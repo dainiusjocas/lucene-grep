@@ -18,8 +18,7 @@ Startup and memory as measured with `time` utility on my Linux laptop:
 time ./lmgrep "english" README.md
 ```
 <img src="docs/time-memory-usage.png"
-alt="Startup time and memory usage" title="Startup time and memory usage"
-align="right" />
+alt="Startup time and memory usage" title="Startup time and memory usage" />
 
 
 NOTE: Not compatible with `grep`. When compared with `grep` the functionality is limited in most aspects.
