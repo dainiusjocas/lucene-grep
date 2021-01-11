@@ -14,12 +14,10 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Fast startup which makes it usable as CLI utility
 
 Startup and memory as measured with `time` utility on my Linux laptop:
-```shell
-time ./lmgrep "english" README.md
-```
 <img src="docs/time-memory-usage.png"
 alt="Startup time and memory usage" title="Startup time and memory usage" />
 
+The output has a format: `[FILE_PATH]:[LINE_NUMBER]:[LINE_WITH_A_COLORED_HIGHLIGHT]`
 
 NOTE: Not compatible with `grep`. When compared with `grep` the functionality is limited in most aspects.
 
@@ -35,9 +33,7 @@ Example of the `lmgrep`:
 ./deps.edn:28:  {:main-opts  ["-m clj.native-image core"
 ```
 
-The output has a format: `[FILE_PATH]:[LINE_NUMBER]:[LINE_WITH_A_COLORED_HIGHLIGHT]`
-
-The output is somewhat similar to in grep, example:
+The output is somewhat similar to grep, example:
 ```shell
 grep -n -R --include=\*.{edn,clj} "main" ./
 =>
