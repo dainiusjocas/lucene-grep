@@ -34,7 +34,7 @@
                 "-J-Dclojure.compiler.direct-linking=true"
                 ;; optional native image name override
                 "-H:+ReportExceptionStackTraces"
-                "-H:Name=lgrep"]
+                "-H:Name=lmgrep"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
    :extra-deps {borkdude/clj-reflector-graal-java11-fix
                 {:mvn/version "0.0.1-graalvm-20.3.0"

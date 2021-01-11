@@ -12,7 +12,7 @@ grep -n -R --include=\*.{edn,clj} "main" ./
 ./deps.edn:28:  {:main-opts  ["-m clj.native-image core"
 ```
 
-Example in lgrep:
+Example in lmgrep:
 ```shell
 clojure -M -m core main "*.{clj,edn}"
 =>

@@ -79,16 +79,17 @@
       (when (.ready ^Reader *in*)
         (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)))))))
 
+; TODO: list supported tokenizers, stemmers,
 (def cli-options
   [[nil "--tokenizer TOKENIZER" "Tokenizer to use"
     :parse-fn #(keyword %)]
    [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
     :parse-fn #(Boolean/parseBoolean %)
     :default false]
-   [nil "--ascii-fold? ASCII_FOLDED" "if text should be ascii folded"
+   [nil "--ascii-fold? ASCII_FOLDED" "If text should be ascii folded"
     :parse-fn #(Boolean/parseBoolean %)
     :default true]
-   [nil "--stem? STEMMED" "if text should be stemmed"
+   [nil "--stem? STEMMED" "If text should be stemmed"
     :parse-fn #(Boolean/parseBoolean %)
     :default true]
    [nil "--stemmer STEMMER" "Which stemmer to use for stemming"
@@ -110,8 +111,10 @@
     (when (seq errors)
       (println "Errors:" errors)
       (System/exit 1))
-    (when (:help options)
-      (println "Lucene Monitor based grep-like utility. Usage:")
+    (when (or (:help options) (zero? (count arguments)))
+      (println "Lucene Monitor based grep-like utility.")
+      (println "Usage: lmgrep [OPTIONS] PHRASE [FILES]")
+      (println "Supported options:")
       (println summary)
       (System/exit 1))
     (if (= 2 (count arguments))
