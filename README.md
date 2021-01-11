@@ -21,6 +21,15 @@ The output has a format: `[FILE_PATH]:[LINE_NUMBER]:[LINE_WITH_A_COLORED_HIGHLIG
 
 NOTE: Not compatible with `grep`. When compared with `grep` the functionality is limited in most aspects.
 
+## Quickstart
+
+Grab a binary from [Github releases](https://github.com/dainiusjocas/lucene-grep/releases) yourself and place it anywhere on the path.
+
+Then run it:
+```shell
+echo "GraalVM is awesome" | time ./lmgrep "graalvm"
+```
+
 ## Examples 
 
 Example of the `lmgrep`:
@@ -122,16 +131,24 @@ echo "labai gerai" | ./lmgrep --stemmer=lithuanian "labas"
 ## Development
 
 Requirements: 
-- Clojure CLI, 
+- Clojure CLI
+- Maven
 - GraalVM with the `native-image` tool installed and on `$PATH`
+- GNU Make
 - Docker (just for rebuilding the linux native image).
 
-Build executable on your platform:
+Install the Quarkus Lucene extension from source:
+```shell
+git clone https://github.com/gunnarmorling/search.morling.dev.git
+cd search.morling.dev/quarkus-lucene-extension
+mvn install
+```
+
+Build executable for your platform:
 ```shell
 make build
 ```
-This will create a file named `lmgrep`.
-
+It will create an executable binary file named `lmgrep` stored at the root directory of the repository.
 
 ## Future work
 
