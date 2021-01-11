@@ -6,7 +6,8 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Supports various text tokenizers
 - Supports various stemmers for multiple languages
 - Matches phrases
-- Phrases can be enforced to be matched in order
+- Matches phrases with customizable slop
+- When slop is provided phrases can be enforced to match in terms order
 - Output is colored
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) file pattern
@@ -76,6 +77,8 @@ Supported options:
   -h, --help
 ```
 
+NOTE: question marks in zsh must be escaped, e.g. `--case-sensitive\?=true`
+
 # Supported tokenizers
 
 Tokenizers are the Lucene tokenizers:
@@ -126,6 +129,34 @@ Example:
 echo "labai gerai" | ./lmgrep --stemmer=lithuanian "labas"                
 =>
 *STDIN*:1:labai gerai
+```
+
+## Phrase Matching with Slop
+
+By default, when search terms are not exactly one after another there is no match, e.g.:
+```shell
+echo "GraalVM is awesome" | ./lmgrep "graalvm awesome"
+=>
+```
+
+We can provide a slop parameter to allow some number of "substitutions" of terms in the document text, e.g.:
+```shell
+echo "GraalVM is awesome" | ./lmgrep --slop=2 "graalvm awesome"
+=>
+*STDIN*:1:GraalVM is awesome
+```
+
+As a side effect, when the slop is big enough terms can match out of order, e.g.:
+```shell
+echo "GraalVM is awesome" | ./lmgrep --slop=3 "awesome graalvm"
+=>
+*STDIN*:1:GraalVM is awesome
+```
+
+However, if we want to enforce order but allow some slop we can provide `--in-order?=true` parameter, e.g.:
+```shell
+echo "GraalVM is awesome" | ./lmgrep --slop=3 --in-order?=true "awesome graalvm"
+=>
 ```
 
 ## Development
