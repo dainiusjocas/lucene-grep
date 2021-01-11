@@ -29,21 +29,28 @@
 (defn green-text [text]
   (str \ "[0;32m" text \ "[0m"))
 
-(defn highlight-line [line-str highlights]
+(defn highlight-line
+  "TODO: overlapping highlights are combined under one color, maybe solve it?"
+  [line-str highlights]
   (when (seq highlights)
     (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
            acc ""
            last-position 0]
-      (let [prefix (subs line-str last-position (:begin-offset ann))
-            highlight (red-text (:text ann))
+      (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
+            highlight (if (< (:begin-offset ann) last-position)
+                        ; adjusting highlight text for overlap
+                        (red-text (subs (:text ann) (- last-position (:begin-offset ann))))
+                        (red-text (:text ann)))
             suffix (if (nil? next-ann)
                      (subs line-str (:end-offset ann))
-                     (subs line-str (:end-offset ann) (:begin-offset next-ann)))]
+                     (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
+                                                           (:end-offset ann))))]
         (if (nil? next-ann)
           (str acc prefix highlight suffix)
           (recur ann-pairs
                  (str acc prefix highlight suffix)
-                 (long (:begin-offset next-ann))))))))
+                 (long (max (:begin-offset next-ann)
+                            (:end-offset ann)))))))))
 
 (defn match-lines [highlighter-fn file-path lines]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
@@ -73,7 +80,9 @@
         (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)))))))
 
 (def cli-options
-  [[nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
+  [[nil "--tokenizer TOKENIZER" "Tokenizer to use"
+    :parse-fn #(keyword %)]
+   [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
     :parse-fn #(Boolean/parseBoolean %)
     :default false]
    [nil "--ascii-fold? ASCII_FOLDED" "if text should be ascii folded"
@@ -82,13 +91,14 @@
    [nil "--stem? STEMMED" "if text should be stemmed"
     :parse-fn #(Boolean/parseBoolean %)
     :default true]
+   [nil "--stemmer STEMMER" "Which stemmer to use for stemming"
+    :parse-fn #(keyword %)]
    [nil "--slop SLOP" "How far can be words from each other"
     :parse-fn #(Integer/parseInt %)
     :default 0]
-   [nil "--stemmer STEMMER" "Which stemmer to use for stemming"
-    :parse-fn #(keyword %)]
-   [nil "--tokenizer TOKENIZER" "Tokenizer to use"
-    :parse-fn #(keyword %)]
+   [nil "--in-order? IN_ORDER" "Should the phrase be ordered in matches with a non-zero slop"
+    :parse-fn #(Boolean/parseBoolean %)
+    :default false]
    ["-h" "--help"]])
 
 (comment
