@@ -3,18 +3,21 @@
             [clojure.tools.cli :as cli]
             [beagle.phrases :as phrases])
   (:gen-class)
-  (:import (java.nio.file FileSystems)
-           (java.io File BufferedReader)))
+  (:import (java.nio.file FileSystems PathMatcher Path)
+           (java.io File BufferedReader Reader)))
 
 (defn get-files [^String glob]
-  (let [grammar-matcher (.getPathMatcher
-                          (FileSystems/getDefault)
-                          (str "glob:" glob))]
-    (->> "."
+  (let [glob-file (io/file glob)
+        starting-folder (or (.getParent glob-file) ".")
+        filename-glob (.getName glob-file)
+        ^PathMatcher grammar-matcher (.getPathMatcher
+                                       (FileSystems/getDefault)
+                                       (str "glob:" filename-glob))]
+    (->> starting-folder
          io/file
          file-seq
-         (filter #(.isFile %))
-         (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
+         (filter #(.isFile ^File %))
+         (filter #(.matches grammar-matcher (.getFileName ^Path (.toPath ^File %))))
          (mapv #(.getPath ^File %)))))
 
 (defn red-text [text]
@@ -52,7 +55,7 @@
       (doseq [path (get-files files-pattern)]
         (with-open [rdr (io/reader path)]
           (match-lines highlighter-fn path (line-seq rdr))))
-      (when (.ready *in*)
+      (when (.ready ^Reader *in*)
         (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)))))))
 
 (def cli-options
