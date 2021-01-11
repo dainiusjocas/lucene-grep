@@ -23,7 +23,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main --lint src test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2020.11.07"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2020.12.12"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :native
   {:main-opts  ["-m clj.native-image core"

@@ -4,7 +4,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 ## Features
 
 - Supports various text tokenizers
-- Supports various stemmers for multiple languages
+- Supports various stemmers for multiple languages  
 - Matches phrases
 - Matches phrases with customizable slop
 - When slop is provided phrases can be enforced to match in terms order
@@ -180,6 +180,16 @@ Build executable for your platform:
 make build
 ```
 It will create an executable binary file named `lmgrep` stored at the root directory of the repository.
+
+Run the tests:
+```shell
+make test
+```
+
+Lint the core with clj-kondo:
+```shell
+make lint
+```
 
 ## Future work
 
