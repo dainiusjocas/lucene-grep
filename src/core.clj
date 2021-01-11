@@ -29,17 +29,31 @@
 (defn green-text [text]
   (str \ "[0;32m" text \ "[0m"))
 
+(defn highlight-line [line-str highlights]
+  (when (seq highlights)
+    (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
+           acc ""
+           last-position 0]
+      (let [prefix (subs line-str last-position (:begin-offset ann))
+            highlight (red-text (:text ann))
+            suffix (if (nil? next-ann)
+                     (subs line-str (:end-offset ann))
+                     (subs line-str (:end-offset ann) (:begin-offset next-ann)))]
+        (if (nil? next-ann)
+          (str acc prefix highlight suffix)
+          (recur ann-pairs
+                 (str acc prefix highlight suffix)
+                 (long (:begin-offset next-ann))))))))
+
 (defn match-lines [highlighter-fn file-path lines]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
-    (when-let [[first-highlight & _] (seq (highlighter-fn line-str))]
+    (when-let [highlights (seq (highlighter-fn line-str))]
       (println
-        (format "%s:%s:%s%s%s"
+        (format "%s:%s:%s"
                 (purple-text (or file-path "*STDIN*"))
                 (green-text (inc line-number))
-                (subs line-str 0 (:begin-offset first-highlight))
-                (red-text (:text first-highlight))
-                (subs line-str (:end-offset first-highlight)))))))
+                (highlight-line line-str highlights))))))
 
 (defn match [query-string files-pattern options]
   (let [dictionary [(merge {:text            query-string
