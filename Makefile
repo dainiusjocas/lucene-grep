@@ -1,0 +1,2 @@
+build:
+	clojure -M:native

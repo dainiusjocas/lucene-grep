@@ -16,22 +16,17 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 Startup and memory as measured with `time` utility on my Linux laptop:
 ```shell
 time ./lmgrep "english" README.md
-=>  
-./README.md:83:- english (default)
-./lmgrep "english" README.md   0.03s  user 0.03s system 103% cpu 0.059 total
-avg shared (code):         0 KB
-avg unshared (data/stack): 0 KB
-total (sum):               0 KB
-max memory:                48 MB
-page faults from disk:     0
-other page faults:         5495
 ```
+<img src="docs/time-memory-usage.png"
+alt="Startup time and memory usage" title="Startup time and memory usage"
+align="right" />
 
-Compared with `grep` in most other aspects the functionality is limited. Not compatible with `grep`.
+
+NOTE: Not compatible with `grep`. When compared with `grep` the functionality is limited in most aspects.
 
 ## Examples 
 
-Example in lmgrep:
+Example of the `lmgrep`:
 ```shell
 ./lmgrep "main" "*.{clj,edn}"
 =>
