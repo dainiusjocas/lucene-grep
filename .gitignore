@@ -12,3 +12,9 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+.idea/
+.clj-kondo/
+.env
+.lsp
+lmgrep
+lucene-grep.iml
