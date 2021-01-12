@@ -1,7 +1,7 @@
 (ns core
   (:require [clojure.java.io :as io]
             [clojure.tools.cli :as cli]
-            [beagle.phrases :as phrases])
+            [lucene :as lucene])
   (:gen-class)
   (:import (java.nio.file FileSystems PathMatcher Path)
            (java.io File BufferedReader Reader)))
@@ -37,10 +37,11 @@
            acc ""
            last-position 0]
       (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
-            highlight (if (< (:begin-offset ann) last-position)
-                        ; adjusting highlight text for overlap
-                        (red-text (subs (:text ann) (- last-position (:begin-offset ann))))
-                        (red-text (:text ann)))
+            highlight (let [text-to-highlight (subs line-str (:begin-offset ann) (:end-offset ann))]
+                        (if (< (:begin-offset ann) last-position)
+                         ; adjusting highlight text for overlap
+                         (red-text (subs text-to-highlight (- last-position (:begin-offset ann))))
+                         (red-text text-to-highlight)))
             suffix (if (nil? next-ann)
                      (subs line-str (:end-offset ann))
                      (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
@@ -71,7 +72,7 @@
                             :tokenizer       :standard
                             :stemmer         :english}
                            options)]
-        highlighter-fn (phrases/highlighter dictionary)]
+        highlighter-fn (lucene/annotator dictionary)]
     (if files-pattern
       (doseq [path (get-files files-pattern)]
         (with-open [rdr (io/reader path)]
