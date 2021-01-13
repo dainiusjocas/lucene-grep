@@ -3,15 +3,13 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 
 ## Features
 
+- Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 - Supports various text tokenizers
-- Supports various stemmers for multiple languages  
-- Matches phrases
-- Matches phrases with customizable slop
-- When slop is provided phrases can be enforced to match in terms order
+- Supports various term stemmers for multiple languages
 - Output is colored
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
-- Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) file pattern
-- Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) utility
+- Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
+- Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
 - Fast startup which makes it usable as CLI utility
 
 Startup and memory as measured with `time` utility on my Linux laptop:
@@ -24,7 +22,7 @@ NOTE: Not compatible with `grep`. When compared with `grep` the functionality is
 
 ## Quickstart
 
-Grab a binary from [Github releases](https://github.com/dainiusjocas/lucene-grep/releases) yourself, extract, and place it anywhere on the path.
+Grab a binary from [Github releases](https://github.com/dainiusjocas/lucene-grep/releases), extract, and place it anywhere on the path.
 
 In case you're running MacOS then give run permissions for the executable binary:
 ```shell
@@ -33,7 +31,7 @@ sudo xattr -r -d com.apple.quarantine lmgrep
 
 Then run it:
 ```shell
-echo "GraalVM is awesome" | time ./lmgrep "graalvm"
+echo "Lucene is awesome" | time ./lmgrep "Lucene"
 ```
 
 ## Examples 
@@ -48,7 +46,7 @@ Example of the `lmgrep`:
 ./deps.edn:28:  {:main-opts  ["-m clj.native-image core"
 ```
 
-The output is somewhat similar to grep, example:
+The output is somewhat similar to `grep`, example:
 ```shell
 grep -n -R --include=\*.{edn,clj} "main" ./
 =>
@@ -60,29 +58,34 @@ grep -n -R --include=\*.{edn,clj} "main" ./
 
 Supports input from STDIN:
 ```shell
-cat README.md | ./lmgrep --slop=4 "monitor lucene"
+cat README.md | ./lmgrep "monitor lucene"
 ```
+TIP: write lucene query within double quotes.
 
+Various options with GLOB file pattern example:
 ```shell
-./lmgrep --case-sensitive\?=false --ascii-fold\?=true --stem\?=true --slop=4 --tokenizer=whitespace "lucene" **/*.md
+./lmgrep --case-sensitive\?=false --ascii-fold\?=true --stem\?=true --tokenizer=whitespace "lucene" "**/*.md"
 ```
+TIP: write GLOB file patterns within double quotes.
+
+## Deviations from Lucene query syntax
+
+- The field names are not supported because there are not field names in a line of text.
 
 # Supported options
 ```shell
 Lucene Monitor based grep-like utility.
-Usage: lmgrep [OPTIONS] PHRASE [FILES]
+Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-      --tokenizer TOKENIZER                    Tokenizer to use
+      --tokenizer TOKENIZER                    Tokenizer to use, one of: [keyword, letter, standard, unicode-whitespace, whitespace]
       --case-sensitive? CASE_SENSITIVE  false  If text should be case sensitive
       --ascii-fold? ASCII_FOLDED        true   If text should be ascii folded
       --stem? STEMMED                   true   If text should be stemmed
-      --stemmer STEMMER                        Which stemmer to use for stemming
-      --slop SLOP                       0      How far can be words from each other
-      --in-order? IN_ORDER              false  Should the phrase be ordered in matches with a non-zero slop
+      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic, armenian, basque, catalan, danish, dutch, english (default), estonian, finnish, french, german2, german, hungarian, irish, italian, kp, lithuanian, lovins, norwegian, porter, portuguese, romanian, russian, spanish, swedish, turkish]
   -h, --help
 ```
 
-NOTE: question marks in zsh must be escaped, e.g. `--case-sensitive\?=true`
+NOTE: question marks in `zsh` shell must be escaped, e.g. `--case-sensitive\?=true` or within double quotes e.g. `"--case-sensitive?=true"` 
 
 # Supported tokenizers
 
@@ -138,31 +141,33 @@ echo "labai gerai" | ./lmgrep --stemmer=lithuanian "labas"
 
 ## Phrase Matching with Slop
 
-By default, when search terms are not exactly one after another there is no match, e.g.:
+To match a phrase you need to put it in double quotes:
 ```shell
-echo "GraalVM is awesome" | ./lmgrep "graalvm awesome"
+echo "GraalVM is awesome" | ./lmgrep "\"graalvm is\""
+=>
+*STDIN*:1:GraalVM is awesome
+```
+
+By default, when phrase terms are not exactly one after another there is no match, e.g.:
+```shell
+echo "GraalVM is awesome" | ./lmgrep "\"graalvm awesome\""
 =>
 ```
 
-We can provide a slop parameter to allow some number of "substitutions" of terms in the document text, e.g.:
+We can provide a slop parameter i.e. `~2` to allow some number of "substitutions" of terms in the document text, e.g.:
 ```shell
-echo "GraalVM is awesome" | ./lmgrep --slop=2 "graalvm awesome"
+echo "GraalVM is awesome" | ./lmgrep "\"graalvm awesome\"~2"
 =>
 *STDIN*:1:GraalVM is awesome
 ```
 
 As a side effect, when the slop is big enough terms can match out of order, e.g.:
 ```shell
-echo "GraalVM is awesome" | ./lmgrep --slop=3 "awesome graalvm"
+echo "GraalVM is awesome" | ./lmgrep "\"awesome graalvm\"~3"
 =>
 *STDIN*:1:GraalVM is awesome
 ```
-
-However, if we want to enforce order but allow some slop we can provide `--in-order?=true` parameter, e.g.:
-```shell
-echo "GraalVM is awesome" | ./lmgrep --slop=3 --in-order?=true "awesome graalvm"
-=>
-```
+However, if order is important there is no way to enforce it Lucene query syntax.
 
 ## Development
 
