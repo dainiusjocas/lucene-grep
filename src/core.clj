@@ -82,7 +82,7 @@
 
 ; TODO: list supported tokenizers, stemmers,
 (def cli-options
-  [[nil "--tokenizer TOKENIZER" "Tokenizer to use"
+  [[nil "--tokenizer TOKENIZER" "Tokenizer to use, one of: [keyword, letter, standard, unicode-whitespace, whitespace]"
     :parse-fn #(keyword %)]
    [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
     :parse-fn #(Boolean/parseBoolean %)
@@ -93,18 +93,18 @@
    [nil "--stem? STEMMED" "If text should be stemmed"
     :parse-fn #(Boolean/parseBoolean %)
     :default true]
-   [nil "--stemmer STEMMER" "Which stemmer to use for stemming"
+   [nil "--stemmer STEMMER" "Which stemmer to use for token stemming, one of: [arabic, armenian, basque, catalan, danish, dutch, english (default), estonian, finnish, french, german2, german, hungarian, irish, italian, kp, lithuanian, lovins, norwegian, porter, portuguese, romanian, russian, spanish, swedish, turkish]"
     :parse-fn #(keyword %)]
-   [nil "--slop SLOP" "How far can be words from each other"
-    :parse-fn #(Integer/parseInt %)
-    :default 0]
-   [nil "--in-order? IN_ORDER" "Should the phrase be ordered in matches with a non-zero slop"
-    :parse-fn #(Boolean/parseBoolean %)
-    :default false]
+   ;[nil "--slop SLOP" "How far can be words from each other"
+   ; :parse-fn #(Integer/parseInt %)
+   ; :default 0]
+   ;[nil "--in-order? IN_ORDER" "Should the phrase be ordered in matches with a non-zero slop"
+   ; :parse-fn #(Boolean/parseBoolean %)
+   ; :default false]
    ["-h" "--help"]])
 
 (comment
-  (cli/parse-opts ["--slop=2" "--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"] cli-options)
+  (cli/parse-opts ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"] cli-options)
   (cli/parse-opts ["test"] cli-options))
 
 (defn -main [& args]
@@ -114,7 +114,7 @@
       (System/exit 1))
     (when (or (:help options) (zero? (count arguments)))
       (println "Lucene Monitor based grep-like utility.")
-      (println "Usage: lmgrep [OPTIONS] PHRASE [FILES]")
+      (println "Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]")
       (println "Supported options:")
       (println summary)
       (System/exit 1))
