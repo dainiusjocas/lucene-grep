@@ -2,6 +2,20 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
+## v2021.01.13
+
+### New
+
+- Support for Lucene query syntax
+
+### Fixed/enhanced
+
+- Fixed GLOB patterns so that the full file path should match
+
+### Changed
+
+- Removed `--slop` and `--in-order` CLI params as no longer needed.
+
 ## v2021.01.11
 
 ### New
@@ -14,20 +28,6 @@ For a list of breaking changes, check [here](#breaking-changes).
 - GLOB support
 - STDIN support
 - CLI params for text analysis
-
-## v2021.01.13
-
-### New
-
-- Support for Lucene query syntax
-  
-### Fixed/enhanced
-
-- Fixed GLOB patterns so that the full file path should match 
-
-### Changed
-
-- Removed `--slop` and `--in-order` CLI params as no longer needed.
 
 ## Breaking changes
 
