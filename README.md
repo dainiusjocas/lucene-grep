@@ -10,7 +10,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - When slop is provided phrases can be enforced to match in terms order
 - Output is colored
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
-- Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) file pattern
+- Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) utility
 - Fast startup which makes it usable as CLI utility
 
