@@ -15,4 +15,22 @@ For a list of breaking changes, check [here](#breaking-changes).
 - STDIN support
 - CLI params for text analysis
 
+## v2021.01.13
+
+### New
+
+- Support for Lucene query syntax
+  
+### Fixed/enhanced
+
+- Fixed GLOB patterns so that the full file path should match 
+
+### Changed
+
+- Removed `--slop` and `--in-order` CLI params as no longer needed.
+
 ## Breaking changes
+
+## v2021.01.13
+
+- Removed `--slop` and `--in-order` CLI params as no longer needed.
