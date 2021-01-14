@@ -1,5 +1,5 @@
 {:paths
- ["src" "resources"]
+ ["src"]
  :deps
  {org.clojure/clojure                                     {:mvn/version "1.10.2-rc1"}
   org.clojure/tools.cli                                   {:mvn/version "1.0.194"}
@@ -25,6 +25,10 @@
   {:main-opts  ["-m" "clj-kondo.main --lint src test"]
    :extra-deps {clj-kondo/clj-kondo {:mvn/version "2020.12.12"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
+  :uberjar
+  {:replace-deps {seancorfield/depstar {:mvn/version "2.0.165"}}
+   :exec-fn      hf.depstar/uberjar
+   :exec-args    {:aot true}}
   :native
   {:main-opts  ["-m clj.native-image lmgrep.core"
                 "--no-fallback"
