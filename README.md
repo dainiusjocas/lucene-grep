@@ -79,12 +79,12 @@ TIP: write GLOB file patterns within double quotes.
 Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-      --tokenizer TOKENIZER                    Tokenizer to use, one of: [unicode-whitespace whitespace letter keyword standard]
+      --tokenizer TOKENIZER                    Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE  false  If text should be case sensitive
       --ascii-fold? ASCII_FOLDED        true   If text should be ascii folded
       --stem? STEMMED                   true   If text should be stemmed
-      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [kp portuguese lithuanian german2 porter danish norwegian catalan irish romanian basque russian dutch estonian finnish turkish italian english lovins swedish german spanish french arabic hungarian armenian]
-      --format FORMAT                          How the output should be formatted, one of: [string edn json]
+      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --format FORMAT                          How the output should be formatted, one of: [edn json string]
   -h, --help
 ```
 
