@@ -9,6 +9,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Output can be formatted as JSON of EDN
 - Text output is colored or separated with customizable tags
 - Text output supports templates
+- Scoring mode (disables highlighting for now)
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
@@ -224,6 +225,14 @@ echo "some text to to match" | clojure -M -m lmgrep.core "text" --pre-tags="<em>
 =>
 some <em>text</em> to to match
 ```
+
+## Scoring
+
+The main thing to understand is that scoring if for every line separately in the context of that one line as a whole corpus.
+
+Another consideration is that scoring in summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
+
+Each individual score is BM25 which is default in Lucene.
 
 ## Future work
 

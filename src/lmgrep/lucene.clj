@@ -3,7 +3,7 @@
             [clojure.tools.logging :as log]
             [beagle.monitor :as monitor]
             [beagle.text-analysis :as text-analysis])
-  (:import (org.apache.lucene.monitor MonitorQuery Monitor HighlightsMatch HighlightsMatch$Hit)
+  (:import (org.apache.lucene.monitor MonitorQuery Monitor HighlightsMatch HighlightsMatch$Hit ScoringMatch)
            (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.document Document Field FieldType)
            (org.apache.lucene.index IndexOptions)))
@@ -57,11 +57,27 @@
                  (dict-entry->monitor-queries dict-entry default-analysis-conf idx))
                dictionary (range))))
 
+(defn match-with-score [^String text ^Monitor monitor field-names type-name]
+  (let [doc (Document.)]
+    (doseq [field-name field-names]
+      (.add doc (Field. ^String field-name text field-type)))
+    (map (fn [^ScoringMatch query-match]
+           (let [^MonitorQuery query (.getQuery monitor (.getQueryId query-match))
+                 meta (.getMetadata query)]
+             {:text          (.getQueryString query)
+              :type          (or (get meta "_type") type-name)
+              :dict-entry-id (.getQueryId query-match)
+              :meta          (into {} meta)
+              :score         (.getScore query-match)}))
+         (.getMatches (.match monitor doc (ScoringMatch/DEFAULT_MATCHER))))))
+
 (defn match-monitor [text monitor field-names type-name opts]
   (log/debugf "Match monitor with opts='%s'" opts)
   (if (s/blank? text)
     []
-    (match-text text monitor field-names type-name)))
+    (if (:with-score opts)
+      (match-with-score text monitor field-names type-name)
+      (match-text text monitor field-names type-name))))
 
 (defn highlighter
   ([dictionary] (highlighter dictionary {}))
@@ -73,3 +89,8 @@
      (fn
        ([text] (match-monitor text monitor field-names type-name {}))
        ([text opts] (match-monitor text monitor field-names type-name opts))))))
+
+(comment
+  ((highlighter [{:text "text"}] {}) "foo text bar")
+
+  ((highlighter [{:text "text bar"}]) "foo text bar one more time text with bar text" {:with-score true}))

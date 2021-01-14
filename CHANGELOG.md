@@ -11,6 +11,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Support for custom highlighting tags
 - Validation of the CLI options
 - Building an uberjar
+- Scoring (disables highlighting and tags)
 
 ## v2021.01.13
 
