@@ -1,5 +1,6 @@
 (ns lmgrep.grep
   (:require [clojure.java.io :as io]
+            [jsonista.core :as json]
             [lmgrep.fs :as fs]
             [lmgrep.lucene :as lucene])
   (:import (java.io BufferedReader Reader)))
@@ -37,15 +38,24 @@
                  (long (max (:begin-offset next-ann)
                             (:end-offset ann)))))))))
 
-(defn match-lines [highlighter-fn file-path lines]
+(defn string-output [highlights {:keys [file line-number line]}]
+  (format "%s:%s:%s"
+          (purple-text (or file "*STDIN*"))
+          (green-text (inc line-number))
+          (highlight-line line highlights)))
+
+(defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
     (when-let [highlights (seq (highlighter-fn line-str))]
-      (println
-        (format "%s:%s:%s"
-                (purple-text (or file-path "*STDIN*"))
-                (green-text (inc line-number))
-                (highlight-line line-str highlights))))))
+      (let [details {:file        file-path
+                     :line-number (inc line-number)
+                     :line        line-str}]
+        (println (case (:format options)
+                  :edn (pr-str details)
+                  :json (json/write-value-as-string details)
+                  :string (string-output highlights details)
+                  (string-output highlights details)))))))
 
 (defn grep [query-string files-pattern options]
   (let [dictionary [(merge {:text            query-string
@@ -60,6 +70,9 @@
     (if files-pattern
       (doseq [path (fs/get-files files-pattern)]
         (with-open [rdr (io/reader path)]
-          (match-lines highlighter-fn path (line-seq rdr))))
+          (match-lines highlighter-fn path (line-seq rdr) options)))
       (when (.ready ^Reader *in*)
-        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)))))))
+        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)))))
+
+(comment
+  (lmgrep.grep/grep "opt" "**.md" {:format :edn}))

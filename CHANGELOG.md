@@ -2,6 +2,14 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
+## Unreleased
+
+### New
+
+- Support for output formats JSON and EDN
+- Validation of the CLI options
+- Building an uberjar
+
 ## v2021.01.13
 
 ### New

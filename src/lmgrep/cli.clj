@@ -1,9 +1,45 @@
 (ns lmgrep.cli
-  (:require [clojure.tools.cli :as cli]))
+  (:require [clojure.tools.cli :as cli]
+            [clojure.string :as str]))
+
+(def format-options #{:edn :json :string})
+
+(def tokenizers #{:keyword :letter :standard :unicode-whitespace :whitespace})
+
+(def stemmers #{:kp
+                :portuguese
+                :lithuanian
+                :german2
+                :porter
+                :danish
+                :norwegian
+                :catalan
+                :irish
+                :romanian
+                :basque
+                :russian
+                :dutch
+                :estonian
+                :finnish
+                :turkish
+                :italian
+                :english
+                :lovins
+                :swedish
+                :german
+                :spanish
+                :french
+                :arabic
+                :hungarian
+                :armenian})
+
+(defn options-to-str [options]
+  (print-str (mapv name (sort options))))
 
 (def cli-options
-  [[nil "--tokenizer TOKENIZER" "Tokenizer to use, one of: [keyword, letter, standard, unicode-whitespace, whitespace]"
-    :parse-fn #(keyword %)]
+  [[nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))
+    :parse-fn #(keyword (str/lower-case %))
+    :validate [#(contains? format-options %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
    [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
     :parse-fn #(Boolean/parseBoolean %)
     :default false]
@@ -13,8 +49,12 @@
    [nil "--stem? STEMMED" "If text should be stemmed"
     :parse-fn #(Boolean/parseBoolean %)
     :default true]
-   [nil "--stemmer STEMMER" "Which stemmer to use for token stemming, one of: [arabic, armenian, basque, catalan, danish, dutch, english (default), estonian, finnish, french, german2, german, hungarian, irish, italian, kp, lithuanian, lovins, norwegian, porter, portuguese, romanian, russian, spanish, swedish, turkish]"
-    :parse-fn #(keyword %)]
+   [nil "--stemmer STEMMER" (str "Which stemmer to use for token stemming, one of: " (options-to-str stemmers))
+    :parse-fn #(keyword (str/lower-case %))
+    :validate [#(contains? format-options %) (str "Stemmer must be one of: " (options-to-str stemmers))]]
+   [nil "--format FORMAT" (str "How the output should be formatted, one of: " (options-to-str format-options))
+    :parse-fn #(keyword (str/lower-case %))
+    :validate [#(contains? format-options %) (str "Format must be one of: " (options-to-str format-options))]]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]
@@ -28,4 +68,5 @@
 
 (comment
   (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"])
-  (lmgrep.cli/handle-args ["test"]))
+  (lmgrep.cli/handle-args ["test"])
+  (lmgrep.cli/handle-args ["--format=edn"]))

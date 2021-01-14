@@ -6,10 +6,12 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 - Supports various text tokenizers
 - Supports various term stemmers for multiple languages
-- Output is colored
+- Text output is colored
+- Output can be formatted as JSON of EDN
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
+- Supports Linux, MacOS, and Windows
 - Fast startup which makes it usable as CLI utility
 
 Startup and memory as measured with `time` utility on my Linux laptop:
@@ -60,7 +62,7 @@ Supports input from STDIN:
 ```shell
 cat README.md | ./lmgrep "monitor lucene"
 ```
-TIP: write lucene query within double quotes.
+TIP: write your Lucene query within double quotes.
 
 Various options with GLOB file pattern example:
 ```shell
@@ -70,18 +72,19 @@ TIP: write GLOB file patterns within double quotes.
 
 ## Deviations from Lucene query syntax
 
-- The field names are not supported because there are not field names in a line of text.
+- The field names are not supported because there are no field names in a line of text.
 
 # Supported options
 ```shell
 Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-      --tokenizer TOKENIZER                    Tokenizer to use, one of: [keyword, letter, standard, unicode-whitespace, whitespace]
+      --tokenizer TOKENIZER                    Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE  false  If text should be case sensitive
       --ascii-fold? ASCII_FOLDED        true   If text should be ascii folded
       --stem? STEMMED                   true   If text should be stemmed
-      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic, armenian, basque, catalan, danish, dutch, english (default), estonian, finnish, french, german2, german, hungarian, irish, italian, kp, lithuanian, lovins, norwegian, porter, portuguese, romanian, russian, spanish, swedish, turkish]
+      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --format FORMAT                          How the output should be formatted, one of: [edn json string]
   -h, --help
 ```
 
