@@ -56,6 +56,8 @@
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? format-options %) (str "Format must be one of: " (options-to-str format-options))]]
    [nil "--template TEMPLATE" "The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}"]
+   [nil "--pre-tags PRE_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --post-tags"]
+   [nil "--post-tags POST_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --pre-tags"]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]

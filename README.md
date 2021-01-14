@@ -7,7 +7,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Supports various text tokenizers
 - Supports various term stemmers for multiple languages
 - Output can be formatted as JSON of EDN
-- Text output is colored
+- Text output is colored or separated with customizable tags
 - Text output supports templates
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
@@ -218,13 +218,18 @@ make lint
 | `{{highlighted-line}}`| Line that matched the query with highlighters applied     |
 | `{{line}}`            | Line that matched the query                               |
 
+When `{{highlighted-line}}` is used then `--pre-tags` and `--post-tags` options are available, e.g.:
+```shell
+echo "some text to to match" | clojure -M -m lmgrep.core "text" --pre-tags="<em>" --post-tags="</em>" --template="{{highlighted-line}}"
+=>
+some <em>text</em> to to match
+```
+
 ## Future work
 
-- [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
-- [ ] Optimize highlighting of [multiple lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
+- [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
 - [ ] Exclude files with [GLOB](https://github.com/dainiusjocas/lucene-grep/issues/5)
-- [ ] Support other [output formats](https://github.com/dainiusjocas/lucene-grep/issues/8)
-- [ ] [Custom coloring](https://github.com/dainiusjocas/lucene-grep/issues/7) would be nice
+- [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
 
 ## License
 

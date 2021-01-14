@@ -16,40 +16,43 @@
   (str \ "[0;32m" text \ "[0m"))
 
 (defn highlight-line
-  "TODO: overlapping highlights are combined under one color, maybe solve it?"
-  [line-str highlights]
+  "TODO: overlapping phrase highlights are combined under one color, maybe solve it?"
+  [line-str highlights options]
   (when (seq highlights)
-    (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
-           acc ""
-           last-position 0]
-      (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
-            highlight (let [text-to-highlight (subs line-str (:begin-offset ann) (:end-offset ann))]
-                        (if (< (:begin-offset ann) last-position)
-                          ; adjusting highlight text for overlap
-                          (red-text (subs text-to-highlight (- last-position (:begin-offset ann))))
-                          (red-text text-to-highlight)))
-            suffix (if (nil? next-ann)
-                     (subs line-str (:end-offset ann))
-                     (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
-                                                           (:end-offset ann))))]
-        (if (nil? next-ann)
-          (str acc prefix highlight suffix)
-          (recur ann-pairs
-                 (str acc prefix highlight suffix)
-                 (long (max (:begin-offset next-ann)
-                            (:end-offset ann)))))))))
+    (let [highlight-fn (if (and (string? (:pre-tags options)) (string? (:post-tags options)))
+                         #(str (:pre-tags options) % (:post-tags options))
+                         red-text)]
+      (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
+             acc ""
+             last-position 0]
+        (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
+              highlight (let [text-to-highlight (subs line-str (:begin-offset ann) (:end-offset ann))]
+                          (if (< (:begin-offset ann) last-position)
+                            ; adjusting highlight text for overlap
+                            (highlight-fn (subs text-to-highlight (- last-position (:begin-offset ann))))
+                            (highlight-fn text-to-highlight)))
+              suffix (if (nil? next-ann)
+                       (subs line-str (:end-offset ann))
+                       (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
+                                                             (:end-offset ann))))]
+          (if (nil? next-ann)
+            (str acc prefix highlight suffix)
+            (recur ann-pairs
+                   (str acc prefix highlight suffix)
+                   (long (max (:begin-offset next-ann)
+                              (:end-offset ann))))))))))
 
 (defn string-output [highlights {:keys [file line-number line]} options]
   (if-let [template (:template options)]
     (-> template
-        (str/replace "{{file}}" file)
+        (str/replace "{{file}}" (or file ""))
         (str/replace "{{line-number}}" (str line-number))
-        (str/replace "{{highlighted-line}}" (highlight-line line highlights))
+        (str/replace "{{highlighted-line}}" (highlight-line line highlights options))
         (str/replace "{{line}}" line))
     (format "%s:%s:%s"
-           (purple-text (or file "*STDIN*"))
-           (green-text line-number)
-           (highlight-line line highlights))))
+            (purple-text (or file "*STDIN*"))
+            (green-text line-number)
+            (highlight-line line highlights options))))
 
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
@@ -59,17 +62,16 @@
                      :line-number (inc line-number)
                      :line        line-str}]
         (println (case (:format options)
-                  :edn (pr-str details)
-                  :json (json/write-value-as-string details)
-                  :string (string-output highlights details options)
-                  (string-output highlights details options)))))))
+                   :edn (pr-str details)
+                   :json (json/write-value-as-string details)
+                   :string (string-output highlights details options)
+                   (string-output highlights details options)))))))
 
 (defn grep [query-string files-pattern options]
   (let [dictionary [(merge {:text            query-string
                             :case-sensitive? false
                             :ascii-fold?     true
                             :stem?           true
-                            :slop            0
                             :tokenizer       :standard
                             :stemmer         :english}
                            options)]
