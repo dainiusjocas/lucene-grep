@@ -6,8 +6,10 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 - Supports various text tokenizers
 - Supports various term stemmers for multiple languages
-- Text output is colored
 - Output can be formatted as JSON of EDN
+- Text output is colored or separated with customizable tags
+- Text output supports templates
+- Scoring mode (disables highlighting for now)
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
@@ -48,7 +50,7 @@ Example of the `lmgrep`:
 ./deps.edn:28:  {:main-opts  ["-m clj.native-image core"
 ```
 
-The output is somewhat similar to `grep`, example:
+The default output is somewhat similar to `grep`, example:
 ```shell
 grep -n -R --include=\*.{edn,clj} "main" ./
 =>
@@ -204,13 +206,40 @@ Lint the core with clj-kondo:
 make lint
 ```
 
+## Print results with a custom format
+
+```shell
+./lmgrep --template="FILE={{file}} LINE_NR={{line-number}} LINE={{highlighted-line}}" "test" "**.md"
+```
+
+| Template Variable     | Notes                                                     |
+|-----------------------|-----------------------------------------------------------|
+| `{{file}}`            | File name                                                 |
+| `{{line-number}}`     | Line number where the text matched the query              |
+| `{{highlighted-line}}`| Line that matched the query with highlighters applied     |
+| `{{line}}`            | Line that matched the query                               |
+| `{{score}}`           | Score of the match (summed)                               |
+
+When `{{highlighted-line}}` is used then `--pre-tags` and `--post-tags` options are available, e.g.:
+```shell
+echo "some text to to match" | clojure -M -m lmgrep.core "text" --pre-tags="<em>" --post-tags="</em>" --template="{{highlighted-line}}"
+=>
+some <em>text</em> to to match
+```
+
+## Scoring
+
+The main thing to understand is that scoring is for every line separately in the context of that one line as a whole corpus.
+
+Another consideration is that scoring is summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
+
+Each individual score is BM25 which is default in Lucene.
+
 ## Future work
 
-- [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
-- [ ] Optimize highlighting of [multiple lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
+- [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
 - [ ] Exclude files with [GLOB](https://github.com/dainiusjocas/lucene-grep/issues/5)
-- [ ] Support other [output formats](https://github.com/dainiusjocas/lucene-grep/issues/8)
-- [ ] [Custom coloring](https://github.com/dainiusjocas/lucene-grep/issues/7) would be nice
+- [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
 
 ## License
 

@@ -7,8 +7,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 ### New
 
 - Support for output formats JSON and EDN
+- Support for output template when format is string
+- Support for custom highlighting tags
 - Validation of the CLI options
 - Building an uberjar
+- Scoring (disables highlighting and tags)
 
 ## v2021.01.13
 

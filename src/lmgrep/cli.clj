@@ -39,7 +39,7 @@
 (def cli-options
   [[nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))
     :parse-fn #(keyword (str/lower-case %))
-    :validate [#(contains? format-options %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
+    :validate [#(contains? tokenizers %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
    [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
     :parse-fn #(Boolean/parseBoolean %)
     :default false]
@@ -51,10 +51,14 @@
     :default true]
    [nil "--stemmer STEMMER" (str "Which stemmer to use for token stemming, one of: " (options-to-str stemmers))
     :parse-fn #(keyword (str/lower-case %))
-    :validate [#(contains? format-options %) (str "Stemmer must be one of: " (options-to-str stemmers))]]
+    :validate [#(contains? stemmers %) (str "Stemmer must be one of: " (options-to-str stemmers))]]
+   [nil "--with-score" "If the matching score should be computed"]
    [nil "--format FORMAT" (str "How the output should be formatted, one of: " (options-to-str format-options))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? format-options %) (str "Format must be one of: " (options-to-str format-options))]]
+   [nil "--template TEMPLATE" "The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}"]
+   [nil "--pre-tags PRE_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --post-tags"]
+   [nil "--post-tags POST_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --pre-tags"]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]
@@ -69,4 +73,5 @@
 (comment
   (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"])
   (lmgrep.cli/handle-args ["test"])
-  (lmgrep.cli/handle-args ["--format=edn"]))
+  (lmgrep.cli/handle-args ["--format=edn"])
+  (lmgrep.cli/handle-args ["--with-score"]))

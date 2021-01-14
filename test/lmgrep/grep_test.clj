@@ -9,4 +9,4 @@
           highlighter-fn (phrases/highlighter [{:text query-string}])
           text "prefix text suffix"]
       (is (= (str "prefix " \ "[1;31mtext" \ "[0m suffix")
-             (grep/highlight-line text (highlighter-fn text)))))))
+             (grep/highlight-line text (highlighter-fn text) {}))))))
