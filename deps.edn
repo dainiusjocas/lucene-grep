@@ -6,6 +6,7 @@
   lt.tokenmill/beagle                                     {:mvn/version "0.5.1"}
   org.apache.lucene/lucene-core                           {:mvn/version "8.7.0"}
   org.apache.lucene/lucene-monitor                        {:mvn/version "8.7.0"}
+  metosin/jsonista                                        {:mvn/version "0.3.0"}
   dev.morling.quarkus.extensions/quarkus-lucene-extension {:mvn/version "1.0-SNAPSHOT"}}
  :aliases
  {:dev
