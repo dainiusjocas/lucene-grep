@@ -6,8 +6,9 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 - Supports various text tokenizers
 - Supports various term stemmers for multiple languages
-- Text output is colored
 - Output can be formatted as JSON of EDN
+- Text output is colored
+- Text output supports templates
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
@@ -48,7 +49,7 @@ Example of the `lmgrep`:
 ./deps.edn:28:  {:main-opts  ["-m clj.native-image core"
 ```
 
-The output is somewhat similar to `grep`, example:
+The default output is somewhat similar to `grep`, example:
 ```shell
 grep -n -R --include=\*.{edn,clj} "main" ./
 =>
@@ -203,6 +204,19 @@ Lint the core with clj-kondo:
 ```shell
 make lint
 ```
+
+## Print results with a custom format
+
+```shell
+./lmgrep --template="FILE={{file}} LINE_NR={{line-number}} LINE={{highlighted-line}}" "test" "**.md"
+```
+
+| Template Variable     | Notes                                                     |
+|-----------------------|-----------------------------------------------------------|
+| `{{file}}`            | File name                                                 |
+| `{{line-number}}`     | Line number where the text matched the query              |
+| `{{highlighted-line}}`| Line that matched the query with highlighters applied     |
+| `{{line}}`            | Line that matched the query                               |
 
 ## Future work
 

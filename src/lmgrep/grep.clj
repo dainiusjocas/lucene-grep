@@ -1,5 +1,6 @@
 (ns lmgrep.grep
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.fs :as fs]
             [lmgrep.lucene :as lucene])
@@ -38,11 +39,17 @@
                  (long (max (:begin-offset next-ann)
                             (:end-offset ann)))))))))
 
-(defn string-output [highlights {:keys [file line-number line]}]
-  (format "%s:%s:%s"
-          (purple-text (or file "*STDIN*"))
-          (green-text (inc line-number))
-          (highlight-line line highlights)))
+(defn string-output [highlights {:keys [file line-number line]} options]
+  (if-let [template (:template options)]
+    (-> template
+        (str/replace "{{file}}" file)
+        (str/replace "{{line-number}}" (str line-number))
+        (str/replace "{{highlighted-line}}" (highlight-line line highlights))
+        (str/replace "{{line}}" line))
+    (format "%s:%s:%s"
+           (purple-text (or file "*STDIN*"))
+           (green-text line-number)
+           (highlight-line line highlights))))
 
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
@@ -54,8 +61,8 @@
         (println (case (:format options)
                   :edn (pr-str details)
                   :json (json/write-value-as-string details)
-                  :string (string-output highlights details)
-                  (string-output highlights details)))))))
+                  :string (string-output highlights details options)
+                  (string-output highlights details options)))))))
 
 (defn grep [query-string files-pattern options]
   (let [dictionary [(merge {:text            query-string

@@ -55,6 +55,7 @@
    [nil "--format FORMAT" (str "How the output should be formatted, one of: " (options-to-str format-options))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? format-options %) (str "Format must be one of: " (options-to-str format-options))]]
+   [nil "--template TEMPLATE" "The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}"]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]

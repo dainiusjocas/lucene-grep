@@ -7,6 +7,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ### New
 
 - Support for output formats JSON and EDN
+- Support for output template when format is string 
 - Validation of the CLI options
 - Building an uberjar
 
