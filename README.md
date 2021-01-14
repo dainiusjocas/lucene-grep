@@ -218,6 +218,7 @@ make lint
 | `{{line-number}}`     | Line number where the text matched the query              |
 | `{{highlighted-line}}`| Line that matched the query with highlighters applied     |
 | `{{line}}`            | Line that matched the query                               |
+| `{{score}}`           | Score of the match (summed)                               |
 
 When `{{highlighted-line}}` is used then `--pre-tags` and `--post-tags` options are available, e.g.:
 ```shell
@@ -228,9 +229,9 @@ some <em>text</em> to to match
 
 ## Scoring
 
-The main thing to understand is that scoring if for every line separately in the context of that one line as a whole corpus.
+The main thing to understand is that scoring is for every line separately in the context of that one line as a whole corpus.
 
-Another consideration is that scoring in summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
+Another consideration is that scoring is summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
 
 Each individual score is BM25 which is default in Lucene.
 
