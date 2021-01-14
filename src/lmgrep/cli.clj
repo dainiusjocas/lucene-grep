@@ -34,7 +34,7 @@
                 :armenian})
 
 (defn options-to-str [options]
-  (print-str (mapv name options)))
+  (print-str (mapv name (sort options))))
 
 (def cli-options
   [[nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))
