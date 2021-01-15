@@ -12,6 +12,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Validation of the CLI options
 - Building an uberjar
 - Scoring (disables highlighting and tags)
+- Exclude files with GLOB
 
 ## v2021.01.13
 

@@ -12,6 +12,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 - Scoring mode (disables highlighting for now)
 - Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
 - Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
+- Support excluding files from processing with GLOB
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
 - Supports Linux, MacOS, and Windows
 - Fast startup which makes it usable as CLI utility
@@ -71,6 +72,12 @@ Various options with GLOB file pattern example:
 ./lmgrep --case-sensitive\?=false --ascii-fold\?=true --stem\?=true --tokenizer=whitespace "lucene" "**/*.md"
 ```
 TIP: write GLOB file patterns within double quotes.
+
+We can exclude files also with a GLOB pattern.
+```shell
+./lmgrep "lucene" "**/*.md" --excludes="README.md"
+```
+TIP: a GLOB pattern is treated as recursive if it contains "**", otherwise GLOB matches only on file name.
 
 ## Deviations from Lucene query syntax
 
@@ -238,7 +245,6 @@ Each individual score is BM25 which is default in Lucene.
 ## Future work
 
 - [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
-- [ ] Exclude files with [GLOB](https://github.com/dainiusjocas/lucene-grep/issues/5)
 - [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
 
 ## License

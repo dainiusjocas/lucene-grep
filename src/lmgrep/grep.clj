@@ -93,7 +93,7 @@
                            options)]
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
-      (doseq [path (fs/get-files files-pattern)]
+      (doseq [path (fs/get-files files-pattern options)]
         (with-open [rdr (io/reader path)]
           (match-lines highlighter-fn path (line-seq rdr) options)))
       (when (.ready ^Reader *in*)
