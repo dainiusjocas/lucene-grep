@@ -93,7 +93,12 @@ Supported options:
       --ascii-fold? ASCII_FOLDED        true   If text should be ascii folded
       --stem? STEMMED                   true   If text should be stemmed
       --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --with-score                             If the matching score should be computed
       --format FORMAT                          How the output should be formatted, one of: [edn json string]
+      --template TEMPLATE                      The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
+      --pre-tags PRE_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --post-tags
+      --post-tags POST_TAGS                    A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
+      --excludes EXCLUDES                      A GLOB that filters out files that were matched with a GLOB
   -h, --help
 ```
 
