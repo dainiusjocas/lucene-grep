@@ -4,7 +4,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
-### New
+### v2021.01.13
 
 - Support for output formats JSON and EDN
 - Support for output template when format is string
