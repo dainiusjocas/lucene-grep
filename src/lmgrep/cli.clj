@@ -59,6 +59,7 @@
    [nil "--template TEMPLATE" "The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}"]
    [nil "--pre-tags PRE_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --post-tags"]
    [nil "--post-tags POST_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --pre-tags"]
+   [nil "--excludes EXCLUDES" "A GLOB that filters out files that were matched with a GLOB"]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]
@@ -74,4 +75,5 @@
   (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"])
   (lmgrep.cli/handle-args ["test"])
   (lmgrep.cli/handle-args ["--format=edn"])
+  (lmgrep.cli/handle-args ["--excludes=**.edn"])
   (lmgrep.cli/handle-args ["--with-score"]))
