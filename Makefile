@@ -2,6 +2,12 @@
 build:
 	clojure -M:native
 
+build-with-docker:
+	docker build -f Dockerfile -t lmgrep-native-image .
+	docker rm lmgrep-native-image-build || true
+	docker create --name lmgrep-native-image-build lmgrep-native-image
+	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep
+
 pom.xml:
 	clojure -Spom
 
