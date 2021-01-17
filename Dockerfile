@@ -17,7 +17,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY deps.edn /usr/src/app/
-RUN clojure -P -M:native
+RUN clojure -P -M:native-linux-static
 COPY src/ /usr/src/app/src
 
-RUN clojure -M:native
+RUN clojure -M:native-linux-static
