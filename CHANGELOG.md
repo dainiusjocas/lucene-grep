@@ -4,7 +4,13 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### New
+
+- Compile Linux executable with `--static` flag 
+
 ### v2021.01.13
+
+### New
 
 - Support for output formats JSON and EDN
 - Support for output template when format is string
