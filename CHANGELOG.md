@@ -6,7 +6,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### New
 
-- Compile Linux executable with `--static` flag 
+- Compile Linux executable with `--static` flag
+- Dockerfile to build static Linux executables
 
 ### v2021.01.13
 
