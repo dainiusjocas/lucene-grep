@@ -5,13 +5,13 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0
 
 - Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 - Supports various text tokenizers
-- Supports various term stemmers for multiple languages
-- Output can be formatted as JSON of EDN
+- Supports various stemmers for multiple languages
 - Text output is colored or separated with customizable tags
 - Text output supports templates
 - Scoring mode (disables highlighting for now)
-- Supports [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) as text input
-- Supports [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
+- Output can be formatted as JSON of EDN
+- Supports input from [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin))
+- Supports filtering files with [GLOB](https://en.wikipedia.org/wiki/Glob_(programming)) [file pattern](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-)
 - Support excluding files from processing with GLOB
 - Compiled with [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/) tool
 - Supports Linux, MacOS, and Windows
@@ -36,7 +36,7 @@ sudo xattr -r -d com.apple.quarantine lmgrep
 
 Then run it:
 ```shell
-echo "Lucene is awesome" | time ./lmgrep "Lucene"
+echo "Lucene is awesome" | ./lmgrep "Lucene"
 ```
 
 ## Examples 
