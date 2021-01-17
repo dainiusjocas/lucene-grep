@@ -33,6 +33,7 @@
   :native
   {:main-opts  ["-m clj.native-image lmgrep.core"
                 "--no-fallback"
+                "--static"
                 "--allow-incomplete-classpath"
                 "--initialize-at-build-time"
                 "--report-unsupported-elements-at-runtime"
