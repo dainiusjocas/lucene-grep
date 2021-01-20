@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:20.3.0-java11 as BUILDER
+FROM oracle/graalvm-ce:21.0.0-java11 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 

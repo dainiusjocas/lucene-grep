@@ -17,4 +17,4 @@ pom.xml.asc
 .env
 .lsp
 lmgrep
-lucene-grep.iml
+lmgrep-*

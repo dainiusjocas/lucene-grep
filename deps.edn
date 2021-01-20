@@ -1,7 +1,7 @@
 {:paths
  ["src"]
  :deps
- {org.clojure/clojure                                     {:mvn/version "1.10.2-rc1"}
+ {org.clojure/clojure                                     {:mvn/version "1.10.2-rc3"}
   org.clojure/tools.cli                                   {:mvn/version "1.0.194"}
   lt.tokenmill/beagle                                     {:mvn/version "0.5.1"}
   org.apache.lucene/lucene-core                           {:mvn/version "8.7.0"}
