@@ -64,5 +64,5 @@
   (lmgrep.fs/get-files "**.clj" {})
   (lmgrep.fs/get-files "**.clj" {:excludes "**test*"})
   (lmgrep.fs/get-files "**/*.clj" {})
-  (lmgrep.fs/get-files "classes/**.class" {})
+  (time (count (lmgrep.fs/get-files "**.*" {:skip-binary true})))
   (lmgrep.fs/get-files "/var/log/**.log" {}))
