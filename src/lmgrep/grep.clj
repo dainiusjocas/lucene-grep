@@ -102,5 +102,5 @@
 (comment
   (lmgrep.grep/grep "opt" "**.md" {:format :edn})
 
-  (time (lmgrep.grep/grep "opt" "**.class" {:format      :edn
-                                            :skip-binary false})))
+  (time (lmgrep.grep/grep "opt" "**.class" {:format            :edn
+                                            :skip-binary-files true})))

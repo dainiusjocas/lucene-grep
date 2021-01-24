@@ -15,7 +15,7 @@
              "charset=binary"))
 
 (defn remove-binary-files [file-paths options]
-  (if (and (:skip-binary options) file-options)
+  (if (and (:skip-binary-files options) file-options)
     (remove binary-file? file-paths)
     file-paths))
 
@@ -64,5 +64,5 @@
   (lmgrep.fs/get-files "**.clj" {})
   (lmgrep.fs/get-files "**.clj" {:excludes "**test*"})
   (lmgrep.fs/get-files "**/*.clj" {})
-  (time (count (lmgrep.fs/get-files "**.*" {:skip-binary true})))
+  (time (count (lmgrep.fs/get-files "**.*" {:skip-binary-files true})))
   (lmgrep.fs/get-files "/var/log/**.log" {}))
