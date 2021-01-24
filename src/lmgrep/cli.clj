@@ -60,6 +60,8 @@
    [nil "--pre-tags PRE_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --post-tags"]
    [nil "--post-tags POST_TAGS" "A string that the highlighted text is wrapped in, use in conjunction with --pre-tags"]
    [nil "--excludes EXCLUDES" "A GLOB that filters out files that were matched with a GLOB"]
+   [nil "--skip-binary" "If a file that is detected to be binary should be skipped. Available for Linux only."
+    :default false]
    ;[nil "--slop SLOP" "How far can be words from each other"
    ; :parse-fn #(Integer/parseInt %)
    ; :default 0]

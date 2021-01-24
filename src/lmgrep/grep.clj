@@ -100,4 +100,7 @@
         (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)))))
 
 (comment
-  (lmgrep.grep/grep "opt" "**.md" {:format :edn}))
+  (lmgrep.grep/grep "opt" "**.md" {:format :edn})
+
+  (time (lmgrep.grep/grep "opt" "**.class" {:format      :edn
+                                            :skip-binary false})))

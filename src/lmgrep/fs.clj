@@ -1,8 +1,22 @@
 (ns lmgrep.fs
   (:require [clojure.java.io :as io]
+            [clojure.java.shell :as sh]
             [clojure.string :as str])
   (:import (java.nio.file FileSystems PathMatcher Path)
            (java.io File)))
+
+(def file-options (case (System/getProperty "os.name")
+                    "Linux" "-ib"
+                    nil))
+
+(defn binary-file? [^String file-path]
+  (.contains ^String (:out (sh/sh "file" file-options file-path))
+             "charset=binary"))
+
+(defn remove-binary-files [file-paths options]
+  (if (and (:skip-binary options) file-options)
+    (remove binary-file? file-paths)
+    file-paths))
 
 ; TODO: Support regex pattern
 (defn get-files [^String glob options]
@@ -18,23 +32,25 @@
                                        (.getPathMatcher
                                          (FileSystems/getDefault)
                                          (str "glob:" excludes-glob)))]
-    (->> starting-folder
-         io/file
-         file-seq
-         (filter (fn [^File f] (.isFile f)))
-         (filter (fn [^File f]
-                   (if (or (.getParent glob-file) (re-find #"\*\*" glob))
-                     (.matches grammar-matcher ^Path (.toPath ^File f))
-                     (when (= starting-folder (str (.getParent (.toPath ^File f))))
-                       (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
-         (remove (fn [^File f]
-                   (if exclude-matcher
-                     (if (re-find #"\*\*" (:excludes options))
-                       (.matches exclude-matcher ^Path (.toPath ^File f))
+    (remove-binary-files
+      (->> starting-folder
+           io/file
+           file-seq
+           (filter (fn [^File f] (.isFile f)))
+           (filter (fn [^File f]
+                     (if (or (.getParent glob-file) (re-find #"\*\*" glob))
+                       (.matches grammar-matcher ^Path (.toPath ^File f))
                        (when (= starting-folder (str (.getParent (.toPath ^File f))))
-                         (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
-                     false)))
-         (mapv #(.getPath ^File %)))))
+                         (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
+           (remove (fn [^File f]
+                     (if exclude-matcher
+                       (if (re-find #"\*\*" (:excludes options))
+                         (.matches exclude-matcher ^Path (.toPath ^File f))
+                         (when (= starting-folder (str (.getParent (.toPath ^File f))))
+                           (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
+                       false)))
+           (mapv #(.getPath ^File %)))
+      options)))
 
 (comment
   (lmgrep.fs/get-files "*.md" {})
