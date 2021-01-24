@@ -7,6 +7,7 @@
 
 (def file-options (case (System/getProperty "os.name")
                     "Linux" "-ib"
+                    "Mac OS X" "-I"
                     nil))
 
 (defn binary-file? [^String file-path]

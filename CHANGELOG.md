@@ -9,6 +9,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Compile Linux executable with `--static` flag
 - Dockerfile to build static Linux executables
 
+### Unreleased
+
+### New
+
+- Option to skip binary files on Linux and MacOS
+
 ### v2021.01.13
 
 ### New
