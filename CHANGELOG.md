@@ -2,7 +2,7 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
-## Unreleased
+## v2021.01.24
 
 ### New
 
@@ -29,6 +29,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Support for Lucene query syntax
 
+* chore: version number of previous release
 ### Fixed/enhanced
 
 - Fixed GLOB patterns so that the full file path should match
