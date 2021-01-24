@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:21.0.0-java11 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:java11-21.0.0 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 
@@ -8,7 +8,7 @@ RUN gu install native-image \
     && ./linux-install-1.10.1.727.sh \
     && rm linux-install-1.10.1.727.sh
 
-RUN yum install -y git maven
+RUN microdnf install -y git maven
 
 RUN git clone https://github.com/gunnarmorling/search.morling.dev.git
 RUN (cd search.morling.dev && sh mvnw install || true)

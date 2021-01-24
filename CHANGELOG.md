@@ -8,8 +8,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Compile Linux executable with `--static` flag
 - Dockerfile to build static Linux executables
+- Option to skip binary files on Linux and MacOS
+- Updated the native-image docker to 21.0.0
 
-### v2021.01.13
+### v2021.01.15
 
 ### New
 
