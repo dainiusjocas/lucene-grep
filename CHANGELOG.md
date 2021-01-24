@@ -11,7 +11,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Option to skip binary files on Linux and MacOS
 - Updated the native-image docker to 21.0.0
 
-### v2021.01.13
+### v2021.01.15
 
 ### New
 
