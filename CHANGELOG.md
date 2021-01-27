@@ -2,6 +2,13 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
+## Unreleased
+
+### Changed
+
+- Stable Clojure release 1.10.2
+- Remove redundant options from native-image building script 
+
 ## v2021.01.24
 
 ### New
