@@ -15,10 +15,14 @@
     (.setStoreTermVectors true)
     (.setStoreTermVectorOffsets true)))
 
-(defn match-text [^String text ^Monitor monitor field-names type-name]
+(defn create-document [^String text field-names]
   (let [doc (Document.)]
     (doseq [field-name field-names]
       (.add doc (Field. ^String field-name text field-type)))
+    doc))
+
+(defn match-text [^String text ^Monitor monitor field-names type-name]
+  (let [^Document doc (create-document text field-names)]
     (mapcat (fn [^HighlightsMatch query-match]
               (let [^MonitorQuery query (.getQuery monitor (.getQueryId query-match))
                     meta (.getMetadata query)
@@ -58,9 +62,7 @@
                dictionary (range))))
 
 (defn match-with-score [^String text ^Monitor monitor field-names type-name]
-  (let [doc (Document.)]
-    (doseq [field-name field-names]
-      (.add doc (Field. ^String field-name text field-type)))
+  (let [^Document doc (create-document text field-names)]
     (map (fn [^ScoringMatch query-match]
            (let [^MonitorQuery query (.getQuery monitor (.getQueryId query-match))
                  meta (.getMetadata query)]
