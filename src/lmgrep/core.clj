@@ -19,5 +19,5 @@
     (when (or (:help options) (zero? (count arguments)))
       (print-summary-msg summary)
       (System/exit 1))
-    (grep/grep lucene-query file-pattern options))
+    (grep/grep lucene-query file-pattern (assoc options :whole-files true)))
   (System/exit 0))

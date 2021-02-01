@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.fs :as fs]
-            [lmgrep.lucene :as lucene])
+            [lmgrep.lucene :as lucene]
+            [lmgrep.lucene.multi :as lm])
   (:import (java.io BufferedReader Reader)))
 
 (defn red-text [text]
@@ -69,19 +70,39 @@
   (when-let [scores (seq (remove nil? (map :score highlights)))]
     (reduce + scores)))
 
+(defn detailed-highlight [file-path line-number line-str highlights]
+  (compact {:file        file-path
+            :line-number (inc line-number)
+            :line        line-str
+            :score       (sum-score highlights)}))
+
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
     (when-let [highlights (seq (highlighter-fn line-str (select-keys options [:with-score])))]
-      (let [details (compact {:file        file-path
-                              :line-number (inc line-number)
-                              :line        line-str
-                              :score       (sum-score highlights)})]
+      (let [details (detailed-highlight file-path line-number line-str highlights)]
         (println (case (:format options)
                    :edn (pr-str details)
                    :json (json/write-value-as-string details)
                    :string (string-output highlights details options)
                    (string-output highlights details options)))))))
+
+(defn multiline-score [highlighter-fn file-paths options]
+  (let [all-lines (mapcat (fn [file-path]
+                            (with-open [rdr (io/reader file-path)]
+                              (doall (map (fn [line-str idx] {:text line-str :id idx :filename file-path})
+                                          (line-seq rdr) (range)))))
+                          file-paths)]
+    (doseq [highlight (take 10 (reverse (sort-by :score (highlighter-fn all-lines))))]
+      (let [details (detailed-highlight (get-in highlight [:doc :filename])
+                                        (get-in highlight [:doc-id])
+                                        (get-in highlight [:doc :text])
+                                        [highlight])]
+        (println (case (:format options)
+                   :edn (pr-str details)
+                   :json (json/write-value-as-string details)
+                   :string (string-output [] details options)
+                   (string-output [] details options)))))))
 
 (defn grep [query-string files-pattern options]
   (let [dictionary [(merge {:text            query-string
@@ -92,15 +113,23 @@
                             :stemmer         :english}
                            options)]
         highlighter-fn (lucene/highlighter dictionary)]
-    (if files-pattern
-      (doseq [path (fs/get-files files-pattern options)]
-        (with-open [rdr (io/reader path)]
-          (match-lines highlighter-fn path (line-seq rdr) options)))
-      (when (.ready ^Reader *in*)
-        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)))))
+    (if (:whole-files options)
+      (multiline-score (lm/multi-highlighter dictionary)
+                       (fs/get-files files-pattern options)
+                       options)
+      (if files-pattern
+        (doseq [path (fs/get-files files-pattern options)]
+          (with-open [rdr (io/reader path)]
+            (match-lines highlighter-fn path (line-seq rdr) options)))
+        (when (.ready ^Reader *in*)
+          (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options))))))
 
 (comment
   (lmgrep.grep/grep "opt" "**.md" {:format :edn})
+
+  (lmgrep.grep/grep "main" "**.md" {:tokenizer   :letter
+                                    :with-score  true
+                                    :whole-files true})
 
   (time (lmgrep.grep/grep "opt" "**.class" {:format            :edn
                                             :skip-binary-files true})))
