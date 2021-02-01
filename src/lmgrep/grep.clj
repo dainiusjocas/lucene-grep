@@ -94,10 +94,14 @@
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
       (doseq [path (fs/get-files files-pattern options)]
-        (with-open [rdr (io/reader path)]
-          (match-lines highlighter-fn path (line-seq rdr) options)))
+        (if (:split options)
+          (with-open [rdr (io/reader path)]
+            (match-lines highlighter-fn path (line-seq rdr) options))
+          (match-lines highlighter-fn path [(slurp path)] options)))
       (when (.ready ^Reader *in*)
-        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)))))
+        (if (:split options)
+          (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)
+          (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options))))))
 
 (comment
   (lmgrep.grep/grep "opt" "**.md" {:format :edn})

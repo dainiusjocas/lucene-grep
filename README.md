@@ -100,6 +100,7 @@ Supported options:
       --post-tags POST_TAGS                    A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
       --excludes EXCLUDES                      A GLOB that filters out files that were matched with a GLOB
       --skip-binary-files                      If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --[no-]split                             If a file (or STDIN) should be split by newline.
   -h, --help
 ```
 
