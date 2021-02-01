@@ -1,5 +1,5 @@
 # lucene-grep
-Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_7_0/monitor/index.html) compiled with GraalVM native-image.
+Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_2_0/monitor/index.html) compiled with GraalVM native-image.
 
 ## Features
 
