@@ -8,6 +8,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Stable Clojure release 1.10.2
 - Remove redundant options from native-image building script 
+- Flag to search in whole files
 
 ## v2021.01.24
 
