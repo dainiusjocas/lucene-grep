@@ -83,7 +83,7 @@
                    :string (string-output highlights details options)
                    (string-output highlights details options)))))))
 
-(defn grep [query-string files-pattern options]
+(defn grep [query-string files-pattern files options]
   (let [dictionary [(merge {:text            query-string
                             :case-sensitive? false
                             :ascii-fold?     true
@@ -93,7 +93,7 @@
                            options)]
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
-      (doseq [path (fs/get-files files-pattern options)]
+      (doseq [path (concat (fs/get-files files-pattern options) files)]
         (if (:split options)
           (with-open [rdr (io/reader path)]
             (match-lines highlighter-fn path (line-seq rdr) options))
