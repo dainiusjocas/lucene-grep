@@ -7,6 +7,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ### Changed
 
 - Accepts multiple files (#30)
+- A proper static binary builder Docker container
 - WordDelimiterGraphFilter added as an optional filter
 
 ## v2021.02.02
