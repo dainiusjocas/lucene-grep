@@ -64,12 +64,9 @@
     :default false]
    [nil "--[no-]split" "If a file (or STDIN) should be split by newline."
     :default true]
-   ;[nil "--slop SLOP" "How far can be words from each other"
-   ; :parse-fn #(Integer/parseInt %)
-   ; :default 0]
-   ;[nil "--in-order? IN_ORDER" "Should the phrase be ordered in matches with a non-zero slop"
-   ; :parse-fn #(Boolean/parseBoolean %)
-   ; :default false]
+   [nil "--word-delimiter-graph-filter WDGF" "WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html"
+    :parse-fn #(Integer/parseInt %)
+    :default 0]
    ["-h" "--help"]])
 
 (defn handle-args [args]

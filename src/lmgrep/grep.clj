@@ -84,12 +84,13 @@
                    (string-output highlights details options)))))))
 
 (defn grep [query-string files-pattern files options]
-  (let [dictionary [(merge {:text            query-string
-                            :case-sensitive? false
-                            :ascii-fold?     true
-                            :stem?           true
-                            :tokenizer       :standard
-                            :stemmer         :english}
+  (let [dictionary [(merge {:text                        query-string
+                            :case-sensitive?             false
+                            :ascii-fold?                 true
+                            :stem?                       true
+                            :tokenizer                   :standard
+                            :stemmer                     :english
+                            :word-delimiter-graph-filter 0}
                            options)]
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
@@ -104,7 +105,7 @@
           (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options))))))
 
 (comment
-  (lmgrep.grep/grep "opt" "**.md" {:format :edn})
+  (lmgrep.grep/grep "opt" "**.md" nil {:format :edn})
 
-  (time (lmgrep.grep/grep "opt" "**.class" {:format            :edn
+  (time (lmgrep.grep/grep "opt" "**.class" nil {:format            :edn
                                             :skip-binary-files true})))
