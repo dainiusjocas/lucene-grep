@@ -1,14 +1,16 @@
-FROM ghcr.io/graalvm/graalvm-ce:java11-21.0.0 as BUILDER
+FROM findepi/graalvm:21.0.0-java11-native as BUILDER
 
-ENV GRAALVM_HOME=$JAVA_HOME
+ENV GRAALVM_HOME=/graalvm
+ENV JAVA_HOME=/graalvm
 
-RUN gu install native-image \
-    && curl -O https://download.clojure.org/install/linux-install-1.10.1.727.sh \
-    && chmod +x linux-install-1.10.1.727.sh \
-    && ./linux-install-1.10.1.727.sh \
-    && rm linux-install-1.10.1.727.sh
+ENV CLOJURE_VERSION=1.10.2.774
 
-RUN microdnf install -y git maven
+RUN apt-get install -y curl git
+
+RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.sh \
+    && chmod +x linux-install-$CLOJURE_VERSION.sh \
+    && ./linux-install-$CLOJURE_VERSION.sh \
+    && rm linux-install-$CLOJURE_VERSION.sh
 
 RUN git clone https://github.com/gunnarmorling/search.morling.dev.git
 RUN (cd search.morling.dev && sh mvnw install || true)
