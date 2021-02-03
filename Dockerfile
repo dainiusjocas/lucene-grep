@@ -1,4 +1,4 @@
-FROM findepi/graalvm:java11-native as BUILDER
+FROM findepi/graalvm:21.0.0-java11-native as BUILDER
 
 ENV GRAALVM_HOME=/graalvm
 ENV JAVA_HOME=/graalvm
