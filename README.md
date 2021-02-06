@@ -88,19 +88,20 @@ TIP: a GLOB pattern is treated as recursive if it contains "**", otherwise GLOB 
 Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-      --tokenizer TOKENIZER                    Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
-      --case-sensitive? CASE_SENSITIVE  false  If text should be case sensitive
-      --ascii-fold? ASCII_FOLDED        true   If text should be ascii folded
-      --stem? STEMMED                   true   If text should be stemmed
-      --stemmer STEMMER                        Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
-      --with-score                             If the matching score should be computed
-      --format FORMAT                          How the output should be formatted, one of: [edn json string]
-      --template TEMPLATE                      The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
-      --pre-tags PRE_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --post-tags
-      --post-tags POST_TAGS                    A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
-      --excludes EXCLUDES                      A GLOB that filters out files that were matched with a GLOB
-      --skip-binary-files                      If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
-      --[no-]split                             If a file (or STDIN) should be split by newline.
+      --tokenizer TOKENIZER                      Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
+      --case-sensitive? CASE_SENSITIVE    false  If text should be case sensitive
+      --ascii-fold? ASCII_FOLDED          true   If text should be ascii folded
+      --stem? STEMMED                     true   If text should be stemmed
+      --stemmer STEMMER                          Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --with-score                               If the matching score should be computed
+      --format FORMAT                            How the output should be formatted, one of: [edn json string]
+      --template TEMPLATE                        The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
+      --pre-tags PRE_TAGS                        A string that the highlighted text is wrapped in, use in conjunction with --post-tags
+      --post-tags POST_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
+      --excludes EXCLUDES                        A GLOB that filters out files that were matched with a GLOB
+      --skip-binary-files                        If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --[no-]split                               If a file (or STDIN) should be split by newline.
+      --word-delimiter-graph-filter WDGF  0      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
   -h, --help
 ```
 
@@ -248,6 +249,24 @@ The main thing to understand is that scoring is for every line separately in the
 Another consideration is that scoring is summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
 
 Each individual score is BM25 which is default in Lucene.
+
+## WordDelimiterGraphFilter
+
+Using this filter might help to tokenize text is various ways, e.g.:
+
+```shell
+echo "test class" | ./lmgrep "TestClass" --word-delimiter-graph-filter=99
+=>
+*STDIN*:1:test class
+```
+
+```shell
+echo "TestClass" | ./lmgrep "test class" --word-delimiter-graph-filter=99
+=>
+*STDIN*:1:TestClass
+```
+
+The number 99 is a sum of options as described [here](https://lucene.apache.org/core/7_4_0/analyzers-common/constant-values.html#org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.CATENATE_ALL). 
 
 ## Future work
 
