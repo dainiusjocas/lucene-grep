@@ -83,14 +83,16 @@
                    :string (string-output highlights details options)
                    (string-output highlights details options)))))))
 
+(def default-text-analysis
+  {:case-sensitive?             false
+   :ascii-fold?                 true
+   :stem?                       true
+   :tokenizer                   :standard
+   :stemmer                     :english
+   :word-delimiter-graph-filter 0})
+
 (defn grep [query-string files-pattern files options]
-  (let [dictionary [(merge {:text            query-string
-                            :case-sensitive? false
-                            :ascii-fold?     true
-                            :stem?           true
-                            :tokenizer       :standard
-                            :stemmer         :english}
-                           options)]
+  (let [dictionary [(merge default-text-analysis (assoc options :text query-string))]
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
       (doseq [path (concat (fs/get-files files-pattern options) files)]
@@ -104,7 +106,7 @@
           (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options))))))
 
 (comment
-  (lmgrep.grep/grep "opt" "**.md" {:format :edn})
+  (lmgrep.grep/grep "opt" "**.md" nil {:format :edn})
 
-  (time (lmgrep.grep/grep "opt" "**.class" {:format            :edn
+  (time (lmgrep.grep/grep "opt" "**.class" nil {:format            :edn
                                             :skip-binary-files true})))

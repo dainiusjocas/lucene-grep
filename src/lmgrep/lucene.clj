@@ -1,8 +1,8 @@
 (ns lmgrep.lucene
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
-            [beagle.monitor :as monitor]
-            [beagle.text-analysis :as text-analysis])
+            [lmgrep.lucene.monitor :as monitor]
+            [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (org.apache.lucene.monitor MonitorQuery Monitor HighlightsMatch HighlightsMatch$Hit ScoringMatch)
            (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.document Document Field FieldType)
@@ -39,12 +39,11 @@
 (defn dict-entry->monitor-queries [{:keys [id text meta type] :as dict-entry} default-analysis-conf idx]
   (try
     (let [query-id (or id (str idx))
-          metadata (prepare-metadata type meta)]
+          metadata (prepare-metadata type meta)
+          field-name (text-analysis/get-field-name dict-entry default-analysis-conf)
+          monitor-analyzer (text-analysis/get-string-analyzer dict-entry default-analysis-conf)]
       (MonitorQuery. query-id
-                     (.parse (QueryParser.
-                               (text-analysis/get-field-name dict-entry default-analysis-conf)
-                               (text-analysis/get-string-analyzer dict-entry default-analysis-conf))
-                             text)
+                     (.parse (QueryParser. field-name monitor-analyzer) text)
                      text
                      metadata))
     (catch ParseException e
@@ -92,5 +91,9 @@
 
 (comment
   ((highlighter [{:text "text"}] {}) "foo text bar")
+
+  ((highlighter [{:text "best class"
+                  :case-sensitive? false
+                  :word-delimiter-graph-filter (+ 1 2 32 64)}] {}) "foo text bar BestClass fooo name")
 
   ((highlighter [{:text "text bar"}]) "foo text bar one more time text with bar text" {:with-score true}))

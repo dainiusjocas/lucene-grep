@@ -16,5 +16,4 @@ pom.xml.asc
 .clj-kondo/
 .env
 .lsp
-lmgrep
-lmgrep-*
+lmgrep-*.zip
