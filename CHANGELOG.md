@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.02.06
+
 ### Changed
 
 - Accepts multiple files (#30)
