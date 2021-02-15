@@ -24,7 +24,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main --lint src test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.01.20"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.02.13"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :uberjar
   {:replace-deps {seancorfield/depstar {:mvn/version "2.0.165"}}
