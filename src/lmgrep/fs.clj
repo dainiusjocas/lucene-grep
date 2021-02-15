@@ -19,6 +19,9 @@
     (remove binary-file? file-paths)
     file-paths))
 
+(defn filter-files [files]
+  (filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
+
 ; TODO: Support regex pattern
 (defn get-files [^String glob options]
   (let [glob-file (io/file glob)
