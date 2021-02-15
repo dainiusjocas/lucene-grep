@@ -30,4 +30,4 @@ lint:
 
 .PHONY: check-deps
 check-deps:
-	clojure -Sdeps '{:deps {antq/antq {:mvn/version "RELEASE"}}}' -m antq.core
+	clojure -Sdeps '{:deps {antq/antq {:mvn/version "RELEASE"}}}' -M -m antq.core
