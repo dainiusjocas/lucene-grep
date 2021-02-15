@@ -95,7 +95,8 @@
   (let [dictionary [(merge default-text-analysis (assoc options :text query-string))]
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
-      (doseq [path (concat (fs/get-files files-pattern options) files)]
+      (doseq [path (concat (fs/get-files files-pattern options)
+                           (fs/filter-files files))]
         (if (:split options)
           (with-open [rdr (io/reader path)]
             (match-lines highlighter-fn path (line-seq rdr) options))

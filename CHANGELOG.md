@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### Fixed/enhanced
+
+- Errors when matching directory
+
 ## v2021.02.06
 
 ### Changed
