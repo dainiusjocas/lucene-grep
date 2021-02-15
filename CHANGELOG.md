@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### New
+
+- Display file path as hyperlinks with the `--hyperlink` flag
+
 ### Fixed/enhanced
 
 - Errors when matching directory

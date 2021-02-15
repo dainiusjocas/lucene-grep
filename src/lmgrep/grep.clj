@@ -12,6 +12,13 @@
 (defn purple-text [text]
   (str \ "[0;35m" text \ "[0m"))
 
+(def SEP ";")
+(def BEL "\u0007")
+(def OSC "\u001B]")
+
+(defn link [text url]
+  (str OSC "8" SEP SEP url BEL text OSC "8" SEP SEP BEL))
+
 (defn green-text [text]
   (str \ "[0;32m" text \ "[0m"))
 
@@ -44,22 +51,27 @@
                      (long (max (:begin-offset next-ann)
                                 (:end-offset ann)))))))))))
 
+(defn file-string [file options]
+  (if (:hyperlink options)
+    (link file (str (.toURI (io/file file))))
+    file))
+
 (defn string-output [highlights {:keys [file line-number line score]} options]
   (if-let [template (:template options)]
     (-> template
-        (str/replace "{{file}}" (or file ""))
+        (str/replace "{{file}}" (or (file-string file options) ""))
         (str/replace "{{line-number}}" (str line-number))
         (str/replace "{{highlighted-line}}" (highlight-line line highlights options))
         (str/replace "{{line}}" line)
         (str/replace "{{score}}" (str score)))
     (if score
       (format "%s:%s:%s:%s"
-              (purple-text (or file "*STDIN*"))
+              (purple-text (or (file-string file options) "*STDIN*"))
               (green-text line-number)
               (purple-text score)
               (highlight-line line highlights options))
       (format "%s:%s:%s"
-              (purple-text (or file "*STDIN*"))
+              (purple-text (or (file-string file options) "*STDIN*"))
               (green-text line-number)
               (highlight-line line highlights options)))))
 
