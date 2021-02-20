@@ -3,7 +3,7 @@ name: clj-kondo checks
 on: [push]
 
 jobs:
-  self-lint:
+  linting:
 
     runs-on: ubuntu-latest
 
