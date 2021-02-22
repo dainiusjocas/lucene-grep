@@ -11,8 +11,7 @@
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:git/url     "https://github.com/clojure/tools.deps.alpha.git"
-                                               :mvn/version "0.9.871"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.9.871"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
