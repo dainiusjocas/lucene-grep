@@ -199,13 +199,6 @@ Requirements:
 - GNU Make
 - Docker (just for rebuilding the linux native image).
 
-Install the Quarkus Lucene extension from source:
-```shell
-git clone https://github.com/gunnarmorling/search.morling.dev.git
-cd search.morling.dev/quarkus-lucene-extension
-mvn install
-```
-
 Build executable for your platform:
 ```shell
 make build
