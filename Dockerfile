@@ -12,9 +12,6 @@ RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.
     && ./linux-install-$CLOJURE_VERSION.sh \
     && rm linux-install-$CLOJURE_VERSION.sh
 
-RUN git clone https://github.com/gunnarmorling/search.morling.dev.git
-RUN (cd search.morling.dev && sh mvnw install || true)
-
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
