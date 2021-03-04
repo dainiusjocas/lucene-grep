@@ -2,6 +2,12 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
+## Unreleased
+
+## Fixed/enhanced
+
+- Use the `io.quarkiverse.lucene/quarkus-lucene` extension instead of building from source
+
 ## v2021.02.28
 
 ### New
