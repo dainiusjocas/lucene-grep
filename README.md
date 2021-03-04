@@ -7,6 +7,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_2_0
 - Supports various text tokenizers
 - Supports various stemmers for multiple languages
 - Text output is colored or separated with customizable tags
+- Supports printing file names as hyperlinks for click to open (check support for your terminal [here](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda))
 - Text output supports templates
 - Scoring mode (disables highlighting for now)
 - Output can be formatted as JSON of EDN
