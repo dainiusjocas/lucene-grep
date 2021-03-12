@@ -18,6 +18,7 @@
       (System/exit 1))
     (when (or (:help options) (zero? (count arguments)))
       (print-summary-msg summary)
-      (System/exit 1))
+      (when-not (:help options)
+        (System/exit 1)))
     (grep/grep lucene-query file-pattern files options))
   (System/exit 0))

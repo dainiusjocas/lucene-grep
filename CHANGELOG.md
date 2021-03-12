@@ -7,6 +7,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## Fixed/enhanced
 
 - Use the `io.quarkiverse.lucene/quarkus-lucene` extension instead of building from source
+- Exit status should be 0 when -h is specified
 
 ## v2021.02.28
 
