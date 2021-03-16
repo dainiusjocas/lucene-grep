@@ -11,7 +11,7 @@
 
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]
-         [lucene-query file-pattern & files] :arguments} (cli/handle-args args)]
+         [lucene-query file-pattern & files :as positional-arguments] :arguments} (cli/handle-args args)]
     (when (seq errors)
       (println "Errors:" errors)
       (print-summary-msg summary)
@@ -20,5 +20,7 @@
       (print-summary-msg summary)
       (when-not (:help options)
         (System/exit 1)))
-    (grep/grep lucene-query file-pattern files options))
+    (if-let [lucene-queries (seq (:query options))]
+      (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
+      (grep/grep [lucene-query] file-pattern files options)))
   (System/exit 0))

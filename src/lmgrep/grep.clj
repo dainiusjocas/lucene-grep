@@ -27,29 +27,30 @@
   [line-str highlights options]
   (if (:with-score options)
     line-str
-    (when (seq highlights)
-      (let [highlight-fn (if (and (string? (:pre-tags options)) (string? (:post-tags options)))
-                           #(str (:pre-tags options) % (:post-tags options))
-                           red-text)]
-        (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
-               acc ""
-               last-position 0]
-          (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
-                highlight (let [text-to-highlight (subs line-str (:begin-offset ann) (:end-offset ann))]
-                            (if (< (:begin-offset ann) last-position)
-                              ; adjusting highlight text for overlap
-                              (highlight-fn (subs text-to-highlight (- last-position (:begin-offset ann))))
-                              (highlight-fn text-to-highlight)))
-                suffix (if (nil? next-ann)
-                         (subs line-str (:end-offset ann))
-                         (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
-                                                               (:end-offset ann))))]
-            (if (nil? next-ann)
-              (str acc prefix highlight suffix)
-              (recur ann-pairs
-                     (str acc prefix highlight suffix)
-                     (long (max (:begin-offset next-ann)
-                                (:end-offset ann)))))))))))
+    (let [highlights (sort-by :begin-offset highlights)]
+      (when (seq highlights)
+        (let [highlight-fn (if (and (string? (:pre-tags options)) (string? (:post-tags options)))
+                             #(str (:pre-tags options) % (:post-tags options))
+                             red-text)]
+          (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
+                 acc ""
+                 last-position 0]
+            (let [prefix (subs line-str last-position (max last-position (:begin-offset ann)))
+                  highlight (let [text-to-highlight (subs line-str (:begin-offset ann) (:end-offset ann))]
+                              (if (< (:begin-offset ann) last-position)
+                                ; adjusting highlight text for overlap
+                                (highlight-fn (subs text-to-highlight (- last-position (:begin-offset ann))))
+                                (highlight-fn text-to-highlight)))
+                  suffix (if (nil? next-ann)
+                           (subs line-str (:end-offset ann))
+                           (subs line-str (:end-offset ann) (max (:begin-offset next-ann)
+                                                                 (:end-offset ann))))]
+              (if (nil? next-ann)
+                (str acc prefix highlight suffix)
+                (recur ann-pairs
+                       (str acc prefix highlight suffix)
+                       (long (max (:begin-offset next-ann)
+                                  (:end-offset ann))))))))))))
 
 (defn file-string [file options]
   (if (:hyperlink options)
@@ -103,8 +104,9 @@
    :stemmer                     :english
    :word-delimiter-graph-filter 0})
 
-(defn grep [query-string files-pattern files options]
-  (let [dictionary [(merge default-text-analysis (assoc options :text query-string))]
+(defn grep [lucene-query-strings files-pattern files options]
+  (let [analysis-options (merge default-text-analysis options)
+        dictionary (map (fn [lqs] (assoc analysis-options :text lqs)) lucene-query-strings)
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
       (doseq [path (concat (fs/get-files files-pattern options)
@@ -119,7 +121,9 @@
           (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options))))))
 
 (comment
-  (lmgrep.grep/grep "opt" "**.md" nil {:format :edn})
+  (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
 
-  (time (lmgrep.grep/grep "opt" "**.class" nil {:format            :edn
-                                            :skip-binary-files true})))
+  (lmgrep.grep/grep ["test" "opt"] "**.md" nil {:split true})
+
+  (time (lmgrep.grep/grep ["opt"] "**.class" nil {:format            :edn
+                                                  :skip-binary-files true})))
