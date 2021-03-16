@@ -22,7 +22,7 @@ Startup and memory as measured with `time` utility on my Linux laptop:
 <img src="docs/time-memory-usage.png"
 alt="Startup time and memory usage" title="Startup time and memory usage" />
 
-The output has a format: `[FILE_PATH]:[LINE_NUMBER]:[LINE_WITH_A_COLORED_HIGHLIGHT]`
+The default output has a format: `[FILE_PATH]:[LINE_NUMBER]:[LINE_WITH_A_COLORED_HIGHLIGHT]`
 
 NOTE: Not compatible with `grep`. When compared with `grep` the functionality is limited in most aspects.
 
@@ -78,7 +78,15 @@ We can exclude files also with a GLOB pattern.
 ```shell
 ./lmgrep "lucene" "**/*.md" --excludes="README.md"
 ```
-TIP: a GLOB pattern is treated as recursive if it contains "**", otherwise GLOB matches only on file name.
+TIP: a GLOB pattern is treated as recursive if it contains "**", otherwise the GLOB is matched only against the file name.
+
+Provide multiple queries:
+```shell
+echo "Lucene is\n awesome" |  lmgrep --query=lucene --query=awesome
+=>
+*STDIN*:1:Lucene is
+*STDIN*:2: awesome
+```
 
 ## Deviations from Lucene query syntax
 
@@ -89,6 +97,7 @@ TIP: a GLOB pattern is treated as recursive if it contains "**", otherwise GLOB 
 Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
+  -q, --query QUERY                              Lucene query string(s). If specified then all the positional arguments are interpreted as files.
       --tokenizer TOKENIZER                      Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE    false  If text should be case sensitive
       --ascii-fold? ASCII_FOLDED          true   If text should be ascii folded
@@ -232,7 +241,7 @@ make lint
 
 When `{{highlighted-line}}` is used then `--pre-tags` and `--post-tags` options are available, e.g.:
 ```shell
-echo "some text to to match" | clojure -M -m lmgrep.core "text" --pre-tags="<em>" --post-tags="</em>" --template="{{highlighted-line}}"
+echo "some text to to match" | lmgrep "text" --pre-tags="<em>" --post-tags="</em>" --template="{{highlighted-line}}"
 =>
 some <em>text</em> to to match
 ```
