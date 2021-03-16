@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### New
+
+- Allows specifying multiple queries with the `--query` flags.
+
 ## Fixed/enhanced
 
 - Use the `io.quarkiverse.lucene/quarkus-lucene` extension instead of building from source
