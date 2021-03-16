@@ -16,7 +16,7 @@
       (println "Errors:" errors)
       (print-summary-msg summary)
       (System/exit 1))
-    (when (or (:help options) (zero? (count arguments)))
+    (when (or (:help options) (and (zero? (count arguments)) (empty? (:query options))))
       (print-summary-msg summary)
       (when-not (:help options)
         (System/exit 1)))
