@@ -12,6 +12,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Use the `io.quarkiverse.lucene/quarkus-lucene` extension instead of building from source
 - Exit status should be 0 when -h is specified
+- Wait for the input from STDIN
 
 ## v2021.02.28
 

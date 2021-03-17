@@ -5,7 +5,7 @@
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene])
-  (:import (java.io BufferedReader Reader)))
+  (:import (java.io BufferedReader)))
 
 (defn compact [m] (into {} (remove (comp nil? second) m)))
 
