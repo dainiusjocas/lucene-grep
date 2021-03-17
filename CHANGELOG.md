@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.03.17
+
 ### New
 
 - Allows specifying multiple queries with the `--query` flags.
