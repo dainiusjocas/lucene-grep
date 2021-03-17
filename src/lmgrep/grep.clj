@@ -46,10 +46,9 @@
           (with-open [rdr (io/reader path)]
             (match-lines highlighter-fn path (line-seq rdr) options))
           (match-lines highlighter-fn path [(slurp path)] options)))
-      (when (.ready ^Reader *in*)
-        (if (:split options)
-          (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)
-          (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options))))))
+      (if (:split options)
+        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)
+        (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options)))))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
