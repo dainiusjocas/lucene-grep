@@ -41,3 +41,17 @@
                         (str/trim
                           (with-out-str
                             (grep/grep queries nil nil options))))))))
+
+(deftest grepping-multiple-queries-from-file
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        queries []
+        options {:split true
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :template "{{highlighted-line}}"
+                 :queries-file "test/resources/queries.json"}]
+    (is (= "The quick brown >fox< jumps over the lazy >dog<"
+           (with-in-str text-from-stdin
+                        (str/trim
+                          (with-out-str
+                            (grep/grep queries nil nil options))))))))

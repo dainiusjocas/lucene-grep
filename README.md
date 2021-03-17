@@ -88,6 +88,25 @@ echo "Lucene is\n awesome" |  lmgrep --query=lucene --query=awesome
 *STDIN*:2: awesome
 ```
 
+Provide Lucene queries in a file:
+```bash
+echo "The quick brown fox jumps over the lazy dog" | ./lmgrep --queries-file=test/resources/queries.json --format=json
+=>
+{"line-number":1,"line":"The quick brown fox jumps over the lazy dog"}
+```
+
+The contents of the Lucene queries file is in JSON format, e.g.:
+```json
+[
+  {
+    "query": "fox"
+  },
+  {
+    "query": "dog"
+  }
+]
+```
+
 ## Deviations from Lucene query syntax
 
 - The field names are not supported because there are no field names in a line of text.
@@ -98,6 +117,7 @@ Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
   -q, --query QUERY                              Lucene query string(s). If specified then all the positional arguments are interpreted as files.
+      --queries-file QUERIES_FILE                A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
       --tokenizer TOKENIZER                      Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE    false  If text should be case sensitive
       --ascii-fold? ASCII_FOLDED          true   If text should be ascii folded
