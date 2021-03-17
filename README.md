@@ -107,6 +107,8 @@ The contents of the Lucene queries file is in JSON format, e.g.:
 ]
 ```
 
+NOTE: when the Lucene queries are specified as a positional argument or with `-q` or `--query` params or with the `--queries-file`, all the queries are concatenated into one list.
+
 ## Deviations from Lucene query syntax
 
 - The field names are not supported because there are no field names in a line of text.
