@@ -5,7 +5,8 @@
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene])
-  (:import (java.io BufferedReader)))
+  (:import (java.io BufferedReader File)
+           (com.fasterxml.jackson.databind ObjectMapper)))
 
 (defn compact [m] (into {} (remove (comp nil? second) m)))
 
@@ -35,9 +36,26 @@
    :stemmer                     :english
    :word-delimiter-graph-filter 0})
 
+(def ^ObjectMapper mapper (json/object-mapper {:decode-key-fn true}))
+
+(defn read-dictionary-from-file [file-path]
+  (let [^File input-file (io/file file-path)]
+    (if (.isFile input-file)
+      (json/read-value (slurp input-file) mapper)
+      (throw (Exception. (format "File '%s' doesn't exist." file-path))))))
+
 (defn grep [lucene-query-strings files-pattern files options]
   (let [analysis-options (merge default-text-analysis options)
-        dictionary (map (fn [lqs] (assoc analysis-options :text lqs)) lucene-query-strings)
+        dictionary (concat
+                     (map (fn [lqs] (assoc analysis-options :text lqs)) lucene-query-strings)
+                     (when-let [queries-file-path (:queries-file options)]
+                       (map (fn [dictionary-entry]
+                              (merge default-text-analysis
+                                     ;; TODO: change dictionary entry :text -> :query
+                                     (-> dictionary-entry
+                                         (assoc :text (:query dictionary-entry))
+                                         (dissoc :query))))
+                            (read-dictionary-from-file queries-file-path))))
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
       (doseq [path (concat (fs/get-files files-pattern options)

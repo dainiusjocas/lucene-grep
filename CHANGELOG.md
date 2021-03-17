@@ -7,6 +7,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ### New
 
 - Allows specifying multiple queries with the `--query` flags.
+- `--queries-file` flag to provide a JSON file with Lucene queries.
 
 ## Fixed/enhanced
 

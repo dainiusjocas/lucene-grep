@@ -41,6 +41,8 @@
     "Lucene query string(s). If specified then all the positional arguments are interpreted as files."
     :multi true
     :update-fn conj]
+   [nil "--queries-file QUERIES_FILE"
+    "A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files."]
    [nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? tokenizers %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
@@ -82,6 +84,7 @@
   (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"])
   (lmgrep.cli/handle-args ["test"])
   (lmgrep.cli/handle-args ["test" "-q" "foo" "--query=bar"])
+  (lmgrep.cli/handle-args ["test" "-q" "foo" "--queries-file=README.md"])
   (lmgrep.cli/handle-args ["--format=edn"])
   (lmgrep.cli/handle-args ["--excludes=**.edn"])
   (lmgrep.cli/handle-args ["--with-score"]))
