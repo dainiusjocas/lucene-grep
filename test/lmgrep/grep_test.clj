@@ -55,3 +55,15 @@
                         (str/trim
                           (with-out-str
                             (grep/grep queries nil nil options))))))))
+
+(deftest grepping-when-no-match-with-flag-to-println-empty-line
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "foo"
+        options {:split true
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :with-empty-lines true
+                 :template "{{highlighted-line}}"}]
+    (is (= "\n" (with-in-str text-from-stdin
+                             (with-out-str
+                               (grep/grep [query] nil nil options)))))))

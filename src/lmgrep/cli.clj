@@ -68,6 +68,8 @@
    [nil "--excludes EXCLUDES" "A GLOB that filters out files that were matched with a GLOB"]
    [nil "--skip-binary-files" "If a file that is detected to be binary should be skipped. Available for Linux and MacOS only."
     :default false]
+   [nil "--with-empty-lines" "When provided on the input that doesn't match write an empty line to STDOUT."
+    :default false]
    [nil "--[no-]split" "If a file (or STDIN) should be split by newline."
     :default true]
    [nil "--hyperlink" "If a file should be printed as hyperlinks."
