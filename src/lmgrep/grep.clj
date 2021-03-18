@@ -17,7 +17,7 @@
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
-    (when-let [highlights (seq (highlighter-fn line-str (select-keys options [:with-score])))]
+    (if-let [highlights (seq (highlighter-fn line-str (select-keys options [:with-score])))]
       (let [details (compact {:file        file-path
                               :line-number (inc line-number)
                               :line        line-str
@@ -26,7 +26,9 @@
                    :edn (pr-str details)
                    :json (json/write-value-as-string details)
                    :string (formatter/string-output highlights details options)
-                   (formatter/string-output highlights details options)))))))
+                   (formatter/string-output highlights details options))))
+      (when (:with-empty-lines options)
+        (println)))))
 
 (def default-text-analysis
   {:case-sensitive?             false

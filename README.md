@@ -132,6 +132,7 @@ Supported options:
       --post-tags POST_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
       --excludes EXCLUDES                        A GLOB that filters out files that were matched with a GLOB
       --skip-binary-files                        If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --with-empty-lines                         When provided on the input that does not match write an empty line to STDOUT.
       --[no-]split                               If a file (or STDIN) should be split by newline.
       --hyperlink                                If a file should be printed as hyperlinks.
       --word-delimiter-graph-filter WDGF  0      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
