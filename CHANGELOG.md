@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.03.18
+
 ## Fixed/enhanced
 
 - Handle the zero queries input
