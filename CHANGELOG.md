@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## New
+
+- Flag to force printing an empty line on no match 
+
 ## v2021.03.18
 
 ## Fixed/enhanced
