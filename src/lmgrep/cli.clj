@@ -70,6 +70,8 @@
     :default false]
    [nil "--with-empty-lines" "When provided on the input that doesn't match write an empty line to STDOUT."
     :default false]
+   [nil "--with-scored-highlights" "ALPHA: Instructs to highlight with scoring."
+    :default false]
    [nil "--[no-]split" "If a file (or STDIN) should be split by newline."
     :default true]
    [nil "--hyperlink" "If a file should be printed as hyperlinks."
