@@ -1,6 +1,7 @@
 (ns lmgrep.grep-test
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
+            [jsonista.core :as json]
             [lmgrep.formatter :as formatter]
             [lmgrep.grep :as grep]
             [lmgrep.lucene :as lucene]))
@@ -31,6 +32,25 @@
                         (str/trim
                           (with-out-str
                             (grep/grep [query] nil nil options))))))))
+
+(deftest grepping-stdin-with-detailed-json-output
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "fox"
+        options {:format :json :with-details true}]
+    (is (= {:line-number 1
+            :line        text-from-stdin
+            :highlights  [{:type          "QUERY"
+                           :dict-entry-id "0"
+                           :meta          {}
+                           :begin-offset  16
+                           :end-offset    19
+                           :query         query}]}
+           (json/read-value
+             (with-in-str text-from-stdin
+                         (str/trim
+                           (with-out-str
+                             (grep/grep [query] nil nil options))))
+             json/keyword-keys-object-mapper)))))
 
 (deftest grepping-multiple-queries
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"

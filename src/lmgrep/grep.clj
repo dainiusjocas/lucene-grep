@@ -14,6 +14,11 @@
   (when-let [scores (seq (remove nil? (map :score highlights)))]
     (reduce + scores)))
 
+(defn printable-highlights [highlights]
+  (map (fn [h] (-> h
+                   (assoc :query (:text h))
+                   (dissoc :text))) highlights))
+
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
@@ -21,7 +26,10 @@
       (let [details (compact {:file        file-path
                               :line-number (inc line-number)
                               :line        line-str
-                              :score       (sum-score highlights)})]
+                              :score       (sum-score highlights)
+                              :highlights  (if (:with-details options)
+                                             (printable-highlights highlights)
+                                             nil)})]
         (println (case (:format options)
                    :edn (pr-str details)
                    :json (json/write-value-as-string details)
