@@ -1,0 +1,12 @@
+[
+  {
+    "id": "german_language",
+    "query": "doggies",
+    "stemmer": "german"
+  },
+  {
+    "id": "english_language",
+    "query": "doggies",
+    "stemmer": "english"
+  }
+]
