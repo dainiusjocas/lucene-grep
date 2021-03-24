@@ -22,7 +22,7 @@
 (defn match-lines [highlighter-fn file-path lines options]
   (doseq [[line-str line-number] (map (fn [line-str line-number] [line-str line-number])
                                       lines (range))]
-    (if-let [highlights (seq (highlighter-fn line-str (select-keys options [:with-score])))]
+    (if-let [highlights (seq (highlighter-fn line-str (select-keys options [:with-score :with-scored-highlights])))]
       (let [details (compact {:file        file-path
                               :line-number (inc line-number)
                               :line        line-str

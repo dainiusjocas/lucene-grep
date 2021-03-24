@@ -132,7 +132,8 @@ Supported options:
       --post-tags POST_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
       --excludes EXCLUDES                        A GLOB that filters out files that were matched with a GLOB
       --skip-binary-files                        If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
-      --with-empty-lines                         When provided on the input that doesn't match write an empty line to STDOUT.
+      --with-empty-lines                         When provided on the input that does not match write an empty line to STDOUT.
+      --with-scored-highlights                   ALPHA: Instructs to highlight with scoring.
       --[no-]split                               If a file (or STDIN) should be split by newline.
       --hyperlink                                If a file should be printed as hyperlinks.
       --with-details                             For JSON and EDN output adds raw highlights list.
