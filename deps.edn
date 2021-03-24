@@ -7,7 +7,7 @@
   org.apache.lucene/lucene-core        {:mvn/version "8.8.1"}
   org.apache.lucene/lucene-monitor     {:mvn/version "8.8.1"}
   metosin/jsonista                     {:mvn/version "0.3.1"}
-  lt.jocas/lucene-monitor-helpers      {:mvn/version "0.1.0"}
+  lt.jocas/lucene-monitor-helpers      {:mvn/version "0.1.1"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.2"}}
  :aliases
  {:dev
@@ -24,10 +24,10 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.03.03"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.03.22"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :uberjar
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.193"}}
+  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.206"}}
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot true}}
   :native
