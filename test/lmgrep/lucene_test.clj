@@ -1,6 +1,6 @@
 (ns lmgrep.lucene-test
   (:require [clojure.test :refer [deftest is testing]]
-            [lmgrep.grep :as grep]
+            [lmgrep.lucene.dictionary :as dictionary]
             [lmgrep.lucene :as lucene]))
 
 (deftest highlighter-details
@@ -15,7 +15,7 @@
     (let [text "foo text bar BestClass fooo name"
           query "best class"
           dictionary [(merge
-                        grep/default-text-analysis
+                        dictionary/default-text-analysis
                         {:text                        query
                          :word-delimiter-graph-filter (+ 1 2 32 64)})]]
       (is (= [{:begin-offset  13
