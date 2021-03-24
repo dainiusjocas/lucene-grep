@@ -54,18 +54,23 @@
       (json/read-value (slurp input-file) mapper)
       (throw (Exception. (format "File '%s' doesn't exist." file-path))))))
 
+(defn prepare-dictionary [lucene-query-strings options]
+  (let [analysis-options (merge default-text-analysis options)]
+    (concat
+      (map (fn [lqs] (assoc analysis-options :text lqs)) lucene-query-strings)
+      (when-let [queries-file-path (:queries-file options)]
+        (map (fn [dictionary-entry]
+               (merge default-text-analysis
+                      ;; TODO: change dictionary entry :text -> :query
+                      (-> dictionary-entry
+                          (assoc :text (:query dictionary-entry))
+                          (update :stemmer keyword)
+                          (update :tokenizer keyword)
+                          (dissoc :query))))
+             (read-dictionary-from-file queries-file-path))))))
+
 (defn grep [lucene-query-strings files-pattern files options]
-  (let [analysis-options (merge default-text-analysis options)
-        dictionary (concat
-                     (map (fn [lqs] (assoc analysis-options :text lqs)) lucene-query-strings)
-                     (when-let [queries-file-path (:queries-file options)]
-                       (map (fn [dictionary-entry]
-                              (merge default-text-analysis
-                                     ;; TODO: change dictionary entry :text -> :query
-                                     (-> dictionary-entry
-                                         (assoc :text (:query dictionary-entry))
-                                         (dissoc :query))))
-                            (read-dictionary-from-file queries-file-path))))
+  (let [dictionary (prepare-dictionary lucene-query-strings options)
         highlighter-fn (lucene/highlighter dictionary)]
     (if files-pattern
       (doseq [path (concat (fs/get-files files-pattern options)

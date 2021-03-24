@@ -137,6 +137,33 @@
                           (with-out-str
                             (grep/grep queries nil nil options))))))))
 
+(defn json-decode [str]
+  (if (str/blank? str)
+    ""
+    (json/read-value str json/keyword-keys-object-mapper)))
+
+(deftest grepping-multiple-queries-from-file-multilingual
+  (testing "german stemmer is different than german despite the fact that both dictionary entries are equal"
+    (let [text-from-stdin "The quick brown fox jumps over the lazy doggy"
+          queries []
+          options {:split        true
+                   :queries-file "test/resources/queries-multilingual.json"
+                   :format       :json
+                   :with-details true}]
+      (is (= {:highlights  [{:begin-offset  40
+                             :dict-entry-id "english_language"
+                             :end-offset    45
+                             :meta          {}
+                             :query         "doggies"
+                             :type          "QUERY"}]
+              :line        "The quick brown fox jumps over the lazy doggy"
+              :line-number 1}
+             (json-decode
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep queries nil nil options))))))))))
+
 (deftest grepping-when-no-match-with-flag-to-println-empty-line
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "foo"
