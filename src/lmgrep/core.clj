@@ -28,5 +28,7 @@
         (System/exit 0)))
     (if-let [lucene-queries (seq (:query options))]
       (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
-      (grep/grep [lucene-query] file-pattern files options)))
+      (if (:queries-file options)
+        (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
+        (grep/grep [lucene-query] file-pattern files options))))
   (System/exit 0))

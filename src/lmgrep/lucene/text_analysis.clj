@@ -120,23 +120,20 @@
       (k m2))
     (k m3)))
 
+(defn merged-conf [analysis-conf default-analysis-conf default-conf]
+  (->Conf
+    (three-way-merge :tokenizer default-conf default-analysis-conf analysis-conf)
+    (three-way-merge :case-sensitive? default-conf default-analysis-conf analysis-conf)
+    (three-way-merge :ascii-fold? default-conf default-analysis-conf analysis-conf)
+    (three-way-merge :stem? default-conf default-analysis-conf analysis-conf)
+    (three-way-merge :stemmer default-conf default-analysis-conf analysis-conf)
+    (three-way-merge :word-delimiter-graph-filter default-conf default-analysis-conf analysis-conf)))
+
 (defn ^Analyzer get-string-analyzer [analysis-conf default-analysis-conf]
-  (analyzer (->Conf
-              (three-way-merge :tokenizer default-conf default-analysis-conf analysis-conf)
-              (three-way-merge :case-sensitive? default-conf default-analysis-conf analysis-conf)
-              (three-way-merge :ascii-fold? default-conf default-analysis-conf analysis-conf)
-              (three-way-merge :stem? default-conf default-analysis-conf analysis-conf)
-              (three-way-merge :stemmer default-conf default-analysis-conf analysis-conf)
-              (three-way-merge :word-delimiter-graph-filter default-conf default-analysis-conf analysis-conf))))
+  (analyzer (merged-conf analysis-conf default-analysis-conf default-conf)))
 
 (defn ^String get-field-name [analysis-conf default-analysis-conf]
-  (field-name (->Conf
-                (three-way-merge :tokenizer default-conf default-analysis-conf analysis-conf)
-                (three-way-merge :case-sensitive? default-conf default-analysis-conf analysis-conf)
-                (three-way-merge :ascii-fold? default-conf default-analysis-conf analysis-conf)
-                (three-way-merge :stem? default-conf default-analysis-conf analysis-conf)
-                (three-way-merge :stemmer default-conf default-analysis-conf analysis-conf)
-                (three-way-merge :word-delimiter-graph-filter default-conf default-analysis-conf analysis-conf))))
+  (field-name (merged-conf analysis-conf default-analysis-conf default-conf)))
 
 (defn text->token-strings
   "Given a text and an analyzer returns a list of tokens as strings."
