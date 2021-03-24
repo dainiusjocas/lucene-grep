@@ -6,6 +6,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## New
 
+- Scored Highlights with a flag `--with-scored-highlights`
 - Flag to force printing an empty line on no match `--with-empty-lines`
 - Flag to output matching details, `--with-details`
 
