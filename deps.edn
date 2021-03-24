@@ -4,6 +4,7 @@
  {org.clojure/clojure                  {:mvn/version "1.10.3"}
   org.clojure/tools.cli                {:mvn/version "1.0.206"}
   org.clojure/tools.logging            {:mvn/version "1.1.0"}
+  org.clojure/core.async               {:mvn/version "1.3.610"}
   org.apache.lucene/lucene-core        {:mvn/version "8.8.1"}
   org.apache.lucene/lucene-monitor     {:mvn/version "8.8.1"}
   metosin/jsonista                     {:mvn/version "0.3.1"}
@@ -12,7 +13,7 @@
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.905"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.910"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -24,10 +25,10 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.03.22"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.03.31"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :uberjar
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.206"}}
+  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.211"}}
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot true}}
   :native
@@ -41,7 +42,7 @@
                 {:git/url    "https://github.com/taylorwood/clj.native-image.git"
                  :exclusions [commons-logging/commons-logging
                               org.slf4j/slf4j-nop]
-                 :sha        "f3e40672d5c543b80a2019c1f07b2d3fe785962c"}}}
+                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}
   :native-linux-static
   {:main-opts  ["-m" "clj.native-image" "lmgrep.core"
                 "--no-fallback"
@@ -54,4 +55,4 @@
                 {:git/url    "https://github.com/taylorwood/clj.native-image.git"
                  :exclusions [commons-logging/commons-logging
                               org.slf4j/slf4j-nop]
-                 :sha        "f3e40672d5c543b80a2019c1f07b2d3fe785962c"}}}}}
+                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}}}

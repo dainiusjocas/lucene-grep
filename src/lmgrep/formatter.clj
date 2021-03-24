@@ -39,23 +39,23 @@
     (ansi/link file (str (.toURI (io/file file))))
     file))
 
-(defn string-output [highlights {:keys [file line-number line score]} options]
+(defn string-output [highlights details options]
   (if-let [template (:template options)]
     (if (str/blank? template)
       ""
       (-> template
-          (str/replace "{{file}}" (or (file-string file options) ""))
-          (str/replace "{{line-number}}" (str line-number))
-          (str/replace "{{highlighted-line}}" (highlight-line line highlights options))
-          (str/replace "{{line}}" line)
-          (str/replace "{{score}}" (str score))))
-    (if score
+          (str/replace "{{file}}" (or (file-string (:file details) options) ""))
+          (str/replace "{{line-number}}" (str (:line-number details)))
+          (str/replace "{{highlighted-line}}" (highlight-line (:line details) highlights options))
+          (str/replace "{{line}}" (:line details))
+          (str/replace "{{score}}" (str (:score details)))))
+    (if (:score details)
       (format "%s:%s:%s:%s"
-              (ansi/purple-text (or (file-string file options) "*STDIN*"))
-              (ansi/green-text line-number)
-              (ansi/purple-text score)
-              (highlight-line line highlights options))
+              (ansi/purple-text (or (file-string (:file details) options) "*STDIN*"))
+              (ansi/green-text (:line-number details))
+              (ansi/purple-text (:score details))
+              (highlight-line (:line details) highlights options))
       (format "%s:%s:%s"
-              (ansi/purple-text (or (file-string file options) "*STDIN*"))
-              (ansi/green-text line-number)
-              (highlight-line line highlights options)))))
+              (ansi/purple-text (or (file-string (:file details) options) "*STDIN*"))
+              (ansi/green-text (:line-number details))
+              (highlight-line (:line details) highlights options)))))
