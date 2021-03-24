@@ -51,11 +51,11 @@
       (update :tokenizer keyword)
       (dissoc :query)))
 
-(defn prepare-dictionary-entry [dictionary-entry]
+(defn prepare-dictionary-entry [dictionary-entry analysis-options]
   (reduce (fn [acc k]
-            (assoc acc k (text-analysis/three-way-merge k {} default-text-analysis acc)))
+            (assoc acc k (text-analysis/three-way-merge k {} analysis-options acc)))
           (normalize-dictionary-entry dictionary-entry)
-          (keys default-text-analysis)))
+          (keys analysis-options)))
 
 (defn prepare-dictionary [lucene-query-strings options]
   (let [analysis-options (merge default-text-analysis options)]
@@ -64,4 +64,6 @@
              (assoc analysis-options :text lucene-query-string))
            lucene-query-strings)
       (when-let [queries-file-path (:queries-file options)]
-        (map prepare-dictionary-entry (read-dictionary-from-file queries-file-path))))))
+        (map (fn [dictionary-entry]
+               (prepare-dictionary-entry dictionary-entry analysis-options))
+             (read-dictionary-from-file queries-file-path))))))

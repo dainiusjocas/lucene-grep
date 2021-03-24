@@ -137,6 +137,22 @@
                           (with-out-str
                             (grep/grep queries nil nil options))))))))
 
+(deftest grepping-multiple-queries-from-file-options
+  (testing "options text analysis is injected into dictionary entry if not present"
+    (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")
+          queries []
+          options {:split           true
+                   :case-sensitive? true
+                   :pre-tags        ">"
+                   :post-tags       "<"
+                   :template        "{{highlighted-line}}"
+                   :queries-file    "test/resources/queries.json"}]
+      (is (str/blank?
+            (with-in-str text-from-stdin
+                         (str/trim
+                           (with-out-str
+                             (grep/grep queries nil nil options)))))))))
+
 (defn json-decode [str]
   (if (str/blank? str)
     ""
@@ -147,6 +163,7 @@
     (let [text-from-stdin "The quick brown fox jumps over the lazy doggy"
           queries []
           options {:split        true
+                   :stemmer      :english
                    :queries-file "test/resources/queries-multilingual.json"
                    :format       :json
                    :with-details true}]
