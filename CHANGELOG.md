@@ -6,7 +6,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## New
 
-- Flag to force printing an empty line on no match 
+- Flag to force printing an empty line on no match `--with-empty-lines`
+- Flag to output matching details, `--with-details`
 
 ## v2021.03.18
 

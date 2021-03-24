@@ -74,6 +74,8 @@
     :default true]
    [nil "--hyperlink" "If a file should be printed as hyperlinks."
     :default false]
+   [nil "--with-details" "For JSON and EDN output adds raw highlights list."
+    :default false]
    [nil "--word-delimiter-graph-filter WDGF" "WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html"
     :parse-fn #(Integer/parseInt %)
     :default 0]
