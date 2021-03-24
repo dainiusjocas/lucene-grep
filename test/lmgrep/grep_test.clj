@@ -47,9 +47,9 @@
                            :query         query}]}
            (json/read-value
              (with-in-str text-from-stdin
-                         (str/trim
-                           (with-out-str
-                             (grep/grep [query] nil nil options))))
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options))))
              json/keyword-keys-object-mapper)))))
 
 (deftest grepping-stdin-with-detailed-json-output-with-score
@@ -90,7 +90,28 @@
                           (str/trim
                             (with-out-str
                               (grep/grep [query] nil nil options))))
-             json/keyword-keys-object-mapper)))))
+             json/keyword-keys-object-mapper))))
+
+  (testing "fuzzy matching"
+    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+          query "fxo~2"
+          options {:format :json :with-details true :with-scored-highlights true}]
+      (is (= {:highlights  [{:begin-offset  16
+                             :dict-entry-id "0"
+                             :end-offset    19
+                             :meta          {}
+                             :query         "fxo~2"
+                             :score         0.08717638
+                             :type          "QUERY"}]
+              :line        "The quick brown fox jumps over the lazy dog"
+              :line-number 1
+              :score       0.08717638}
+             (json/read-value
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep [query] nil nil options))))
+               json/keyword-keys-object-mapper))))))
 
 (deftest grepping-multiple-queries
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"

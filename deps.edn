@@ -7,7 +7,7 @@
   org.apache.lucene/lucene-core        {:mvn/version "8.8.1"}
   org.apache.lucene/lucene-monitor     {:mvn/version "8.8.1"}
   metosin/jsonista                     {:mvn/version "0.3.1"}
-  lt.jocas/lucene-monitor-helpers      {:mvn/version "0.1.1"}
+  lt.jocas/lucene-monitor-helpers      {:mvn/version "0.1.2"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.2"}}
  :aliases
  {:dev
