@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.03.24
+
 ## New
 
 - Scored Highlights with a flag `--with-scored-highlights`
