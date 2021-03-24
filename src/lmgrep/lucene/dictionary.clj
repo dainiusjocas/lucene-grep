@@ -1,6 +1,5 @@
 (ns lmgrep.lucene.dictionary
-  (:require [clojure.string :as s]
-            [clojure.tools.logging :as log]
+  (:require [clojure.tools.logging :as log]
             [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.monitor MonitorQuery)))
