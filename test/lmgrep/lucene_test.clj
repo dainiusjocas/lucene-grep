@@ -4,7 +4,6 @@
             [lmgrep.grep :as grep]
             [lmgrep.lucene :as lucene]
             [lmgrep.lucene.dictionary :as dictionary]
-            [lmgrep.lucene :as lucene]
             [lmgrep.lucene.text-analysis :as text-analysis]
             [lmgrep.formatter :as formatter]))
 

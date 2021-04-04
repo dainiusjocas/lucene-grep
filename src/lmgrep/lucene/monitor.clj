@@ -1,6 +1,5 @@
 (ns lmgrep.lucene.monitor
   (:require [clojure.java.io :as io]
-            [clojure.tools.logging :as log]
             [jsonista.core :as json]
             [lmgrep.lucene.text-analysis :as text-analysis]
             [lmgrep.lucene.dictionary :as dictionary])
