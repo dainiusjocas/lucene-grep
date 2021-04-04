@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## New
+
+- Flag to only analyze text and spit to stdout `--only-analyze` 
+
 ## v2021.03.24
 
 ## New
