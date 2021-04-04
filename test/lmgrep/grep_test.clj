@@ -2,17 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [jsonista.core :as json]
-            [lmgrep.formatter :as formatter]
-            [lmgrep.grep :as grep]
-            [lmgrep.lucene :as lucene]))
-
-(deftest highlighting-test
-  (testing "coloring the output"
-    (let [query-string "text"
-          highlighter-fn (lucene/highlighter [{:text query-string}])
-          text "prefix text suffix"]
-      (is (= (str "prefix " \ "[1;31mtext" \ "[0m suffix")
-             (formatter/highlight-line text (highlighter-fn text) {}))))))
+            [lmgrep.grep :as grep]))
 
 (deftest grepping-file
   (let [file "test/resources/test.txt"
@@ -32,6 +22,16 @@
                         (str/trim
                           (with-out-str
                             (grep/grep [query] nil nil options))))))))
+
+
+(deftest should-output-no-lines
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog\nfoo"
+        query "bar"
+        options {:split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
+    (is (= ""
+           (with-in-str text-from-stdin
+                        (with-out-str
+                          (grep/grep [query] nil nil options)))))))
 
 (deftest grepping-stdin-with-detailed-json-output
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
@@ -158,6 +158,34 @@
     ""
     (json/read-value str json/keyword-keys-object-mapper)))
 
+(deftest grepping-multiple-queries-from-file-with-meta
+  (testing "options text analysis is injected into dictionary entry if not present"
+    (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")
+          queries []
+          options {:split        true
+                   :format       :json
+                   :with-details true
+                   :queries-file "test/resources/queries.json"}]
+      (is (= {:highlights  [{:begin-offset  16
+                             :dict-entry-id "0"
+                             :end-offset    19
+                             :meta          {:foo "bar"}
+                             :query         "fox"
+                             :type          "QUERY"}
+                            {:begin-offset  40
+                             :dict-entry-id "1"
+                             :end-offset    43
+                             :meta          {}
+                             :query         "dog"
+                             :type          "QUERY"}]
+              :line        "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"
+              :line-number 1}
+             (json-decode
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep queries nil nil options))))))))))
+
 (deftest grepping-multiple-queries-from-file-multilingual
   (testing "german stemmer is different than german despite the fact that both dictionary entries are equal"
     (let [text-from-stdin "The quick brown fox jumps over the lazy doggy"
@@ -192,3 +220,17 @@
     (is (= "\n" (with-in-str text-from-stdin
                              (with-out-str
                                (grep/grep [query] nil nil options)))))))
+
+(deftest concurrency-preserves-order-of-input
+  (testing "the highlights should be returned in the same order as the input"
+    ; Lucene has a bug that fails to find all matches when called concurrently
+    ; https://issues.apache.org/jira/browse/LUCENE-9791
+    ; therefore the test is not stable
+    (let [size 10
+          text (str/join "\n" (range size))
+          options {:split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
+      (is (= (str/join "\n" (map (fn [s] (str ">" s "<")) (range size)))
+             (with-in-str text
+                          (str/trim
+                            (with-out-str
+                              (grep/grep (map str (range size)) nil nil options)))))))))

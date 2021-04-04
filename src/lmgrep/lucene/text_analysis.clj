@@ -100,40 +100,30 @@
 (def analyzer (memoize analyzer-constructor))
 (def field-name (memoize field-name-constructor))
 
-(def default-conf
-  {:tokenizer                   :standard
-   :case-sensitive?             true
-   :ascii-fold?                 false
-   :stem?                       false
-   :stemmer                     :english
-   :word-delimiter-graph-filter 0})
-
 (defrecord Conf [tokenizer case-sensitive? ascii-fold? stem? stemmer word-delimiter-graph-filter])
 
-(defn three-way-merge
-  "Given a key and three maps return the value that would appear in the map after merge.
+(defn two-way-merge
+  "Given a key and two maps return the value that would appear in the map after merge.
   Semantics is of the default Clojure merge."
-  [k m1 m2 m3]
-  (if (nil? (k m3))
-    (if (nil? (k m2))
-      (k m1)
-      (k m2))
-    (k m3)))
+  [k m1 m2]
+  (if (nil? (get m2 k))
+    (get m1 k)
+    (get m2 k)))
 
-(defn merged-conf [analysis-conf default-analysis-conf default-conf]
+(defn merged-conf [analysis-conf default-analysis-conf]
   (->Conf
-    (three-way-merge :tokenizer default-conf default-analysis-conf analysis-conf)
-    (three-way-merge :case-sensitive? default-conf default-analysis-conf analysis-conf)
-    (three-way-merge :ascii-fold? default-conf default-analysis-conf analysis-conf)
-    (three-way-merge :stem? default-conf default-analysis-conf analysis-conf)
-    (three-way-merge :stemmer default-conf default-analysis-conf analysis-conf)
-    (three-way-merge :word-delimiter-graph-filter default-conf default-analysis-conf analysis-conf)))
+    (two-way-merge :tokenizer default-analysis-conf analysis-conf)
+    (two-way-merge :case-sensitive? default-analysis-conf analysis-conf)
+    (two-way-merge :ascii-fold? default-analysis-conf analysis-conf)
+    (two-way-merge :stem? default-analysis-conf analysis-conf)
+    (two-way-merge :stemmer default-analysis-conf analysis-conf)
+    (two-way-merge :word-delimiter-graph-filter default-analysis-conf analysis-conf)))
 
 (defn ^Analyzer get-string-analyzer [analysis-conf default-analysis-conf]
-  (analyzer (merged-conf analysis-conf default-analysis-conf default-conf)))
+  (analyzer (merged-conf analysis-conf default-analysis-conf)))
 
 (defn ^String get-field-name [analysis-conf default-analysis-conf]
-  (field-name (merged-conf analysis-conf default-analysis-conf default-conf)))
+  (field-name (merged-conf analysis-conf default-analysis-conf)))
 
 (defn text->token-strings
   "Given a text and an analyzer returns a list of tokens as strings."

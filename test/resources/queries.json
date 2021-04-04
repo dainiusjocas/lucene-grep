@@ -1,6 +1,7 @@
 [
   {
-    "query": "fox"
+    "query": "fox",
+    "meta": {"foo": "bar"}
   },
   {
     "query": "dog"

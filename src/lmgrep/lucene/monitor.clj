@@ -1,13 +1,14 @@
 (ns lmgrep.lucene.monitor
   (:require [clojure.java.io :as io]
-            [clojure.tools.logging :as log]
             [jsonista.core :as json]
-            [lmgrep.lucene.text-analysis :as text-analysis])
+            [lmgrep.lucene.text-analysis :as text-analysis]
+            [lmgrep.lucene.dictionary :as dictionary])
   (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (org.apache.lucene.util BytesRef)
            (org.apache.lucene.search MatchAllDocsQuery)
-           (java.util ArrayList)))
+           (java.util ArrayList)
+           (clojure.lang Indexed)))
 
 (def monitor-query-serializer
   (reify MonitorQuerySerializer
@@ -24,10 +25,11 @@
                        (get dq "query")
                        (get dq "metadata"))))))
 
+(def empty-analyzer (text-analysis/get-string-analyzer {} {}))
+
 (defn create [field-names-w-analyzers]
   (let [^MonitorConfiguration config (MonitorConfiguration.)
-        per-field-analyzers (PerFieldAnalyzerWrapper.
-                              (text-analysis/get-string-analyzer {} {}) field-names-w-analyzers)]
+        per-field-analyzers (PerFieldAnalyzerWrapper. empty-analyzer field-names-w-analyzers)]
     (.setIndexPath config nil monitor-query-serializer)
     (Monitor. per-field-analyzers config)))
 
@@ -36,36 +38,31 @@
     (try
       (.register monitor (doto (ArrayList.) (.add mq)))
       (catch Exception e
-        (log/errorf "Failed to register query: '%s'" mq)
-        (.printStackTrace e)))))
+        (.println System/err (format "Failed to register query %s with exception '%s'" mq (.getMessage e)))))))
 
 (defn register-queries [^Monitor monitor monitor-queries]
   (try
     (.register monitor ^Iterable monitor-queries)
-    (catch Exception _
+    (catch Exception e
+      (.println System/err (format "Failed to register queries with exception '%s'" (.getMessage e)))
       (defer-to-one-by-one-registration monitor monitor-queries))))
 
 (defn field-name-analyzer-mappings
   "Creates a map with field names as keys and Lucene analyzers as values.
-  Both field name and analyzer are decided based on the dictionary entry configuration.
-  First group dictionary entries by field name. Then from every group of dictionary entries
-  take the first entry and create an analyzer based on analysis configuration."
-  [dictionary default-analysis-conf]
-  (->> dictionary
-       (group-by (fn [dictionary-entry]
-                   (text-analysis/get-field-name dictionary-entry default-analysis-conf)))
-       (reduce (fn [acc [field-name dict]]
-                 (assoc acc field-name (text-analysis/get-string-analyzer (first dict) default-analysis-conf)))
-               {})))
-
-(defn prepare [monitor dict-entries default-analysis-conf dictionary->monitor-queries-fn]
-  (register-queries monitor (dictionary->monitor-queries-fn dict-entries default-analysis-conf)))
+  First, group dictionary entries by field name. Then from every group of dictionary entries
+  take the first entry and get the analyzer."
+  [questionnaire]
+  (reduce (fn [acc [field-name dict]]
+            (assoc acc field-name (get (.nth ^Indexed dict 0) :monitor-analyzer)))
+          {}
+          (group-by :field-name questionnaire)))
 
 (defn setup
-  "Setups the monitor with all the dictionary entries."
-  [dictionary default-analysis-conf dict-entry->monitor-queries-fn]
-  (let [mappings-from-field-names-to-analyzers (field-name-analyzer-mappings dictionary default-analysis-conf)
+  "Setups the monitor with all the questionnaire entries."
+  [questionnaire default-type options]
+  (let [questionnaire-with-analyzers (dictionary/normalize questionnaire default-type options)
+        mappings-from-field-names-to-analyzers (field-name-analyzer-mappings questionnaire-with-analyzers)
         monitor (create mappings-from-field-names-to-analyzers)]
-    (prepare monitor dictionary default-analysis-conf dict-entry->monitor-queries-fn)
+    (register-queries monitor (dictionary/get-monitor-queries questionnaire-with-analyzers))
     {:monitor     monitor
      :field-names (keys mappings-from-field-names-to-analyzers)}))
