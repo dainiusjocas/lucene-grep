@@ -81,6 +81,8 @@
    [nil "--word-delimiter-graph-filter WDGF" "WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html"
     :parse-fn #(Integer/parseInt %)
     :default 0]
+   [nil "--only-analyze" "When provided output will be analyzed text."
+    :default false]
    ["-h" "--help"]])
 
 (defn handle-args [args]

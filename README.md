@@ -138,6 +138,7 @@ Supported options:
       --hyperlink                                If a file should be printed as hyperlinks.
       --with-details                             For JSON and EDN output adds raw highlights list.
       --word-delimiter-graph-filter WDGF  0      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
+      --only-analyze                             When provided output will be analyzed text.
   -h, --help
 ```
 
