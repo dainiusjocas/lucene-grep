@@ -6,7 +6,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## New
 
-- Flag to only analyze text and spit to stdout `--only-analyze` 
+- Flag to only analyze text and spit to stdout `--only-analyze`
+- Lucene Monitor is executed in another thread
+- Optimized loading of large query dictionaries
 
 ## v2021.03.24
 
