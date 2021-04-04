@@ -83,4 +83,7 @@
       (analyze-text nil analyzer))))
 
 (comment
-  (lmgrep.grep/analyze-lines "test/resources/test.txt" {}))
+  (lmgrep.grep/analyze-lines
+    "test/resources/test.txt"
+    nil
+    (text-analysis/analyzer-constructor {})))

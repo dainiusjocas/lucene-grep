@@ -1,10 +1,9 @@
 (ns lmgrep.lucene-test
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
-            [lmgrep.lucene.dictionary :as dictionary]
-            [lmgrep.lucene :as lucene]
             [lmgrep.grep :as grep]
             [lmgrep.lucene :as lucene]
+            [lmgrep.lucene.dictionary :as dictionary]
             [lmgrep.lucene.text-analysis :as text-analysis]))
 
 (deftest highlighter-details
