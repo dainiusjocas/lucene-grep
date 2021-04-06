@@ -8,7 +8,7 @@
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene]
             [lmgrep.lucene.text-analysis :as text-analysis])
-  (:import (java.io BufferedReader File PrintWriter OutputStream BufferedWriter OutputStreamWriter)
+  (:import (java.io BufferedReader File PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)))
 
 (set! *warn-on-reflection* true)
@@ -104,7 +104,7 @@
   "Sequence of text into sequence of text token sequences. Output format is JSON.
   If given file path reads file otherwise stdin."
   [files-pattern files options]
-  (let [analyzer (text-analysis/analyzer-constructor options)
+  (let [^Analyzer analyzer (text-analysis/analyzer-constructor options)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))]
     (doseq [path (if files-pattern
                    (concat (fs/get-files files-pattern options)
@@ -114,14 +114,18 @@
             line-out-chan (a/chan (* 2 1024))]
 
         ;; parallel processing pipeline on a threadpool
-        (a/pipeline (or (* 4 (.availableProcessors (Runtime/getRuntime))))
+        (a/pipeline (* 4 (.availableProcessors (Runtime/getRuntime)))
                     line-out-chan
-                    (map (fn [line] (json/write-value-as-string (text-analysis/text->token-strings line analyzer))))
+                    (map (fn [line]
+                           (json/write-value-as-string
+                             (text-analysis/text->token-strings line analyzer))))
                     line-in-chan)
 
         ;; read lines in a thread pool
         (a/go
-          (with-open [^BufferedReader rdr (if path (io/reader path) (BufferedReader. *in* (* 1024 8192)))]
+          (with-open [^BufferedReader rdr (if path
+                                            (io/reader path)
+                                            (BufferedReader. *in* (* 1024 8192)))]
             (loop [^String line (.readLine rdr)]
               (if (= nil line)
                 (a/close! line-in-chan)
