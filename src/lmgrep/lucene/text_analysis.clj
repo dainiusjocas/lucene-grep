@@ -131,13 +131,13 @@
   (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
         ^CharTermAttribute termAtt (.addAttribute token-stream CharTermAttribute)]
     (.reset token-stream)
-    (reduce (fn [acc _]
-              (if (.incrementToken token-stream)
-                (conj acc (.toString termAtt))
-                (do
-                  (.end token-stream)
-                  (.close token-stream)
-                  (reduced acc)))) [] (range))))
+    (loop [acc (transient [])]
+      (if (.incrementToken token-stream)
+        (recur (conj! acc (.toString termAtt)))
+        (do
+          (.end token-stream)
+          (.close token-stream)
+          (persistent! acc))))))
 
 (comment
   (text->token-strings

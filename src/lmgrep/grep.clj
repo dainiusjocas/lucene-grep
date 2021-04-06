@@ -105,19 +105,36 @@
   If given file path reads file otherwise stdin."
   [files-pattern files options]
   (let [analyzer (text-analysis/analyzer-constructor options)
-        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out*))]
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))]
     (doseq [path (if files-pattern
                    (concat (fs/get-files files-pattern options)
                            (fs/filter-files files))
                    [nil])]
-      (with-open [^BufferedReader rdr (if path (io/reader path) (BufferedReader. *in*))]
-        (loop [^String line (.readLine rdr)]
-          (when line
-            (.println writer
-                      ^String (json/write-value-as-string
-                                (text-analysis/text->token-strings line analyzer)))
-            (recur (.readLine rdr)))))
-      (.flush writer))))
+      (let [line-in-chan (a/chan 1024)
+            line-out-chan (a/chan (* 2 1024))]
+
+        ;; parallel processing pipeline on a threadpool
+        (a/pipeline (or (* 4 (.availableProcessors (Runtime/getRuntime))))
+                    line-out-chan
+                    (map (fn [line] (json/write-value-as-string (text-analysis/text->token-strings line analyzer))))
+                    line-in-chan)
+
+        ;; read lines in a thread pool
+        (a/go
+          (with-open [^BufferedReader rdr (if path (io/reader path) (BufferedReader. *in* (* 1024 8192)))]
+            (loop [^String line (.readLine rdr)]
+              (if (= nil line)
+                (a/close! line-in-chan)
+                (do
+                  (a/>!! line-in-chan line)
+                  (recur (.readLine rdr)))))))
+
+        ;; write to stdout on the main thread
+        (loop [^String line (a/<!! line-out-chan)]
+          (when-not (= nil line)
+            (.println writer line)
+            (recur (a/<!! line-out-chan))))
+        (.flush writer)))))
 
 (comment
   (lmgrep.grep/analyze-lines

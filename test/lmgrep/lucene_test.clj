@@ -46,13 +46,6 @@
              ((lucene/highlighter dictionary {}) text))))))
 
 (deftest only-analysis
-  (testing "multiple lines from stdin"
-    (let [text-from-stdin "foo bar \nbaz quux"
-          analyzer (text-analysis/analyzer-constructor {})]
-      (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
-             (with-in-str text-from-stdin
-                          (with-out-str
-                            (grep/analyze-lines nil nil analyzer)))))))
   (testing "file input"
     (let [file-path "test/resources/test.txt"
           analyzer (text-analysis/analyzer-constructor {})]
@@ -60,4 +53,11 @@
                  (str/split-lines
                    (str/trim
                      (with-out-str
-                       (grep/analyze-lines file-path nil analyzer))))))))))
+                       (grep/analyze-lines file-path nil analyzer)))))))))
+  (testing "multiple lines from stdin"
+    (let [text-from-stdin "foo bar \nbaz quux"
+          analyzer (text-analysis/analyzer-constructor {})]
+      (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
+             (with-in-str text-from-stdin
+                          (with-out-str
+                            (grep/analyze-lines nil nil analyzer))))))))
