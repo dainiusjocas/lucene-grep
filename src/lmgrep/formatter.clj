@@ -34,9 +34,9 @@
                      (long (max (:begin-offset next-ann)
                                 (:end-offset ann)))))))))))
 
-(defn file-string [file options]
+(defn file-string [file line-number options]
   (if (:hyperlink options)
-    (ansi/link file (str (.toURI (io/file file))))
+    (ansi/link file (str (.toURI (io/file file)) "#" line-number))
     file))
 
 (defn string-output [highlights details options]
@@ -44,18 +44,18 @@
     (if (str/blank? template)
       ""
       (-> template
-          (str/replace "{{file}}" (or (file-string (:file details) options) ""))
+          (str/replace "{{file}}" (or (file-string (:file details) (:line-number details) options) ""))
           (str/replace "{{line-number}}" (str (:line-number details)))
           (str/replace "{{highlighted-line}}" (highlight-line (:line details) highlights options))
           (str/replace "{{line}}" (:line details))
           (str/replace "{{score}}" (str (:score details)))))
     (if (:score details)
       (format "%s:%s:%s:%s"
-              (ansi/purple-text (or (file-string (:file details) options) "*STDIN*"))
+              (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
               (ansi/green-text (:line-number details))
               (ansi/purple-text (:score details))
               (highlight-line (:line details) highlights options))
       (format "%s:%s:%s"
-              (ansi/purple-text (or (file-string (:file details) options) "*STDIN*"))
+              (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
               (ansi/green-text (:line-number details))
               (highlight-line (:line details) highlights options)))))
