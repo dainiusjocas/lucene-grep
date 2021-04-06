@@ -114,11 +114,11 @@
   If given file path reads file otherwise stdin."
   [files-pattern files options]
   (let [analyzer (text-analysis/analyzer-constructor options)]
-    (if files-pattern
-      (doseq [path (concat (fs/get-files files-pattern options)
-                           (fs/filter-files files))]
-        (analyze-text path analyzer))
-      (analyze-text nil analyzer))))
+    (doseq [path (if files-pattern
+                   (concat (fs/get-files files-pattern options)
+                           (fs/filter-files files))
+                   [nil])]
+      (analyze-text path analyzer))))
 
 (comment
   (lmgrep.grep/analyze-lines

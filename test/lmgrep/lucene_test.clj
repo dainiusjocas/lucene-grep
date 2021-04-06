@@ -45,19 +45,19 @@
                :type          "QUERY"}]
              ((lucene/highlighter dictionary {}) text))))))
 
-(deftest tokenizing-multiple-lines-from-stdin
-  (let [text-from-stdin "foo bar \nbaz quux"
-        analyzer (text-analysis/analyzer-constructor {})]
-    (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
-           (with-in-str text-from-stdin
-                        (with-out-str
-                          (grep/analyze-text nil analyzer)))))))
-
-(deftest tokenizing-multiple-lines-from-file
-  (let [file-path "test/resources/test.txt"
-        analyzer (text-analysis/analyzer-constructor {})]
-    (is (= 2 (count
-               (str/split-lines
-                 (str/trim
-                   (with-out-str
-                     (grep/analyze-text file-path analyzer)))))))))
+(deftest only-analysis
+  (testing "multiple lines from stdin"
+    (let [text-from-stdin "foo bar \nbaz quux"
+          analyzer (text-analysis/analyzer-constructor {})]
+      (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
+             (with-in-str text-from-stdin
+                          (with-out-str
+                            (grep/analyze-text nil analyzer)))))))
+  (testing "file input"
+    (let [file-path "test/resources/test.txt"
+          analyzer (text-analysis/analyzer-constructor {})]
+      (is (= 2 (count
+                 (str/split-lines
+                   (str/trim
+                     (with-out-str
+                       (grep/analyze-text file-path analyzer))))))))))
