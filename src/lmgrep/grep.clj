@@ -8,7 +8,7 @@
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene]
             [lmgrep.lucene.text-analysis :as text-analysis])
-  (:import (java.io BufferedReader File)
+  (:import (java.io BufferedReader File PrintWriter OutputStream BufferedWriter OutputStreamWriter)
            (org.apache.lucene.analysis Analyzer)))
 
 (set! *warn-on-reflection* true)
@@ -100,25 +100,24 @@
   (time (lmgrep.grep/grep ["opt"] "**.class" nil {:format            :edn
                                                   :skip-binary-files true})))
 
-(defn analyze-text [file-path ^Analyzer analyzer]
-  (with-open [^BufferedReader rdr (if file-path (io/reader file-path) (BufferedReader. *in*))]
-    (loop [^String line (.readLine rdr)]
-      (when line
-        (println
-          (json/write-value-as-string
-            (text-analysis/text->token-strings line analyzer)))
-        (recur (.readLine rdr))))))
-
 (defn analyze-lines
   "Sequence of text into sequence of text token sequences. Output format is JSON.
   If given file path reads file otherwise stdin."
   [files-pattern files options]
-  (let [analyzer (text-analysis/analyzer-constructor options)]
+  (let [analyzer (text-analysis/analyzer-constructor options)
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out*))]
     (doseq [path (if files-pattern
                    (concat (fs/get-files files-pattern options)
                            (fs/filter-files files))
                    [nil])]
-      (analyze-text path analyzer))))
+      (with-open [^BufferedReader rdr (if path (io/reader path) (BufferedReader. *in*))]
+        (loop [^String line (.readLine rdr)]
+          (when line
+            (.println writer
+                      ^String (json/write-value-as-string
+                                (text-analysis/text->token-strings line analyzer)))
+            (recur (.readLine rdr)))))
+      (.flush writer))))
 
 (comment
   (lmgrep.grep/analyze-lines

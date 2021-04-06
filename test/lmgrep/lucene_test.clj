@@ -52,7 +52,7 @@
       (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
              (with-in-str text-from-stdin
                           (with-out-str
-                            (grep/analyze-text nil analyzer)))))))
+                            (grep/analyze-lines nil nil analyzer)))))))
   (testing "file input"
     (let [file-path "test/resources/test.txt"
           analyzer (text-analysis/analyzer-constructor {})]
@@ -60,4 +60,4 @@
                  (str/split-lines
                    (str/trim
                      (with-out-str
-                       (grep/analyze-text file-path analyzer))))))))))
+                       (grep/analyze-lines file-path nil analyzer))))))))))
