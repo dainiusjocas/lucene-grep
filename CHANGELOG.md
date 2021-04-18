@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## Fixed/enhanced
+
+- Use Java PrintWriter to write to STDOUT (see #79)
+
 ## v2021.04.06
 
 ## New
