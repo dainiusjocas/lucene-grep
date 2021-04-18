@@ -60,11 +60,13 @@
   (let [parallel-matcher (matcher-fn highlighter-fn file-path options)
         concurrency 1
         numbered-lines (map-indexed (fn [line-str line-number] (LineNrStr. line-str line-number)) lines)
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out*))
         with-empty-lines (:with-empty-lines options)]
     (doseq [^String to-print (map-pipeline parallel-matcher concurrency numbered-lines)]
       (if (.equals "" to-print)
-        (when with-empty-lines (println))
-        (println to-print)))))
+        (when with-empty-lines (.println writer))
+        (.println writer to-print)))
+    (.flush writer)))
 
 (defn read-questionnaire-from-file [^String file-path]
   (let [^File input-file (io/file file-path)]
