@@ -44,6 +44,13 @@
                                                        {:name "stop"}]})]
         (is (= ["quick" "brown" "fox"] (ta/text->token-strings text analyzer)))))
 
+    (testing "stopwords token filter from a custom file"
+      (let [text "my foo bar baz text"
+            analyzer (analysis/create {:token-filters [{:name "lowercase"}
+                                                       {:name "stop"
+                                                        :args {:words "stops.txt"}}]})]
+        (is (= ["my" "text"] (ta/text->token-strings text analyzer)))))
+
     (testing "order of token filters"
       (let [text "brown foxes"
             analyzer (analysis/create {:token-filters [{:name "uppercase"}

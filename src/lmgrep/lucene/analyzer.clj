@@ -1,6 +1,6 @@
 (ns lmgrep.lucene.analyzer
   (:require [clojure.string :as str])
-  (:import (java.util HashMap Map Collection ArrayList)
+  (:import (java.util HashMap Map ArrayList)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis.util TokenizerFactory TokenFilterFactory CharFilterFactory)
            (org.apache.lucene.analysis.en EnglishAnalyzer)
