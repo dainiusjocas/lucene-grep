@@ -48,8 +48,7 @@
       (let [text "my foo bar baz text"
             analyzer (analysis/create {:token-filters [{:name "lowercase"}
                                                        {:name "stop"
-                                                        :args {:words "test/resources/stops.txt"
-                                                               :foo "bar"}}]})]
+                                                        :args {:words "test/resources/stops.txt"}}]})]
         (is (= ["my" "text"] (ta/text->token-strings text analyzer)))))
 
     (testing "MappingCharFilter file resources"
