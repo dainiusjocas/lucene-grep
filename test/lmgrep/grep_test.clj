@@ -147,7 +147,7 @@
                    :post-tags       "<"
                    :template        "{{highlighted-line}}"
                    :queries-file    "test/resources/queries.json"}]
-      (is (str/blank?
+      (is (= ""
             (with-in-str text-from-stdin
                          (str/trim
                            (with-out-str

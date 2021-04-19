@@ -76,3 +76,18 @@
             analyzer-2 (analysis/create {:token-filters [{:name lowercased-ported-stemmer-name}]})]
         (is (not= porter-stemmer-name lowercased-ported-stemmer-name))
         (is (= (ta/text->token-strings text analyzer-1) (ta/text->token-strings text analyzer-2)))))))
+
+(deftest tokenizer-tests
+  (let [text "The quick brown fox"
+        analyzer (analysis/create {:tokenizer {:name "edgengram"
+                                               :args {:maxGramSize 5}}})]
+    (is (= ["T" "Th" "The" "The " "The q"] (ta/text->token-strings text analyzer)))))
+
+(deftest word-delimiter-graph
+  (let [text "TestClass"
+        analyzer (analysis/create {:token-filters [{:name "worddelimitergraph"
+                                                    :args {"generateWordParts" 1
+                                                           "generateNumberParts" 1
+                                                           "preserveOriginal" 1
+                                                           "splitOnCaseChange" 1}}]})]
+    (is (= ["TestClass" "Test" "Class"] (ta/text->token-strings text analyzer)))))

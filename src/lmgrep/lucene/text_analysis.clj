@@ -1,85 +1,90 @@
 (ns lmgrep.lucene.text-analysis
   (:require [clojure.string :as string]
-            [clojure.tools.logging :as log])
-  (:import (org.apache.lucene.analysis Analyzer Analyzer$TokenStreamComponents Tokenizer TokenStream CharArraySet)
-           (org.apache.lucene.analysis.core LowerCaseFilter WhitespaceTokenizer LetterTokenizer KeywordTokenizer UnicodeWhitespaceTokenizer)
-           (org.apache.lucene.analysis.miscellaneous ASCIIFoldingFilter WordDelimiterGraphFilter)
-           (org.apache.lucene.analysis.standard ClassicFilter StandardTokenizer)
+            [clojure.tools.logging :as log]
+            [lmgrep.lucene.analyzer :as analyzer])
+  (:import (org.apache.lucene.analysis Analyzer TokenStream)
            (org.apache.lucene.analysis.tokenattributes CharTermAttribute)
-           (org.apache.lucene.analysis.snowball SnowballFilter)
-           (org.tartarus.snowball.ext LithuanianStemmer ArabicStemmer ArmenianStemmer BasqueStemmer EnglishStemmer CatalanStemmer DanishStemmer DutchStemmer EstonianStemmer FinnishStemmer FrenchStemmer German2Stemmer GermanStemmer HungarianStemmer IrishStemmer ItalianStemmer KpStemmer LovinsStemmer NorwegianStemmer PorterStemmer PortugueseStemmer RomanianStemmer RussianStemmer SpanishStemmer SwedishStemmer TurkishStemmer)
-           (org.tartarus.snowball SnowballProgram)
            (java.io StringReader)))
 
-(defn ^SnowballProgram stemmer
+(defn ^String stemmer
   "Creates a stemmer object given the stemmer keyword.
   Default stemmer is English."
   [stemmer-kw]
   (case stemmer-kw
-    :arabic (ArabicStemmer.)
-    :armenian (ArmenianStemmer.)
-    :basque (BasqueStemmer.)
-    :catalan (CatalanStemmer.)
-    :danish (DanishStemmer.)
-    :dutch (DutchStemmer.)
-    :english (EnglishStemmer.)
-    :estonian (EstonianStemmer.)
-    :finnish (FinnishStemmer.)
-    :french (FrenchStemmer.)
-    :german2 (German2Stemmer.)
-    :german (GermanStemmer.)
-    :hungarian (HungarianStemmer.)
-    :irish (IrishStemmer.)
-    :italian (ItalianStemmer.)
-    :kp (KpStemmer.)
-    :lithuanian (LithuanianStemmer.)
-    :lovins (LovinsStemmer.)
-    :norwegian (NorwegianStemmer.)
-    :porter (PorterStemmer.)
-    :portuguese (PortugueseStemmer.)
-    :romanian (RomanianStemmer.)
-    :russian (RussianStemmer.)
-    :spanish (SpanishStemmer.)
-    :swedish (SwedishStemmer.)
-    :turkish (TurkishStemmer.)
+    :arabic "arabicstem"
+    ;:armenian (ArmenianStemmer.)
+    ;:basque (BasqueStemmer.)
+    ;:catalan (CatalanStemmer.)
+    ;:danish (DanishStemmer.)
+    ;:dutch (DutchStemmer.)
+    :english "englishMinimalStem"
+    ;:estonian (EstonianStemmer.)
+    ;:finnish (FinnishStemmer.)
+    ;:french (FrenchStemmer.)
+    :german2 "germanlightstem"
+    :german "germanstem"
+    ;:hungarian (HungarianStemmer.)
+    ;:irish (IrishStemmer.)
+    :italian "italianlightstem"
+    ;:kp (KpStemmer.)
+    ;:lithuanian (LithuanianStemmer.)
+    ;:lovins (LovinsStemmer.)
+    :norwegian "norwegianminimalstem"
+    :porter "porterstem"
+    :portuguese "portugueselightstem"
+    ;:romanian (RomanianStemmer.)
+    :russian "russianlightstem"
+    :spanish "spanishlightstem"
+    :swedish "swedishlightstem"
+    ;:turkish (TurkishStemmer.)
     (do
       (when stemmer-kw
         (log/debugf "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw))
-      (EnglishStemmer.))))
+      "englishMinimalStem")))
 
-(defn ^Tokenizer tokenizer [tokenizer-kw]
+(defn tokenizer [tokenizer-kw]
   (case tokenizer-kw
-    :keyword (KeywordTokenizer.)
-    :letter (LetterTokenizer.)
-    :standard (StandardTokenizer.)
-    :unicode-whitespace (UnicodeWhitespaceTokenizer.)
-    :whitespace (WhitespaceTokenizer.)
+    :keyword {:name "keyword"}
+    :letter {:name "letter"}
+    :standard {:name "standard"}
+    :unicode-whitespace {:name "whitespace" :args {:rule "unicode"}}
+    :whitespace {:name "whitespace" :args {:rule "java"}}
     (do
       (when tokenizer-kw
         (log/debugf "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw))
-      (StandardTokenizer.))))
+      {:name "standard"})))
 
-(defn analyzer-constructor [{tokenizer-kw    :tokenizer
+(defn analyzer-constructor [{analysis        :analysis
+                             tokenizer-kw    :tokenizer
                              ascii-fold?     :ascii-fold?
                              case-sensitive? :case-sensitive?
                              stem?           :stem?
                              stemmer-kw      :stemmer
                              wdgf            :word-delimiter-graph-filter}]
-  (proxy [Analyzer] []
-    (createComponents [^String field-name]
-      (let [^Tokenizer tokenizr (tokenizer tokenizer-kw)
-            ^TokenStream filters-chain
-            (cond-> tokenizr
-                    (and (number? wdgf) (pos? wdgf)) (WordDelimiterGraphFilter. wdgf CharArraySet/EMPTY_SET)
-                    (not case-sensitive?) (LowerCaseFilter.)
-                    ascii-fold? (ASCIIFoldingFilter.))
-            token-stream (if stem?
-                           (SnowballFilter. filters-chain (stemmer stemmer-kw))
-                           (if (instance? Tokenizer filters-chain)
-                             (ClassicFilter. tokenizr)
-                             filters-chain))]
-        (Analyzer$TokenStreamComponents.
-          ^Tokenizer tokenizr ^TokenStream token-stream)))))
+  (let [wdgf-args (when (pos-int? wdgf)
+                    (cond-> {}
+                            (not (zero? (bit-and wdgf 1))) (assoc "generateWordParts" 1)
+                            (not (zero? (bit-and wdgf 2))) (assoc "generateNumberParts" 1)
+                            (not (zero? (bit-and wdgf 4))) (assoc "catenateWords" 1)
+                            (not (zero? (bit-and wdgf 8))) (assoc "catenateNumbers" 1)
+                            (not (zero? (bit-and wdgf 16))) (assoc "catenateAll" 1)
+                            (not (zero? (bit-and wdgf 32))) (assoc "preserveOriginal" 1)
+                            (not (zero? (bit-and wdgf 64))) (assoc "splitOnCaseChange" 1)
+                            (not (zero? (bit-and wdgf 128))) (assoc "splitOnNumerics" 1)
+                            (not (zero? (bit-and wdgf 256))) (assoc "stemEnglishPossessive" 1)
+                            (not (zero? (bit-and wdgf 512))) (assoc "ignoreKeywords" 1)))
+        tokenizr (get tokenizer tokenizer-kw)
+        token-filters (cond-> []
+                              (pos-int? wdgf) (conj {:name "worddelimitergraph"
+                                                     :args wdgf-args})
+                              (false? case-sensitive?) (conj {:name "lowercase"})
+                              ascii-fold? (conj {:name "asciifolding"})
+                              stem? (conj {:name (stemmer stemmer-kw)}))]
+
+    (analyzer/create
+      (cond-> analysis
+              (not (nil? tokenizer-kw)) (assoc :tokenizer tokenizr)
+              true (update :token-filters (fn [val] (concat token-filters val)))))))
 
 (defn field-name-constructor [{tokenizer-kw    :tokenizer
                                ascii-fold?     :ascii-fold?
@@ -141,9 +146,17 @@
 
 (comment
   (text->token-strings
-    "foo text bar BestClass name" (analyzer-constructor {:tokenizer       :whitespace
-                                                         :case-sensitive? false
-                                                         :ascii-fold?     false
-                                                         :stem?           true
-                                                         :stemmer         :english
-                                                         :word-delimiter-graph-filter (+ 1 2 32 64)})))
+    "foo text bar BestClass fooo name" (analyzer-constructor {:tokenizer       :whitespace
+                                                              :case-sensitive? false
+                                                              :ascii-fold?     false
+                                                              :stem?           true
+                                                              :stemmer         :english
+                                                              :word-delimiter-graph-filter (+ 1 2 32 64)}))
+
+  (text->token-strings
+    "The quick brown fox jumps over the lazy doggy"
+    (analyzer-constructor {:tokenizer       :standard
+                           :case-sensitive? true
+                           :ascii-fold?     false
+                           :stem?           true
+                           :stemmer         :german})))

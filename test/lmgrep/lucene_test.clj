@@ -21,8 +21,9 @@
           query "text"]
       (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
                :meta {"foo" "bar"} :begin-offset 4 :end-offset 8}]
-             ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]) text)))))
+             ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]) text))))))
 
+(deftest word-delimiter-highlights
   (testing "word delimiter"
     (let [text "foo text bar BestClass fooo name"
           query "best class"
@@ -33,11 +34,11 @@
                          :word-delimiter-graph-filter (+ 1 2 32 64)})]]
       (is (= [{:begin-offset  13
                :dict-entry-id "0"
-               :end-offset    22
+               :end-offset    17
                :meta          {}
                :query         "best class"
                :type          "QUERY"}
-              {:begin-offset  13
+              {:begin-offset  17
                :dict-entry-id "0"
                :end-offset    22
                :meta          {}
