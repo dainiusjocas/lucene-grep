@@ -1,8 +1,13 @@
 (ns lmgrep.lucene.analysis-test
   (:require [clojure.test :refer :all]
+            [clojure.string :as str]
             [lmgrep.lucene.analyzer :as analysis]
-            [lmgrep.lucene.text-analysis :as ta]
-            [clojure.string :as str]))
+            [lmgrep.lucene.text-analysis :as ta]))
+
+(deftest predefined-analyzers
+  (let [text "The brown foxes"
+        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+    (is (= ["brown" "fox"] (ta/text->token-strings text analyzer)))) )
 
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
