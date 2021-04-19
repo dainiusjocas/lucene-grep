@@ -7,7 +7,7 @@
 (deftest predefined-analyzers
   (let [text "The brown foxes"
         analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
-    (is (= ["brown" "fox"] (ta/text->token-strings text analyzer)))) )
+    (is (= ["brown" "fox"] (ta/text->token-strings text analyzer)))))
 
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
@@ -48,8 +48,15 @@
       (let [text "my foo bar baz text"
             analyzer (analysis/create {:token-filters [{:name "lowercase"}
                                                        {:name "stop"
-                                                        :args {:words "stops.txt"}}]})]
+                                                        :args {:words "test/resources/stops.txt"
+                                                               :foo "bar"}}]})]
         (is (= ["my" "text"] (ta/text->token-strings text analyzer)))))
+
+    (testing "MappingCharFilter file resources"
+      (let [text "my foo bar baz text"
+            analyzer (analysis/create {:char-filters [{:name "mapping"
+                                                       :args {:mapping "test/resources/mapping.txt"}}]})]
+        (is (= ["my" "bar" "bar" "baz" "text"] (ta/text->token-strings text analyzer)))))
 
     (testing "order of token filters"
       (let [text "brown foxes"
