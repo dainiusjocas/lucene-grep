@@ -1,6 +1,7 @@
 (ns lmgrep.cli
   (:require [clojure.tools.cli :as cli]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [jsonista.core :as json]))
 
 (def format-options #{:edn :json :string})
 
@@ -83,6 +84,9 @@
     :default 0]
    [nil "--only-analyze" "When provided output will be analyzed text."
     :default false]
+   [nil "--analysis ANALYSIS" "The analysis chain configuration"
+    :parse-fn #(json/read-value % json/keyword-keys-object-mapper)
+    :default {}]
    ["-h" "--help"]])
 
 (defn handle-args [args]
