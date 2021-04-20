@@ -6,6 +6,7 @@
            (org.apache.lucene.analysis.tokenattributes CharTermAttribute)
            (java.io StringReader)))
 
+; TODO: convert to hashmap
 (defn ^String stemmer
   "Creates a stemmer object given the stemmer keyword.
   Default stemmer is English."
@@ -42,6 +43,7 @@
         (log/debugf "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw))
       "englishMinimalStem")))
 
+; TODO: convert to hashmap
 (defn tokenizer [tokenizer-kw]
   (case tokenizer-kw
     :keyword {:name "keyword"}
@@ -54,25 +56,27 @@
         (log/debugf "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw))
       {:name "standard"})))
 
-(defn analyzer-constructor [{analysis        :analysis
-                             tokenizer-kw    :tokenizer
+(defn wdgf->token-filter-args [wdgf]
+  (when (pos-int? wdgf)
+    (cond-> {}
+            (not (zero? (bit-and wdgf 1))) (assoc "generateWordParts" 1)
+            (not (zero? (bit-and wdgf 2))) (assoc "generateNumberParts" 1)
+            (not (zero? (bit-and wdgf 4))) (assoc "catenateWords" 1)
+            (not (zero? (bit-and wdgf 8))) (assoc "catenateNumbers" 1)
+            (not (zero? (bit-and wdgf 16))) (assoc "catenateAll" 1)
+            (not (zero? (bit-and wdgf 32))) (assoc "preserveOriginal" 1)
+            (not (zero? (bit-and wdgf 64))) (assoc "splitOnCaseChange" 1)
+            (not (zero? (bit-and wdgf 128))) (assoc "splitOnNumerics" 1)
+            (not (zero? (bit-and wdgf 256))) (assoc "stemEnglishPossessive" 1)
+            (not (zero? (bit-and wdgf 512))) (assoc "ignoreKeywords" 1))))
+
+(defn flags->analysis-conf [{tokenizer-kw    :tokenizer
                              ascii-fold?     :ascii-fold?
                              case-sensitive? :case-sensitive?
                              stem?           :stem?
                              stemmer-kw      :stemmer
                              wdgf            :word-delimiter-graph-filter}]
-  (let [wdgf-args (when (pos-int? wdgf)
-                    (cond-> {}
-                            (not (zero? (bit-and wdgf 1))) (assoc "generateWordParts" 1)
-                            (not (zero? (bit-and wdgf 2))) (assoc "generateNumberParts" 1)
-                            (not (zero? (bit-and wdgf 4))) (assoc "catenateWords" 1)
-                            (not (zero? (bit-and wdgf 8))) (assoc "catenateNumbers" 1)
-                            (not (zero? (bit-and wdgf 16))) (assoc "catenateAll" 1)
-                            (not (zero? (bit-and wdgf 32))) (assoc "preserveOriginal" 1)
-                            (not (zero? (bit-and wdgf 64))) (assoc "splitOnCaseChange" 1)
-                            (not (zero? (bit-and wdgf 128))) (assoc "splitOnNumerics" 1)
-                            (not (zero? (bit-and wdgf 256))) (assoc "stemEnglishPossessive" 1)
-                            (not (zero? (bit-and wdgf 512))) (assoc "ignoreKeywords" 1)))
+  (let [wdgf-args (wdgf->token-filter-args wdgf)
         tokenizr (get tokenizer tokenizer-kw)
         token-filters (cond-> []
                               (pos-int? wdgf) (conj {:name "worddelimitergraph"
@@ -81,10 +85,18 @@
                               ascii-fold? (conj {:name "asciifolding"})
                               stem? (conj {:name (stemmer stemmer-kw)}))]
 
+    (cond-> {}
+            (not (nil? tokenizer-kw)) (assoc :tokenizer tokenizr)
+            true (assoc :token-filters token-filters))))
+
+(defn analyzer-constructor [{analysis        :analysis
+                             tokenizer-kw    :tokenizer
+                             :as flags}]
+  (let [analysis-conf (flags->analysis-conf flags)]
     (analyzer/create
       (cond-> analysis
-              (not (nil? tokenizer-kw)) (assoc :tokenizer tokenizr)
-              true (update :token-filters (fn [val] (concat token-filters val)))))))
+              (not (nil? tokenizer-kw)) (assoc :tokenizer (get analysis-conf :tokenizer))
+              true (update :token-filters (fn [val] (concat (get analysis-conf :token-filters) val)))))))
 
 (defn field-name-constructor [{tokenizer-kw    :tokenizer
                                ascii-fold?     :ascii-fold?
