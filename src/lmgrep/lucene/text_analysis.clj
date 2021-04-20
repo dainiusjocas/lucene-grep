@@ -1,5 +1,5 @@
 (ns lmgrep.lucene.text-analysis
-  (:require [clojure.string :as string]
+  (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [lmgrep.lucene.analyzer :as analyzer])
   (:import (org.apache.lucene.analysis Analyzer TokenStream)
@@ -97,14 +97,22 @@
 (defn analyzer-constructor [analysis-conf]
   (analyzer/create analysis-conf))
 
-(defn field-name-constructor [analysis-conf]
-  (let [analyzer-name (get-in analysis-conf [:analyzer :name])
-        tokenizr (str (name (or (get-in analysis-conf [:tokenizer :name]) :standard)) "-tokenizer")
-        char-filters (sort (map :name (get analysis-conf :char-filters)))
-        filters (sort (map :name (get analysis-conf :token-filters)))]
-    (if (seq filters)
-      (str "text" "." tokenizr "." (or analyzer-name (string/join "-" filters)))
-      (str "text" "." (or analyzer-name tokenizr)))))
+(defn component-name-str [component]
+  (str (get component :name) "-" (hash (get component :args))))
+
+(defn field-name-constructor
+  "If analyzer is specified then analyzer determines the name of the field"
+  [analysis-conf]
+  (let [analyzer-name (when-let [analyzer (get analysis-conf :analyzer)]
+                        (component-name-str analyzer))
+        tokenizer-name (str (or (when-let [tokenizer (get analysis-conf :tokenizer)]
+                                  (component-name-str tokenizer))
+                                "standard")
+                            "-tokenizer")
+        char-filters (str/join "." (mapv component-name-str (get analysis-conf :char-filters)))
+        token-filters (str/join "." (mapv component-name-str (get analysis-conf :token-filters)))
+        suffix (str/join "." (remove str/blank? [char-filters tokenizer-name token-filters]))]
+    (str "text" "." (or analyzer-name suffix))))
 
 (def analyzer (memoize analyzer-constructor))
 (def field-name (memoize field-name-constructor))
