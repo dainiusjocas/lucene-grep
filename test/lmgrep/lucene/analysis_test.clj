@@ -91,3 +91,8 @@
                                                            "preserveOriginal" 1
                                                            "splitOnCaseChange" 1}}]})]
     (is (= ["TestClass" "Test" "Class"] (ta/text->token-strings text analyzer)))))
+
+(deftest lithuanian-snowball-stemmer-token-filter-factory
+  (let [text "lietus lyja"
+        analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
+    (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer)))))

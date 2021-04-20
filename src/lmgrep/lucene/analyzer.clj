@@ -31,7 +31,7 @@
            (org.apache.lucene.analysis.hy ArmenianAnalyzer)
            (org.apache.lucene.analysis.id IndonesianAnalyzer)
            (org.apache.lucene.analysis.it ItalianAnalyzer)
-           (org.apache.lucene.analysis.lt LithuanianAnalyzer)
+           (org.apache.lucene.analysis.lt LithuanianAnalyzer LithuanianSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.lv LatvianAnalyzer)
            (org.apache.lucene.analysis.no NorwegianAnalyzer)
            (org.apache.lucene.analysis.pt PortugueseAnalyzer)
@@ -47,9 +47,14 @@
 
 (set! *warn-on-reflection* true)
 
+(defn namify
+  "Normalizes analysis component name."
+  [component-name]
+  (str/lower-case component-name))
+
 (def predefined-analyzers
   (reduce (fn [acc [analyzer-name analyzer]]
-            (assoc acc (str/lower-case (str/replace analyzer-name "Analyzer" "")) analyzer))
+            (assoc acc (namify (str/replace analyzer-name "Analyzer" "")) analyzer))
           {}
           {"ArabicAnalyzer"        (ArabicAnalyzer.)
            "BulgarianAnalyzer"     (BulgarianAnalyzer.)
@@ -97,18 +102,19 @@
 
 (def tokenizer-name->class
   (reduce (fn [acc ^String tokenizer-name]
-            (assoc acc (str/lower-case tokenizer-name) (TokenizerFactory/lookupClass tokenizer-name)))
+            (assoc acc (namify tokenizer-name) (TokenizerFactory/lookupClass tokenizer-name)))
           {} (TokenizerFactory/availableTokenizers)))
 
 (def char-filter-name->class
   (reduce (fn [acc ^String char-filter-name]
-            (assoc acc (str/lower-case char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
+            (assoc acc (namify char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
 (def token-filter-name->class
-  (reduce (fn [acc ^String token-filter-name]
-            (assoc acc (str/lower-case token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
-          {} (TokenFilterFactory/availableTokenFilters)))
+  (assoc (reduce (fn [acc ^String token-filter-name]
+                   (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
+                 {} (TokenFilterFactory/availableTokenFilters))
+    (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
@@ -117,22 +123,22 @@
   "Either fetches a predefined analyzer or creates one from the config."
   [{:keys [char-filters tokenizer token-filters analyzer]}]
   (or
-    (get predefined-analyzers (when-let [n (get analyzer :name)] (str/lower-case (str/replace n "Analyzer" ""))))
+    (get predefined-analyzers (when-let [n (get analyzer :name)] (namify (str/replace n "Analyzer" ""))))
     (try
       (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder)]
         (.withTokenizer cab
                         ^Class
-                        (get tokenizer-name->class (str/lower-case (get tokenizer :name DEFAULT_TOKENIZER_NAME)))
+                        (get tokenizer-name->class (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME)))
                         ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
 
         (doseq [char-filter char-filters]
           (.addCharFilter cab
-                          ^Class (get char-filter-name->class (str/lower-case (get char-filter :name)))
+                          ^Class (get char-filter-name->class (namify (get char-filter :name)))
                           ^Map (HashMap. ^Map (stringify (get char-filter :args)))))
 
         (doseq [token-filter token-filters]
           (.addTokenFilter cab
-                           ^Class (get token-filter-name->class (str/lower-case (get token-filter :name)))
+                           ^Class (get token-filter-name->class (namify (get token-filter :name)))
                            ^Map (HashMap. ^Map (stringify (get token-filter :args)))))
 
         (.build cab))

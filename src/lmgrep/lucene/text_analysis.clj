@@ -27,7 +27,7 @@
     ;:irish (IrishStemmer.)
     :italian "italianlightstem"
     ;:kp (KpStemmer.)
-    ;:lithuanian (LithuanianStemmer.)
+    :lithuanian "lithuanianSnowballStem"
     ;:lovins (LovinsStemmer.)
     :norwegian "norwegianminimalstem"
     :porter "porterstem"
