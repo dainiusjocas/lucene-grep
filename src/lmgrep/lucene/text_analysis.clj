@@ -94,26 +94,17 @@
           (nil? (get analysis :tokenizer)) (assoc :tokenizer (get analysis-conf :tokenizer))
           true (update :token-filters (fn [val] (concat (get analysis-conf :token-filters) val)))))
 
-(defn analyzer-constructor [{analysis        :analysis
-                             :as flags}]
-  (let [analysis-conf (flags->analysis-conf flags)]
-    (analyzer/create (merge-from-flags-with-analysis-conf analysis analysis-conf))))
+(defn analyzer-constructor [analysis-conf]
+  (analyzer/create analysis-conf))
 
-(defn field-name-constructor [{tokenizer-kw    :tokenizer
-                               ascii-fold?     :ascii-fold?
-                               case-sensitive? :case-sensitive?
-                               stem?           :stem?
-                               stemmer-kw      :stemmer
-                               wdgf            :word-delimiter-graph-filter}]
-  (let [tokenizr (str (name (or tokenizer-kw :standard)) "-tokenizer")
-        filters (cond-> []
-                        (and (number? wdgf) (pos? wdgf)) (conj (str "wdgf-" wdgf))
-                        (not case-sensitive?) (conj "lowercased")
-                        ascii-fold? (conj "ascii-folded")
-                        stem? (conj (str "stemmed-" (name (or stemmer-kw :english)))))]
+(defn field-name-constructor [analysis-conf]
+  (let [analyzer-name (get-in analysis-conf [:analyzer :name])
+        tokenizr (str (name (or (get-in analysis-conf [:tokenizer :name]) :standard)) "-tokenizer")
+        char-filters (sort (map :name (get analysis-conf :char-filters)))
+        filters (sort (map :name (get analysis-conf :token-filters)))]
     (if (seq filters)
-      (str "text" "." tokenizr "." (string/join "-" (sort filters)))
-      (str "text" "." tokenizr))))
+      (str "text" "." tokenizr "." (or analyzer-name (string/join "-" filters)))
+      (str "text" "." (or analyzer-name tokenizr)))))
 
 (def analyzer (memoize analyzer-constructor))
 (def field-name (memoize field-name-constructor))
@@ -128,20 +119,11 @@
     (get m1 k)
     (get m2 k)))
 
-(defn merged-conf [analysis-conf default-analysis-conf]
-  (->Conf
-    (two-way-merge :tokenizer default-analysis-conf analysis-conf)
-    (two-way-merge :case-sensitive? default-analysis-conf analysis-conf)
-    (two-way-merge :ascii-fold? default-analysis-conf analysis-conf)
-    (two-way-merge :stem? default-analysis-conf analysis-conf)
-    (two-way-merge :stemmer default-analysis-conf analysis-conf)
-    (two-way-merge :word-delimiter-graph-filter default-analysis-conf analysis-conf)))
+(defn ^Analyzer get-string-analyzer [analysis-conf]
+  (analyzer analysis-conf))
 
-(defn ^Analyzer get-string-analyzer [analysis-conf default-analysis-conf]
-  (analyzer (merged-conf analysis-conf default-analysis-conf)))
-
-(defn ^String get-field-name [analysis-conf default-analysis-conf]
-  (field-name (merged-conf analysis-conf default-analysis-conf)))
+(defn ^String get-field-name [analysis-conf]
+  (field-name analysis-conf))
 
 (defn text->token-strings
   "Given a text and an analyzer returns a list of tokens as strings."

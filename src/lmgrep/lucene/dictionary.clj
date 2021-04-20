@@ -52,16 +52,18 @@
 (defrecord Dict [field-name monitor-analyzer monitor-query])
 
 (defn prepare-query-entry
-  [query-entry default-type analysis-options]
-  (let [with-analysis-options (-> query-entry
+  [questionnaire-entry default-type analysis-options]
+  (let [with-analysis-options (-> questionnaire-entry
                                   (normalize-dictionary-entry default-type)
                                   (inject-analysis-options analysis-keys analysis-options))
         ; Get full combined analysis conf
-        analysis-conf (text-analysis/flags->analysis-conf with-analysis-options)
+        analysis-conf (text-analysis/merge-from-flags-with-analysis-conf
+                        (get questionnaire-entry :analysis)
+                        (text-analysis/flags->analysis-conf with-analysis-options))
         ; Field name should be calculatable from the `analysis-conf`
-        field-name (text-analysis/get-field-name with-analysis-options analysis-options)
+        field-name (text-analysis/get-field-name analysis-conf)
         ; Analyzer should be constructed from the `analysis-conf`
-        monitor-analyzer (text-analysis/get-string-analyzer with-analysis-options analysis-options)]
+        monitor-analyzer (text-analysis/get-string-analyzer analysis-conf)]
     (Dict.
       field-name
       monitor-analyzer
