@@ -49,9 +49,7 @@
 
 (def analysis-keys (keys default-text-analysis))
 
-(defrecord Dict [id query type meta
-                 tokenizer case-sensitive? ascii-fold? stem? stemmer word-delimiter-graph-filter
-                 field-name monitor-analyzer monitor-query])
+(defrecord Dict [field-name monitor-analyzer monitor-query])
 
 (defn prepare-query-entry
   [query-entry default-type analysis-options]
@@ -61,16 +59,6 @@
         field-name (text-analysis/get-field-name with-analysis-options analysis-options)
         monitor-analyzer (text-analysis/get-string-analyzer with-analysis-options analysis-options)]
     (Dict.
-      (:id with-analysis-options)
-      (:query with-analysis-options)
-      (:type with-analysis-options)
-      (:meta with-analysis-options)
-      (:tokenizer with-analysis-options)
-      (:case-sensitive? with-analysis-options)
-      (:ascii-fold? with-analysis-options)
-      (:stem? with-analysis-options)
-      (:stemmer with-analysis-options)
-      (:word-delimiter-graph-filter with-analysis-options)
       field-name
       monitor-analyzer
       (query->monitor-query with-analysis-options field-name monitor-analyzer))))
