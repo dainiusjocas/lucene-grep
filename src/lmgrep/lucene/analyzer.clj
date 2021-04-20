@@ -3,7 +3,7 @@
   (:import (java.util HashMap Map ArrayList)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis.util TokenizerFactory TokenFilterFactory CharFilterFactory)
-           (org.apache.lucene.analysis.en EnglishAnalyzer)
+           (org.apache.lucene.analysis.en EnglishAnalyzer LovinsSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis Analyzer CharArraySet)
            (org.apache.lucene.analysis.ar ArabicAnalyzer)
            (org.apache.lucene.analysis.standard StandardAnalyzer ClassicAnalyzer UAX29URLEmailAnalyzer)
@@ -15,16 +15,16 @@
            (org.apache.lucene.analysis.cjk CJKAnalyzer)
            (org.apache.lucene.analysis.ckb SoraniAnalyzer)
            (org.apache.lucene.analysis.cz CzechAnalyzer)
-           (org.apache.lucene.analysis.da DanishAnalyzer)
+           (org.apache.lucene.analysis.da DanishAnalyzer DanishSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.de GermanAnalyzer)
            (org.apache.lucene.analysis.el GreekAnalyzer)
            (org.apache.lucene.analysis.es SpanishAnalyzer)
-           (org.apache.lucene.analysis.et EstonianAnalyzer)
-           (org.apache.lucene.analysis.eu BasqueAnalyzer)
+           (org.apache.lucene.analysis.et EstonianAnalyzer EstonianSnowballStemTokenFilterFactory)
+           (org.apache.lucene.analysis.eu BasqueAnalyzer BasqueSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.fa PersianAnalyzer)
            (org.apache.lucene.analysis.fi FinnishAnalyzer)
            (org.apache.lucene.analysis.fr FrenchAnalyzer)
-           (org.apache.lucene.analysis.ga IrishAnalyzer)
+           (org.apache.lucene.analysis.ga IrishAnalyzer IrishSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.gl GalicianAnalyzer)
            (org.apache.lucene.analysis.hi HindiAnalyzer)
            (org.apache.lucene.analysis.hu HungarianAnalyzer)
@@ -35,13 +35,17 @@
            (org.apache.lucene.analysis.lv LatvianAnalyzer)
            (org.apache.lucene.analysis.no NorwegianAnalyzer)
            (org.apache.lucene.analysis.pt PortugueseAnalyzer)
-           (org.apache.lucene.analysis.ro RomanianAnalyzer)
+           (org.apache.lucene.analysis.ro RomanianAnalyzer RomanianSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.ru RussianAnalyzer)
            (org.apache.lucene.analysis.ru RussianAnalyzer)
            (org.apache.lucene.analysis.sv SwedishAnalyzer)
            (org.apache.lucene.analysis.th ThaiAnalyzer)
-           (org.apache.lucene.analysis.tr TurkishAnalyzer)
-           (org.apache.lucene.analysis.pl PolishAnalyzer)))
+           (org.apache.lucene.analysis.tr TurkishAnalyzer TurkishSnowballStemTokenFilterFactory)
+           (org.apache.lucene.analysis.pl PolishAnalyzer)
+           (org.apache.lucene.analysis.hy ArmenianSnowballStemTokenFilterFactory)
+           (org.apache.lucene.analysis.nl DutchAnalyzer DutchSnowballStemTokenFilterFactory)
+           (org.apache.lucene.analysis.ca CatalanSnowballStemTokenFilterFactory)
+           (org.apache.lucene.analysis.nl KPSnowballStemTokenFilterFactory)))
 
 ; https://lucene.apache.org/core/8_8_0/analyzers-common/constant-values.html#org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_WORD_PARTS
 
@@ -66,6 +70,7 @@
            "StopAnalyzer"          (StopAnalyzer. (CharArraySet. (ArrayList.) true))
            "CzechAnalyzer"         (CzechAnalyzer.)
            "DanishAnalyzer"        (DanishAnalyzer.)
+           "DutchAnalyzer"         (DutchAnalyzer.)
            "GermanAnalyzer"        (GermanAnalyzer.)
            "GreekAnalyzer"         (GreekAnalyzer.)
            "SpanishAnalyzer"       (SpanishAnalyzer.)
@@ -114,11 +119,21 @@
   (assoc (reduce (fn [acc ^String token-filter-name]
                    (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
                  {} (TokenFilterFactory/availableTokenFilters))
-    (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory))
+    (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
+    (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
+    (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
+    (namify "catalanSnowballStem") CatalanSnowballStemTokenFilterFactory
+    (namify "danishSnowballStem") DanishSnowballStemTokenFilterFactory
+    (namify "dutchSnowballStem") DutchSnowballStemTokenFilterFactory
+    (namify "basqueSnowballStem") EstonianSnowballStemTokenFilterFactory
+    (namify "irishSnowballStem") IrishSnowballStemTokenFilterFactory
+    (namify "kpSnowballStem") KPSnowballStemTokenFilterFactory
+    (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
+    (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
+    (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
-; What about analyzers by name
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
   [{:keys [char-filters tokenizer token-filters analyzer]}]

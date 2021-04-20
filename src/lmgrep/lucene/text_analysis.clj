@@ -12,31 +12,31 @@
   [stemmer-kw]
   (case stemmer-kw
     :arabic "arabicstem"
-    ;:armenian (ArmenianStemmer.)
-    ;:basque (BasqueStemmer.)
-    ;:catalan (CatalanStemmer.)
-    ;:danish (DanishStemmer.)
-    ;:dutch (DutchStemmer.)
+    :armenian "armenianSnowballStem"
+    :basque "basqueSnowballStem"
+    :catalan "catalanSnowballStem"
+    :danish "danishSnowballStem"
+    :dutch "dutchSnowballStem"
     :english "englishMinimalStem"
-    ;:estonian (EstonianStemmer.)
-    ;:finnish (FinnishStemmer.)
-    ;:french (FrenchStemmer.)
+    :estonian "basqueSnowballStem"
+    :finnish "finnishlightstem"
+    :french "frenchLightStem"
     :german2 "germanlightstem"
     :german "germanstem"
-    ;:hungarian (HungarianStemmer.)
-    ;:irish (IrishStemmer.)
+    :hungarian "hungarianLightStem"
+    :irish "irishSnowballStem"
     :italian "italianlightstem"
-    ;:kp (KpStemmer.)
+    :kp "kpSnowballStem"
     :lithuanian "lithuanianSnowballStem"
-    ;:lovins (LovinsStemmer.)
+    :lovins "lovinsSnowballStem"
     :norwegian "norwegianminimalstem"
     :porter "porterstem"
     :portuguese "portugueselightstem"
-    ;:romanian (RomanianStemmer.)
+    :romanian "romanianSnowballStem"
     :russian "russianlightstem"
     :spanish "spanishlightstem"
     :swedish "swedishlightstem"
-    ;:turkish (TurkishStemmer.)
+    :turkish "turkishSnowballStem"
     (do
       (when stemmer-kw
         (log/debugf "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw))

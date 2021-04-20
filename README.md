@@ -313,8 +313,7 @@ The number 99 is a sum of options as described [here](https://lucene.apache.org/
 (spit "graalvm/lucene-reflect-config.json"
       (json/write-value-as-string
         (map (fn [entry]
-               (assoc entry "allDeclaredConstructors" true
-                            "allPublicMethods" true))
+               (assoc entry "allDeclaredConstructors" true))
              (filter
                (fn [e] (re-matches #"org.apache.*" (get e "name")))
                (json/read-value (slurp "graalvm/reflect-config.json"))))))
