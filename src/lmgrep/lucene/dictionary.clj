@@ -56,7 +56,11 @@
   (let [with-analysis-options (-> query-entry
                                   (normalize-dictionary-entry default-type)
                                   (inject-analysis-options analysis-keys analysis-options))
+        ; Get full combined analysis conf
+        analysis-conf (text-analysis/flags->analysis-conf with-analysis-options)
+        ; Field name should be calculatable from the `analysis-conf`
         field-name (text-analysis/get-field-name with-analysis-options analysis-options)
+        ; Analyzer should be constructed from the `analysis-conf`
         monitor-analyzer (text-analysis/get-string-analyzer with-analysis-options analysis-options)]
     (Dict.
       field-name

@@ -1,5 +1,6 @@
 (ns lmgrep.lucene
   (:require [clojure.string :as s]
+            [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.monitor :as monitor]
             [lmgrep.lucene.matching :as matching]
             [lmgrep.lucene.text-analysis :as text-analysis]))
@@ -22,14 +23,18 @@
 
   ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true}))
 
-(defn text->tokens [^String text analysis-options]
-  (text-analysis/text->token-strings text (text-analysis/analyzer-constructor analysis-options)))
+(defn text->tokens [^String text analysis-conf]
+  (text-analysis/text->token-strings text (analyzer/create analysis-conf)))
 
 (comment
   (text->tokens
-    "foo text bar BestClass name" {:tokenizer                   :whitespace
-                                   :case-sensitive?             false
-                                   :ascii-fold?                 false
-                                   :stem?                       true
-                                   :stemmer                     :english
-                                   :word-delimiter-graph-filter (+ 1 2 32 64)}))
+    "foo text bar BestClass name"
+    (text-analysis/flags->analysis-conf
+      {:tokenizer                   :whitespace
+       :case-sensitive?             false
+       :ascii-fold?                 false
+       :stem?                       true
+       :stemmer                     :english
+       :word-delimiter-graph-filter (+ 1 2 32 64)}))
+
+  (text->tokens "texting names" {:analyzer {:name "English"}}))
