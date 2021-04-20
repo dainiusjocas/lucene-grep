@@ -7,7 +7,10 @@
 (deftest predefined-analyzers
   (let [text "The brown foxes"
         analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
-    (is (= ["brown" "fox"] (ta/text->token-strings text analyzer)))))
+    (is (= ["brown" "fox"] (ta/text->token-strings text analyzer))))
+  (let [text "The brown foxes"
+        analyzer (analysis/create {:analyzer {:name "CollationKeyAnalyzer"}})]
+    (is (= ["The brown foxes"] (ta/text->token-strings text analyzer)))))
 
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
