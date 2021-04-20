@@ -5,7 +5,8 @@
             [lmgrep.lucene :as lucene]
             [lmgrep.lucene.dictionary :as dictionary]
             [lmgrep.lucene.text-analysis :as text-analysis]
-            [lmgrep.formatter :as formatter]))
+            [lmgrep.formatter :as formatter]
+            [lmgrep.lucene.analyzer :as analyzer]))
 
 (deftest highlighting-test
   (testing "coloring the output"
@@ -49,7 +50,7 @@
 (deftest only-analysis
   (testing "file input"
     (let [file-path "test/resources/test.txt"
-          analyzer (text-analysis/analyzer-constructor {})]
+          analyzer (analyzer/create {})]
       (is (= 2 (count
                  (str/split-lines
                    (str/trim
@@ -57,7 +58,7 @@
                        (grep/analyze-lines file-path nil analyzer)))))))))
   (testing "multiple lines from stdin"
     (let [text-from-stdin "foo bar \nbaz quux"
-          analyzer (text-analysis/analyzer-constructor {})]
+          analyzer (analyzer/create {})]
       (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
              (with-in-str text-from-stdin
                           (with-out-str

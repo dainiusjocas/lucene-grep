@@ -89,14 +89,15 @@
             (not (nil? tokenizer-kw)) (assoc :tokenizer tokenizr)
             true (assoc :token-filters token-filters))))
 
+(defn merge-from-flags-with-analysis-conf [analysis analysis-conf]
+  (cond-> analysis
+          (nil? (get analysis :tokenizer)) (assoc :tokenizer (get analysis-conf :tokenizer))
+          true (update :token-filters (fn [val] (concat (get analysis-conf :token-filters) val)))))
+
 (defn analyzer-constructor [{analysis        :analysis
-                             tokenizer-kw    :tokenizer
                              :as flags}]
   (let [analysis-conf (flags->analysis-conf flags)]
-    (analyzer/create
-      (cond-> analysis
-              (not (nil? tokenizer-kw)) (assoc :tokenizer (get analysis-conf :tokenizer))
-              true (update :token-filters (fn [val] (concat (get analysis-conf :token-filters) val)))))))
+    (analyzer/create (merge-from-flags-with-analysis-conf analysis analysis-conf))))
 
 (defn field-name-constructor [{tokenizer-kw    :tokenizer
                                ascii-fold?     :ascii-fold?
@@ -158,17 +159,22 @@
 
 (comment
   (text->token-strings
-    "foo text bar BestClass fooo name" (analyzer-constructor {:tokenizer       :whitespace
-                                                              :case-sensitive? false
-                                                              :ascii-fold?     false
-                                                              :stem?           true
-                                                              :stemmer         :english
-                                                              :word-delimiter-graph-filter (+ 1 2 32 64)}))
+    "foo text bar BestClass fooo name"
+    (analyzer/create
+      (flags->analysis-conf
+        {:tokenizer                   :whitespace
+         :case-sensitive?             false
+         :ascii-fold?                 false
+         :stem?                       true
+         :stemmer                     :english
+         :word-delimiter-graph-filter (+ 1 2 32 64)})))
 
   (text->token-strings
     "The quick brown fox jumps over the lazy doggy"
-    (analyzer-constructor {:tokenizer       :standard
-                           :case-sensitive? true
-                           :ascii-fold?     false
-                           :stem?           true
-                           :stemmer         :german})))
+    (analyzer/create
+      (flags->analysis-conf
+        {:tokenizer       :standard
+         :case-sensitive? true
+         :ascii-fold?     false
+         :stem?           true
+         :stemmer         :german}))))
