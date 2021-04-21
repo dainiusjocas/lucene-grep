@@ -27,13 +27,12 @@
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
 (def default-text-analysis
-  (text-analysis/map->Conf
-    {:case-sensitive?             false
-     :ascii-fold?                 true
-     :stem?                       true
-     :tokenizer                   :standard
-     :stemmer                     :english
-     :word-delimiter-graph-filter 0}))
+  {:case-sensitive?             false
+   :ascii-fold?                 true
+   :stem?                       true
+   :tokenizer                   :standard
+   :stemmer                     :english
+   :word-delimiter-graph-filter 0})
 
 (defn normalize-dictionary-entry [dictionary-entry default-type]
   (-> dictionary-entry
