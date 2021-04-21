@@ -48,14 +48,11 @@
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? tokenizers %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
    [nil "--case-sensitive? CASE_SENSITIVE" "If text should be case sensitive"
-    :parse-fn #(Boolean/parseBoolean %)
-    :default false]
+    :parse-fn #(Boolean/parseBoolean %)]
    [nil "--ascii-fold? ASCII_FOLDED" "If text should be ascii folded"
-    :parse-fn #(Boolean/parseBoolean %)
-    :default true]
+    :parse-fn #(Boolean/parseBoolean %)]
    [nil "--stem? STEMMED" "If text should be stemmed"
-    :parse-fn #(Boolean/parseBoolean %)
-    :default true]
+    :parse-fn #(Boolean/parseBoolean %)]
    [nil "--stemmer STEMMER" (str "Which stemmer to use for token stemming, one of: " (options-to-str stemmers))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? stemmers %) (str "Stemmer must be one of: " (options-to-str stemmers))]]
@@ -80,8 +77,7 @@
    [nil "--with-details" "For JSON and EDN output adds raw highlights list."
     :default false]
    [nil "--word-delimiter-graph-filter WDGF" "WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html"
-    :parse-fn #(Integer/parseInt %)
-    :default 0]
+    :parse-fn #(Integer/parseInt %)]
    [nil "--only-analyze" "When provided output will be analyzed text."
     :default false]
    [nil "--analysis ANALYSIS" "The analysis chain configuration"

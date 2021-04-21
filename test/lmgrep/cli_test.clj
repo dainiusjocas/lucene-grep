@@ -4,10 +4,6 @@
 
 (def default-options
   {:analysis                    {}
-   :ascii-fold?                 true
-   :case-sensitive?             false
-   :stem?                       true
-   :word-delimiter-graph-filter 0
    :hyperlink                   false
    :only-analyze                false
    :skip-binary-files           false
