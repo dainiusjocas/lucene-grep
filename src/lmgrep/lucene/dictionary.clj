@@ -26,18 +26,6 @@
     (catch Exception e
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
-(defn normalize-dictionary-entry [dictionary-entry default-type]
-  (-> dictionary-entry
-      (update :stemmer keyword)
-      (update :tokenizer keyword)
-      (update :type (fn [type] (if type type default-type)))))
-
-(defn inject-analysis-options [dictionary-entry analysis-keys analysis-options]
-  (reduce (fn [dict-entry k]
-            (assoc dict-entry k (text-analysis/two-way-merge k analysis-options dict-entry)))
-          dictionary-entry
-          analysis-keys))
-
 (def analysis-keys #{:case-sensitive?
                      :ascii-fold?
                      :stem?
@@ -77,24 +65,19 @@
       :tokenizer tokenizer
       :token-filters token-filters)))
 
-(defn merge-flags-into-acm [default-text-analysis options]
-  (let [analysis-flags (select-keys options analysis-keys)]
-    (if (empty? analysis-flags)
-      (if (empty? (get options :analysis))
+(defn prepare-analysis-configuration [default-text-analysis options]
+  (if (empty? (get options :analysis))
+    (let [analysis-flags (select-keys options analysis-keys)]
+      (if (empty? analysis-flags)
         default-text-analysis
-        (get options :analysis))
-      (override-acm default-text-analysis analysis-flags))))
+        (override-acm default-text-analysis analysis-flags)))
+    (get options :analysis)))
 
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf]
-  (let [with-analysis-options (-> questionnaire-entry
-                                  (normalize-dictionary-entry default-type)
-                                  (inject-analysis-options analysis-keys global-analysis-conf))
-        ; Get full combined analysis conf
-        analysis-conf (merge-flags-into-acm global-analysis-conf questionnaire-entry)
-        ; Field name should be calculatable from the `analysis-conf`
+  (let [with-analysis-options (update questionnaire-entry :type (fn [type] (if type type default-type)))
+        analysis-conf (prepare-analysis-configuration global-analysis-conf questionnaire-entry)
         field-name (text-analysis/get-field-name analysis-conf)
-        ; Analyzer should be constructed from the `analysis-conf`
         monitor-analyzer (text-analysis/get-string-analyzer analysis-conf)]
     (Dict.
       field-name
@@ -112,7 +95,7 @@
       acc)))
 
 (defn normalize [questionnaire default-type options]
-  (let [global-analysis-conf (merge-flags-into-acm default-text-analysis options)]
+  (let [global-analysis-conf (prepare-analysis-configuration default-text-analysis options)]
     (->> questionnaire
          ; Make sure that each dictionary entry has an :id
          indexed

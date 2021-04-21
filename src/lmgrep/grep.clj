@@ -108,7 +108,7 @@
   "Sequence of text into sequence of text token sequences. Output format is JSON.
   If given file path reads file otherwise stdin."
   [files-pattern files options]
-  (let [analysis-conf (dictionary/merge-flags-into-acm dictionary/default-text-analysis options)
+  (let [analysis-conf (dictionary/prepare-analysis-configuration dictionary/default-text-analysis options)
         ^Analyzer analyzer (analyzer/create analysis-conf)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))]
     (doseq [path (if files-pattern
