@@ -1,6 +1,7 @@
 (ns lmgrep.lucene
   (:require [clojure.string :as s]
             [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.dictionary :as dictionary]
             [lmgrep.lucene.monitor :as monitor]
             [lmgrep.lucene.matching :as matching]
             [lmgrep.lucene.text-analysis :as text-analysis]))
@@ -29,7 +30,8 @@
 (comment
   (text->tokens
     "foo text bar BestClass name"
-    (text-analysis/flags->analysis-conf
+    (dictionary/override-acm
+      dictionary/default-text-analysis
       {:tokenizer                   :whitespace
        :case-sensitive?             false
        :ascii-fold?                 false

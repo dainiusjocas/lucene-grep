@@ -1,6 +1,8 @@
 (ns lmgrep.lucene.dictionary
   (:require [clojure.core.reducers :as r]
-            [lmgrep.lucene.text-analysis :as text-analysis])
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.field-name :as field-name]
+            [lmgrep.lucene.analysis-conf :as ac])
   (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
@@ -26,65 +28,30 @@
     (catch Exception e
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
-(def analysis-keys #{:case-sensitive?
-                     :ascii-fold?
-                     :stem?
-                     :tokenizer
-                     :stemmer
-                     :word-delimiter-graph-filter})
-
 (defrecord Dict [field-name monitor-analyzer monitor-query])
 
-(def default-text-analysis
-  {:tokenizer nil
-   :token-filters [{:name "lowercase"}
-                   {:name "asciifolding"}
-                   {:name "englishMinimalStem"}]})
+(def ^Analyzer get-string-analyzer
+  (memoize analyzer/create))
 
-(defn override-acm [acm flags]
-  (let [tokenizer (or (when-let [tokenizer-kw (get flags :tokenizer)]
-                        (text-analysis/tokenizer tokenizer-kw))
-                      (:tokenizer acm))
-        token-filters (cond->> (get acm :token-filters)
-                               (true? (get flags :case-sensitive?))
-                               (remove (fn [tf] (= "lowercase" (name (get tf :name)))))
-                               (false? (get flags :ascii-fold?))
-                               (remove (fn [tf] (= "asciifolding" (name (get tf :name)))))
-                               (false? (get flags :stem?))
-                               (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name)))))
-                               (keyword? (keyword (get flags :stemmer)))
-                               ((fn [tfs]
-                                  (conj (into [] (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name))))
-                                                         tfs))
-                                        {:name (text-analysis/stemmer (keyword (get flags :stemmer)))})))
-                               (pos-int? (get flags :word-delimiter-graph-filter))
-                               (cons {:name "worddelimitergraph"
-                                      :args (text-analysis/wdgf->token-filter-args
-                                              (get flags :word-delimiter-graph-filter))}))]
-    (assoc acm
-      :tokenizer tokenizer
-      :token-filters token-filters)))
+(def ^String get-field-name
+  (memoize field-name/construct))
 
-(defn prepare-analysis-configuration [default-text-analysis options]
-  (if (empty? (get options :analysis))
-    (let [analysis-flags (select-keys options analysis-keys)]
-      (if (empty? analysis-flags)
-        default-text-analysis
-        (override-acm default-text-analysis analysis-flags)))
-    (get options :analysis)))
+(defn ensure-type [questionnaire-entry default-type]
+  (update questionnaire-entry :type (fn [type] (if type type default-type))))
 
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf]
-  (let [with-analysis-options (update questionnaire-entry :type (fn [type] (if type type default-type)))
-        analysis-conf (prepare-analysis-configuration global-analysis-conf questionnaire-entry)
-        field-name (text-analysis/get-field-name analysis-conf)
-        monitor-analyzer (text-analysis/get-string-analyzer analysis-conf)]
+  (let [analysis-conf (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
+        field-name (get-field-name analysis-conf)
+        monitor-analyzer (get-string-analyzer analysis-conf)]
     (Dict.
       field-name
       monitor-analyzer
-      (query->monitor-query with-analysis-options field-name monitor-analyzer))))
+      (query->monitor-query (ensure-type questionnaire-entry default-type) field-name monitor-analyzer))))
 
-(defn indexed [questionnaire]
+(defn indexed
+  "Iterate over all entries and add sequence number as ID if ID is missing."
+  [questionnaire]
   (loop [index 0
          entries questionnaire
          acc []]
@@ -94,18 +61,22 @@
              (conj acc (update (nth entries 0) :id #(or % (str index)))))
       acc)))
 
-(defn normalize [questionnaire default-type options]
-  (let [global-analysis-conf (prepare-analysis-configuration default-text-analysis options)]
+(defn normalize
+  "With global analysis configuration for each query:
+  - add ID if missing;
+  - construct field name;
+  - construct analyzer;
+  - construct Lucene MonitorQuery object."
+  [questionnaire default-type options]
+  (let [global-analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)]
     (->> questionnaire
-         ; Make sure that each dictionary entry has an :id
          indexed
-         ; Add text analysis details
          (r/map (fn [dictionary-entry]
                   (prepare-query-entry dictionary-entry default-type global-analysis-conf)))
          (r/foldcat))))
 
 (defn get-monitor-queries
-  "Returns a list MonitorQuery vector"
+  "Returns a vector of MonitorQuery"
   [questionnaire]
   (->> questionnaire
        (r/map :monitor-query)
