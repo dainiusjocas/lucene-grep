@@ -93,10 +93,4 @@
   (cli/parse-opts args cli-options))
 
 (comment
-  (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"])
-  (lmgrep.cli/handle-args ["test"])
-  (lmgrep.cli/handle-args ["test" "-q" "foo" "--query=bar"])
-  (lmgrep.cli/handle-args ["test" "-q" "foo" "--queries-file=README.md"])
-  (lmgrep.cli/handle-args ["--format=edn"])
-  (lmgrep.cli/handle-args ["--excludes=**.edn"])
-  (lmgrep.cli/handle-args ["--with-score"]))
+  (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"]))

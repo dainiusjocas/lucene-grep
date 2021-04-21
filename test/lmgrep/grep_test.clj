@@ -234,3 +234,24 @@
                           (str/trim
                             (with-out-str
                               (grep/grep (map str (range size)) nil nil options)))))))))
+
+(deftest combination-of-flags-and-analysis-conf
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "jump"
+        options {:split true
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :with-empty-lines true
+                 :template "{{highlighted-line}}"}]
+
+    (testing "standard analyzer should produce no matches"
+      (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
+        (is (= "\n" (with-in-str text-from-stdin
+                                 (with-out-str
+                                   (grep/grep [query] nil nil options)))))))
+
+    (testing "English analyzer should produce a matche"
+      (let [options (assoc options :analysis {:analyzer {:name "english"}})]
+        (is (= "The quick brown fox >jumps< over the lazy dog\n" (with-in-str text-from-stdin
+                                 (with-out-str
+                                   (grep/grep [query] nil nil options)))))))))

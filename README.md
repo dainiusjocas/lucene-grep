@@ -303,22 +303,6 @@ The number 99 is a sum of options as described [here](https://lucene.apache.org/
 - [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
 - [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
 
-## GraalVM native-image
-
-```shell
- echo "dainius jocas"  | clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M -m lmgrep.core  --only-analyze
-```
-
-```clojure
-(spit "graalvm/lucene-reflect-config.json"
-      (json/write-value-as-string
-        (map (fn [entry]
-               (assoc entry "allDeclaredConstructors" true))
-             (filter
-               (fn [e] (re-matches #"org.apache.*" (get e "name")))
-               (json/read-value (slurp "graalvm/reflect-config.json"))))))
-```
-
 ## License
 
 Copyright &copy; 2021 [Dainius Jocas](https://www.jocas.lt).

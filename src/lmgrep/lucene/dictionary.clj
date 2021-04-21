@@ -52,13 +52,14 @@
 (defrecord Dict [field-name monitor-analyzer monitor-query])
 
 (defn prepare-query-entry
-  [questionnaire-entry default-type analysis-options]
+  [questionnaire-entry default-type analysis-options options]
   (let [with-analysis-options (-> questionnaire-entry
                                   (normalize-dictionary-entry default-type)
                                   (inject-analysis-options analysis-keys analysis-options))
         ; Get full combined analysis conf
         analysis-conf (text-analysis/merge-from-flags-with-analysis-conf
-                        (get questionnaire-entry :analysis)
+                        (or (get questionnaire-entry :analysis)
+                            (get options :analysis))
                         (text-analysis/flags->analysis-conf with-analysis-options))
         ; Field name should be calculatable from the `analysis-conf`
         field-name (text-analysis/get-field-name analysis-conf)
@@ -86,7 +87,7 @@
          indexed
          ; Add text analysis details
          (r/map (fn [dictionary-entry]
-                  (prepare-query-entry dictionary-entry default-type analysis-options)))
+                  (prepare-query-entry dictionary-entry default-type analysis-options options)))
          (r/foldcat))))
 
 (defn get-monitor-queries
