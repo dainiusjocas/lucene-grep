@@ -3,8 +3,6 @@
             [clojure.string :as str]
             [lmgrep.grep :as grep]
             [lmgrep.lucene :as lucene]
-            [lmgrep.lucene.dictionary :as dictionary]
-            [lmgrep.lucene.text-analysis :as text-analysis]
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene.analyzer :as analyzer]))
 
@@ -28,11 +26,14 @@
   (testing "word delimiter"
     (let [text "foo text bar BestClass fooo name"
           query "best class"
-          dictionary [(merge
-                        dictionary/default-text-analysis
-                        {:query                       query
-                         :id                          "0"
-                         :word-delimiter-graph-filter (+ 1 2 32 64)})]]
+          dictionary [{:query                       query
+                       :id                          "0"
+                       :case-sensitive?             false
+                       :ascii-fold?                 true
+                       :stem?                       true
+                       :tokenizer                   :standard
+                       :stemmer                     :english
+                       :word-delimiter-graph-filter (+ 1 2 32 64)}]]
       (is (= [{:begin-offset  13
                :dict-entry-id "0"
                :end-offset    17
@@ -50,15 +51,15 @@
 (deftest only-analysis
   (testing "file input"
     (let [file-path "test/resources/test.txt"
-          analyzer (analyzer/create {})]
+          options {}]
       (is (= 2 (count
                  (str/split-lines
                    (str/trim
                      (with-out-str
-                       (grep/analyze-lines file-path nil analyzer)))))))))
+                       (grep/analyze-lines file-path nil options)))))))))
   (testing "multiple lines from stdin"
     (let [text-from-stdin "foo bar \nbaz quux"
-          analyzer (analyzer/create {})]
+          analyzer {}]
       (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
              (with-in-str text-from-stdin
                           (with-out-str

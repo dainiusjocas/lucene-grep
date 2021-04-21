@@ -26,14 +26,6 @@
     (catch Exception e
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
-(def default-text-analysis
-  {:case-sensitive?             false
-   :ascii-fold?                 true
-   :stem?                       true
-   :tokenizer                   :standard
-   :stemmer                     :english
-   :word-delimiter-graph-filter 0})
-
 (defn normalize-dictionary-entry [dictionary-entry default-type]
   (-> dictionary-entry
       (update :stemmer keyword)
@@ -46,20 +38,60 @@
           dictionary-entry
           analysis-keys))
 
-(def analysis-keys (keys default-text-analysis))
+(def analysis-keys #{:case-sensitive?
+                     :ascii-fold?
+                     :stem?
+                     :tokenizer
+                     :stemmer
+                     :word-delimiter-graph-filter})
 
 (defrecord Dict [field-name monitor-analyzer monitor-query])
 
+(def default-text-analysis
+  {:tokenizer nil
+   :token-filters [{:name "lowercase"}
+                   {:name "asciifolding"}
+                   {:name "englishMinimalStem"}]})
+
+(defn override-acm [acm flags]
+  (let [tokenizer (or (when-let [tokenizer-kw (get flags :tokenizer)]
+                        (text-analysis/tokenizer tokenizer-kw))
+                      (:tokenizer acm))
+        token-filters (cond->> (get acm :token-filters)
+                               (true? (get flags :case-sensitive?))
+                               (remove (fn [tf] (= "lowercase" (name (get tf :name)))))
+                               (false? (get flags :ascii-fold?))
+                               (remove (fn [tf] (= "asciifolding" (name (get tf :name)))))
+                               (false? (get flags :stem?))
+                               (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name)))))
+                               (keyword? (keyword (get flags :stemmer)))
+                               ((fn [tfs]
+                                  (conj (into [] (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name))))
+                                                         tfs))
+                                        {:name (text-analysis/stemmer (keyword (get flags :stemmer)))})))
+                               (pos-int? (get flags :word-delimiter-graph-filter))
+                               (cons {:name "worddelimitergraph"
+                                      :args (text-analysis/wdgf->token-filter-args
+                                              (get flags :word-delimiter-graph-filter))}))]
+    (assoc acm
+      :tokenizer tokenizer
+      :token-filters token-filters)))
+
+(defn merge-flags-into-acm [default-text-analysis options]
+  (let [analysis-flags (select-keys options analysis-keys)]
+    (if (empty? analysis-flags)
+      (if (empty? (get options :analysis))
+        default-text-analysis
+        (get options :analysis))
+      (override-acm default-text-analysis analysis-flags))))
+
 (defn prepare-query-entry
-  [questionnaire-entry default-type analysis-options options]
+  [questionnaire-entry default-type global-analysis-conf]
   (let [with-analysis-options (-> questionnaire-entry
                                   (normalize-dictionary-entry default-type)
-                                  (inject-analysis-options analysis-keys analysis-options))
+                                  (inject-analysis-options analysis-keys global-analysis-conf))
         ; Get full combined analysis conf
-        analysis-conf (text-analysis/merge-from-flags-with-analysis-conf
-                        (or (get questionnaire-entry :analysis)
-                            (get options :analysis))
-                        (text-analysis/flags->analysis-conf with-analysis-options))
+        analysis-conf (merge-flags-into-acm global-analysis-conf questionnaire-entry)
         ; Field name should be calculatable from the `analysis-conf`
         field-name (text-analysis/get-field-name analysis-conf)
         ; Analyzer should be constructed from the `analysis-conf`
@@ -74,19 +106,19 @@
          entries questionnaire
          acc []]
     (if entries
-     (recur (inc index)
-            (next entries)
-            (conj acc (update (nth entries 0) :id #(or % (str index)))))
-     acc)))
+      (recur (inc index)
+             (next entries)
+             (conj acc (update (nth entries 0) :id #(or % (str index)))))
+      acc)))
 
 (defn normalize [questionnaire default-type options]
-  (let [analysis-options (merge default-text-analysis (select-keys options analysis-keys))]
+  (let [global-analysis-conf (merge-flags-into-acm default-text-analysis options)]
     (->> questionnaire
          ; Make sure that each dictionary entry has an :id
          indexed
          ; Add text analysis details
          (r/map (fn [dictionary-entry]
-                  (prepare-query-entry dictionary-entry default-type analysis-options options)))
+                  (prepare-query-entry dictionary-entry default-type global-analysis-conf)))
          (r/foldcat))))
 
 (defn get-monitor-queries
