@@ -99,3 +99,66 @@
   (let [text "lietus lyja"
         analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
     (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer)))))
+
+(deftest try-all-predefined-analyzers
+  (let [text "cats and dogs"
+        analyzer-names (keys analysis/predefined-analyzers)]
+    (is (not (empty? analyzer-names)))
+    (doseq [an analyzer-names]
+      (try
+        (let [analyzer (analysis/create {:analyzer {:name an}})]
+          (is (not (empty? (ta/text->token-strings text analyzer)))))
+        (catch Exception e
+          (println (format "Failed analyzer: '%s'" an))
+          (.printStackTrace e))))))
+
+(deftest try-all-char-filters
+  (let [text "cats and dogs"
+        with-required-params #{"patternreplace"}
+        char-filter-names (remove (fn [cfn] (contains? with-required-params cfn))
+                                  (keys analysis/char-filter-name->class))]
+    (is (not (empty? char-filter-names)))
+    (doseq [char-filter-name char-filter-names]
+      (try
+        (let [analyzer (analysis/create {:char-filters [{:name char-filter-name}]})]
+          (is (not (empty? (ta/text->token-strings text analyzer)))))
+        (catch Exception e
+          (println (format "Failed char filter name: '%s' class: '%s'"
+                           char-filter-name
+                           (get analysis/char-filter-name->class char-filter-name)))
+          (throw e))))))
+
+(deftest try-all-tokenizers
+  (let [text "cats and dogs"
+        components analysis/tokenizer-name->class
+        with-required-params #{"simplepatternsplit" "simplepattern" "pattern"}
+        tokenizer-names (remove (fn [tn] (contains? with-required-params tn))
+                                (keys components))]
+    (is (not (empty? tokenizer-names)))
+    (doseq [tokenizer-name tokenizer-names]
+      (try
+        (let [analyzer (analysis/create {:tokenizer {:name tokenizer-name}})]
+          (is (not (empty? (ta/text->token-strings text analyzer)))))
+        (catch Exception e
+          (println (format "Failed tokenizer name: '%s' class: '%s'"
+                           tokenizer-name (get components tokenizer-name)))
+          (throw e))))))
+
+(deftest try-all-token-filters
+  (let [text "cats and dogs"
+        components analysis/token-filter-name->class
+        with-required-params #{"synonym" "limittokencount" "delimitedpayload" "dictionarycompoundword"
+                               "numericpayload" "hunspellstem" "edgengram" "patterncapturegroup"
+                               "hyphenationcompoundword" "length" "type" "synonymgraph" "limittokenoffset"
+                               "protectedterm" "limittokenposition" "patternreplace" "ngram" "codepointcount"}
+        token-filter-name (remove (fn [tn] (contains? with-required-params tn))
+                                  (keys components))]
+    (is (not (empty? token-filter-name)))
+    (doseq [tokenizer-name token-filter-name]
+      (try
+        (let [analyzer (analysis/create {:token-filters [{:name tokenizer-name}]})]
+          (is (vector? (ta/text->token-strings text analyzer))))
+        (catch Exception e
+          (println (format "Failed token filter name: '%s' class: '%s'"
+                           tokenizer-name (get components tokenizer-name)))
+          (throw e))))))
