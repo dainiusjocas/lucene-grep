@@ -249,6 +249,65 @@ If your JSON spans multiple lines ask a little help from `jq`:
 echo "dogs and cats" | ./lmgrep --only-analyze --analysis=$(jq -c . analysis-conf.json)
 ```
 
+### What about resources for analyzers?
+
+Some token filters require a file as an argument, e.g. `StopFilterFactory` requires `words` which is a file.
+By default, the Lucene would load the file under `words` from the classpath.
+However, `lmgrep` is a single binary and there the notion of the classpath makes little sense.
+To support such analysis components that expects files the Lucene class that loads files was patched to support arbitrary files.
+
+E.g. create a stopwords file:
+```shell
+echo "foo\nbar" > my-stopwords.txt
+```
+Run the analysis
+```shell
+echo "foo bar baz" | \
+  ./lmgrep \
+  --only-analyze \
+  --analysis='
+  {
+    "token-filters": [
+      {
+        "name": "stop",
+        "args": {
+          "words": "'$HOME'/.lmgrep/my-stopwords.txt"
+        }
+      }
+    ]
+  }
+  '
+=>
+["baz"]
+```
+See the custom stopwords was removed.
+
+Creating files in arbitrary places might be OK for one-off scripts.
+However, it creates some mess.
+Therefore, consider creating a folder for your analysis component resources such as: `$HOME/.lmgrep`.
+
+```shell
+export LMGREP_HOME=$HOME/.lmgrep
+echo "foo\nbar" > $LMGREP_HOME/my-stopwords.txt
+echo "foo bar baz" | \
+  ./lmgrep \
+  --only-analyze \
+  --analysis='
+  {
+    "token-filters": [
+      {
+        "name": "stop",
+        "args": {
+          "words": "'$LMGREP_HOME'/my-stopwords.txt"
+        }
+      }
+    ]
+  }
+  '
+=>
+["baz"]
+```
+
 ### Analysis in the queries file
 
 Every query in the queries file can provide its own configuration, e.g.:
