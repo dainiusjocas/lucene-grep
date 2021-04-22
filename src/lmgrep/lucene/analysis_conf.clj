@@ -9,7 +9,7 @@
                      :word-delimiter-graph-filter})
 
 (def default-text-analysis
-  {:tokenizer nil
+  {:tokenizer {:name "standard"}
    :token-filters [{:name "lowercase"}
                    {:name "asciifolding"}
                    {:name "englishMinimalStem"}]})

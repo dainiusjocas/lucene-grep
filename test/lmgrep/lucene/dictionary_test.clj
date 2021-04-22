@@ -35,21 +35,21 @@
       (let [flags {:case-sensitive? true}]
         (is (= {:token-filters [{:name "asciifolding"}
                                 {:name "englishMinimalStem"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))
 
     (testing ":ascii-fold? false removes asciifolding token filter"
       (let [flags {:ascii-fold? false}]
         (is (= {:token-filters [{:name "lowercase"}
                                 {:name "englishMinimalStem"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))
 
     (testing ":stem? false removes stemmer token filter"
       (let [flags {:stem? false}]
         (is (= {:token-filters [{:name "lowercase"}
                                 {:name "asciifolding"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))
 
     (testing ":stemmer :german replaces the default stemmer token filter"
@@ -57,7 +57,7 @@
         (is (= {:token-filters [{:name "lowercase"}
                                 {:name "asciifolding"}
                                 {:name "germanstem"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))
 
     (testing ":word-delimiter-graph-filter 1 adds first token filter"
@@ -67,7 +67,7 @@
                                 {:name "lowercase"}
                                 {:name "asciifolding"}
                                 {:name "englishMinimalStem"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))
 
     (testing ":word-delimiter-graph-filter 1 and german stemmer adds wdgf as first token filter"
@@ -78,7 +78,7 @@
                                 {:name "lowercase"}
                                 {:name "asciifolding"}
                                 {:name "germanstem"}]
-                :tokenizer     nil}
+                :tokenizer     {:name "standard"}}
                (dict/override-acm acm flags)))))))
 
 (deftest merge-acl-with-flags
