@@ -124,27 +124,28 @@ NOTE: when the Lucene queries are specified as a positional argument or with `-q
 Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-  -q, --query QUERY                              Lucene query string(s). If specified then all the positional arguments are interpreted as files.
-      --queries-file QUERIES_FILE                A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
-      --tokenizer TOKENIZER                      Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
-      --case-sensitive? CASE_SENSITIVE    false  If text should be case sensitive
-      --ascii-fold? ASCII_FOLDED          true   If text should be ascii folded
-      --stem? STEMMED                     true   If text should be stemmed
-      --stemmer STEMMER                          Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
-      --with-score                               If the matching score should be computed
-      --format FORMAT                            How the output should be formatted, one of: [edn json string]
-      --template TEMPLATE                        The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
-      --pre-tags PRE_TAGS                        A string that the highlighted text is wrapped in, use in conjunction with --post-tags
-      --post-tags POST_TAGS                      A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
-      --excludes EXCLUDES                        A GLOB that filters out files that were matched with a GLOB
-      --skip-binary-files                        If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
-      --with-empty-lines                         When provided on the input that does not match write an empty line to STDOUT.
-      --with-scored-highlights                   ALPHA: Instructs to highlight with scoring.
-      --[no-]split                               If a file (or STDIN) should be split by newline.
-      --hyperlink                                If a file should be printed as hyperlinks.
-      --with-details                             For JSON and EDN output adds raw highlights list.
-      --word-delimiter-graph-filter WDGF  0      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
-      --only-analyze                             When provided output will be analyzed text.
+  -q, --query QUERY                           Lucene query string(s). If specified then all the positional arguments are interpreted as files.
+      --queries-file QUERIES_FILE             A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
+      --tokenizer TOKENIZER                   Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
+      --case-sensitive? CASE_SENSITIVE        If text should be case sensitive
+      --ascii-fold? ASCII_FOLDED              If text should be ascii folded
+      --stem? STEMMED                         If text should be stemmed
+      --stemmer STEMMER                       Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --with-score                            If the matching score should be computed
+      --format FORMAT                         How the output should be formatted, one of: [edn json string]
+      --template TEMPLATE                     The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
+      --pre-tags PRE_TAGS                     A string that the highlighted text is wrapped in, use in conjunction with --post-tags
+      --post-tags POST_TAGS                   A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
+      --excludes EXCLUDES                     A GLOB that filters out files that were matched with a GLOB
+      --skip-binary-files                     If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --with-empty-lines                      When provided on the input that doesn't match write an empty line to STDOUT.
+      --with-scored-highlights                ALPHA: Instructs to highlight with scoring.
+      --[no-]split                            If a file (or STDIN) should be split by newline.
+      --hyperlink                             If a file should be printed as hyperlinks.
+      --with-details                          For JSON and EDN output adds raw highlights list.
+      --word-delimiter-graph-filter WDGF      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
+      --only-analyze                          When provided output will be analyzed text.
+      --analysis ANALYSIS                 {}  The analysis chain configuration
   -h, --help
 ```
 
