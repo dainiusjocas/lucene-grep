@@ -1,9 +1,8 @@
 (ns lmgrep.lucene
   (:require [clojure.string :as s]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.dictionary :as dictionary]
-            [lmgrep.lucene.monitor :as monitor]
             [lmgrep.lucene.matching :as matching]
+            [lmgrep.lucene.monitor :as monitor]
             [lmgrep.lucene.text-analysis :as text-analysis]))
 
 (defn highlighter
@@ -30,13 +29,14 @@
 (comment
   (text->tokens
     "foo text bar BestClass name"
-    (dictionary/override-acm
-      dictionary/default-text-analysis
-      {:tokenizer                   :whitespace
-       :case-sensitive?             false
-       :ascii-fold?                 false
-       :stem?                       true
-       :stemmer                     :english
-       :word-delimiter-graph-filter (+ 1 2 32 64)}))
+    {:tokenizer {:name "whitespace"
+                 :args {:rule "java"}}
+     :token-filters [{:name "worddelimitergraph"
+                      :args {"generateWordParts" 1
+                             "generateNumberParts" 1
+                             "preserveOriginal" 1
+                             "splitOnCaseChange" 1}}
+                     {:name "lowercase"}
+                     {:name "englishMinimalStem"}]})
 
   (text->tokens "texting names" {:analyzer {:name "English"}}))

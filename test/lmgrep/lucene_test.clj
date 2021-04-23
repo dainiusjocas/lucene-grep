@@ -1,10 +1,9 @@
 (ns lmgrep.lucene-test
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
-            [lmgrep.grep :as grep]
-            [lmgrep.lucene :as lucene]
             [lmgrep.formatter :as formatter]
-            [lmgrep.lucene.analyzer :as analyzer]))
+            [lmgrep.grep :as grep]
+            [lmgrep.lucene :as lucene]))
 
 (deftest highlighting-test
   (testing "coloring the output"

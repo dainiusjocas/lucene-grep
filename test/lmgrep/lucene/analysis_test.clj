@@ -1,5 +1,5 @@
 (ns lmgrep.lucene.analysis-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest testing is]]
             [clojure.string :as str]
             [lmgrep.lucene.analyzer :as analysis]
             [lmgrep.lucene.text-analysis :as ta]))
@@ -103,11 +103,11 @@
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
         analyzer-names (keys analysis/predefined-analyzers)]
-    (is (not (empty? analyzer-names)))
+    (is (seq analyzer-names))
     (doseq [an analyzer-names]
       (try
         (let [analyzer (analysis/create {:analyzer {:name an}})]
-          (is (not (empty? (ta/text->token-strings text analyzer)))))
+          (is (seq (ta/text->token-strings text analyzer))))
         (catch Exception e
           (println (format "Failed analyzer: '%s'" an))
           (.printStackTrace e))))))
@@ -117,11 +117,11 @@
         with-required-params #{"patternreplace"}
         char-filter-names (remove (fn [cfn] (contains? with-required-params cfn))
                                   (keys analysis/char-filter-name->class))]
-    (is (not (empty? char-filter-names)))
+    (is (seq char-filter-names))
     (doseq [char-filter-name char-filter-names]
       (try
         (let [analyzer (analysis/create {:char-filters [{:name char-filter-name}]})]
-          (is (not (empty? (ta/text->token-strings text analyzer)))))
+          (is (seq (ta/text->token-strings text analyzer))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -134,11 +134,11 @@
         with-required-params #{"simplepatternsplit" "simplepattern" "pattern"}
         tokenizer-names (remove (fn [tn] (contains? with-required-params tn))
                                 (keys components))]
-    (is (not (empty? tokenizer-names)))
+    (is (seq tokenizer-names))
     (doseq [tokenizer-name tokenizer-names]
       (try
         (let [analyzer (analysis/create {:tokenizer {:name tokenizer-name}})]
-          (is (not (empty? (ta/text->token-strings text analyzer)))))
+          (is (seq (ta/text->token-strings text analyzer))))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
@@ -153,7 +153,7 @@
                                "protectedterm" "limittokenposition" "patternreplace" "ngram" "codepointcount"}
         token-filter-name (remove (fn [tn] (contains? with-required-params tn))
                                   (keys components))]
-    (is (not (empty? token-filter-name)))
+    (is (seq token-filter-name))
     (doseq [tokenizer-name token-filter-name]
       (try
         (let [analyzer (analysis/create {:token-filters [{:name tokenizer-name}]})]

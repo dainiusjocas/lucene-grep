@@ -152,36 +152,35 @@
                                      (get analyzer :name)
                                      (sort (keys predefined-analyzers))))))
         (get predefined-analyzers (namify (str/replace n "Analyzer" ""))))
-      (try
-        (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder)]
-          (when (nil? (get tokenizer-name->class (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME))))
-            (throw (Exception. (format "Tokenizer '%s' is not available. Choose one of: %s"
-                                       (get tokenizer :name)
-                                       (sort (keys tokenizer-name->class))))))
-          (.withTokenizer cab
-                          ^Class
-                          (get tokenizer-name->class (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME)))
-                          ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
+      (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder)]
+        (when (nil? (get tokenizer-name->class (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME))))
+          (throw (Exception. (format "Tokenizer '%s' is not available. Choose one of: %s"
+                                     (get tokenizer :name)
+                                     (sort (keys tokenizer-name->class))))))
+        (.withTokenizer cab
+                        ^Class
+                        (get tokenizer-name->class (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME)))
+                        ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
 
-          (doseq [char-filter char-filters]
-            (when (nil? (get char-filter-name->class (namify (get char-filter :name))))
-              (throw (Exception. (format "Char filter '%s' is not available. Choose one of: %s"
-                                         (get char-filter :name)
-                                         (sort (keys char-filter-name->class))))))
-            (.addCharFilter cab
-                            ^Class (get char-filter-name->class (namify (get char-filter :name)))
-                            ^Map (HashMap. ^Map (stringify (get char-filter :args)))))
+        (doseq [char-filter char-filters]
+          (when (nil? (get char-filter-name->class (namify (get char-filter :name))))
+            (throw (Exception. (format "Char filter '%s' is not available. Choose one of: %s"
+                                       (get char-filter :name)
+                                       (sort (keys char-filter-name->class))))))
+          (.addCharFilter cab
+                          ^Class (get char-filter-name->class (namify (get char-filter :name)))
+                          ^Map (HashMap. ^Map (stringify (get char-filter :args)))))
 
-          (doseq [token-filter token-filters]
-            (when (nil? (get token-filter-name->class (namify (get token-filter :name))))
-              (throw (Exception. (format "Token Filter '%s' is not available. Choose one of: %s"
-                                         (get token-filter :name)
-                                         (sort (keys token-filter-name->class))))))
-            (.addTokenFilter cab
-                             ^Class (get token-filter-name->class (namify (get token-filter :name)))
-                             ^Map (HashMap. ^Map (stringify (get token-filter :args)))))
+        (doseq [token-filter token-filters]
+          (when (nil? (get token-filter-name->class (namify (get token-filter :name))))
+            (throw (Exception. (format "Token Filter '%s' is not available. Choose one of: %s"
+                                       (get token-filter :name)
+                                       (sort (keys token-filter-name->class))))))
+          (.addTokenFilter cab
+                           ^Class (get token-filter-name->class (namify (get token-filter :name)))
+                           ^Map (HashMap. ^Map (stringify (get token-filter :args)))))
 
-          (.build cab))))
+        (.build cab)))
     (catch Exception e
       ; TODO: Add debug info
       (throw e))))

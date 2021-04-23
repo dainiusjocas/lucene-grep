@@ -1,5 +1,5 @@
 (ns lmgrep.cli-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.cli :as cli]))
 
 (def default-options
