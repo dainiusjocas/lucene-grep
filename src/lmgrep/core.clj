@@ -21,17 +21,20 @@
       (println "Errors:" errors)
       (print-summary-msg summary)
       (System/exit 1))
-    (if (:only-analyze options)
-      (grep/analyze-lines (first positional-arguments) (rest positional-arguments) options)
-      (do
-        (when (or (:help options) (zero-queries? arguments options))
-          (print-summary-msg summary)
-          (if-not (:help options)
-            (System/exit 1)
-            (System/exit 0)))
-        (if-let [lucene-queries (seq (:query options))]
-          (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
-          (if (:queries-file options)
-            (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
-            (grep/grep [lucene-query] file-pattern files options)))))
-  (System/exit 0)))
+    (try
+      (if (:only-analyze options)
+        (grep/analyze-lines (first positional-arguments) (rest positional-arguments) options)
+        (do
+          (when (or (:help options) (zero-queries? arguments options))
+            (print-summary-msg summary)
+            (if-not (:help options)
+              (System/exit 1)
+              (System/exit 0)))
+          (if-let [lucene-queries (seq (:query options))]
+            (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
+            (if (:queries-file options)
+              (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
+              (grep/grep [lucene-query] file-pattern files options)))))
+      (catch Exception e
+        (.println System/err (.getMessage e))))
+    (System/exit 0)))
