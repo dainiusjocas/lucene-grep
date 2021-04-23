@@ -271,7 +271,7 @@ echo "foo bar baz" | \
       {
         "name": "stop",
         "args": {
-          "words": "'$HOME'/.lmgrep/my-stopwords.txt"
+          "words": "my-stopwords.txt"
         }
       }
     ]
