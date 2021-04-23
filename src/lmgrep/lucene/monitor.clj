@@ -1,7 +1,7 @@
 (ns lmgrep.lucene.monitor
   (:require [clojure.java.io :as io]
             [jsonista.core :as json]
-            [lmgrep.lucene.text-analysis :as text-analysis]
+            [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.dictionary :as dictionary])
   (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
@@ -25,7 +25,7 @@
                        (get dq "query")
                        (get dq "metadata"))))))
 
-(def empty-analyzer (text-analysis/get-string-analyzer {} {}))
+(def empty-analyzer (analyzer/create {}))
 
 (defn create [field-names-w-analyzers]
   (let [^MonitorConfiguration config (MonitorConfiguration.)

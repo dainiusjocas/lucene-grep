@@ -15,23 +15,27 @@
        (nil? (:queries-file options))))
 
 (defn -main [& args]
-  (let [{:keys [options arguments errors summary]
-         [lucene-query file-pattern & files :as positional-arguments] :arguments} (cli/handle-args args)]
-    (when (seq errors)
-      (println "Errors:" errors)
-      (print-summary-msg summary)
-      (System/exit 1))
-    (if (:only-analyze options)
-      (grep/analyze-lines (first positional-arguments) (rest positional-arguments) options)
-      (do
-        (when (or (:help options) (zero-queries? arguments options))
-          (print-summary-msg summary)
-          (if-not (:help options)
-            (System/exit 1)
-            (System/exit 0)))
-        (if-let [lucene-queries (seq (:query options))]
-          (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
-          (if (:queries-file options)
-            (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
-            (grep/grep [lucene-query] file-pattern files options)))))
-  (System/exit 0)))
+  (try
+    (let [{:keys [options arguments errors summary]
+           [lucene-query file-pattern & files :as positional-arguments] :arguments} (cli/handle-args args)]
+      (when (seq errors)
+        (println "Errors:" errors)
+        (print-summary-msg summary)
+        (System/exit 1))
+      (if (:only-analyze options)
+        (grep/analyze-lines (first positional-arguments) (rest positional-arguments) options)
+        (do
+          (when (or (:help options) (zero-queries? arguments options))
+            (print-summary-msg summary)
+            (if-not (:help options)
+              (System/exit 1)
+              (System/exit 0)))
+          (if-let [lucene-queries (seq (:query options))]
+            (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
+            (if (:queries-file options)
+              (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
+              (grep/grep [lucene-query] file-pattern files options))))))
+    (catch Exception e
+      (.println System/err (.getMessage e))
+      (System/exit 1)))
+  (System/exit 0))

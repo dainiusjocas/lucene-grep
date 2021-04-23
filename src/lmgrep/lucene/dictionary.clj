@@ -1,6 +1,8 @@
 (ns lmgrep.lucene.dictionary
   (:require [clojure.core.reducers :as r]
-            [lmgrep.lucene.text-analysis :as text-analysis])
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.field-name :as field-name]
+            [lmgrep.lucene.analysis-conf :as ac])
   (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
@@ -26,77 +28,55 @@
     (catch Exception e
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
-(def default-text-analysis
-  (text-analysis/map->Conf
-    {:case-sensitive?             false
-     :ascii-fold?                 true
-     :stem?                       true
-     :tokenizer                   :standard
-     :stemmer                     :english
-     :word-delimiter-graph-filter 0}))
+(defrecord Dict [field-name monitor-analyzer monitor-query])
 
-(defn normalize-dictionary-entry [dictionary-entry default-type]
-  (-> dictionary-entry
-      (update :stemmer keyword)
-      (update :tokenizer keyword)
-      (update :type (fn [type] (if type type default-type)))))
+(def ^Analyzer get-string-analyzer
+  (memoize analyzer/create))
 
-(defn inject-analysis-options [dictionary-entry analysis-keys analysis-options]
-  (reduce (fn [dict-entry k]
-            (assoc dict-entry k (text-analysis/two-way-merge k analysis-options dict-entry)))
-          dictionary-entry
-          analysis-keys))
+(def ^String get-field-name
+  (memoize field-name/construct))
 
-(def analysis-keys (keys default-text-analysis))
-
-(defrecord Dict [id query type meta
-                 tokenizer case-sensitive? ascii-fold? stem? stemmer word-delimiter-graph-filter
-                 field-name monitor-analyzer monitor-query])
+(defn ensure-type [questionnaire-entry default-type]
+  (update questionnaire-entry :type (fn [type] (if type type default-type))))
 
 (defn prepare-query-entry
-  [query-entry default-type analysis-options]
-  (let [with-analysis-options (-> query-entry
-                                  (normalize-dictionary-entry default-type)
-                                  (inject-analysis-options analysis-keys analysis-options))
-        field-name (text-analysis/get-field-name with-analysis-options analysis-options)
-        monitor-analyzer (text-analysis/get-string-analyzer with-analysis-options analysis-options)]
+  [questionnaire-entry default-type global-analysis-conf]
+  (let [analysis-conf (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
+        field-name (get-field-name analysis-conf)
+        monitor-analyzer (get-string-analyzer analysis-conf)]
     (Dict.
-      (:id with-analysis-options)
-      (:query with-analysis-options)
-      (:type with-analysis-options)
-      (:meta with-analysis-options)
-      (:tokenizer with-analysis-options)
-      (:case-sensitive? with-analysis-options)
-      (:ascii-fold? with-analysis-options)
-      (:stem? with-analysis-options)
-      (:stemmer with-analysis-options)
-      (:word-delimiter-graph-filter with-analysis-options)
       field-name
       monitor-analyzer
-      (query->monitor-query with-analysis-options field-name monitor-analyzer))))
+      (query->monitor-query (ensure-type questionnaire-entry default-type) field-name monitor-analyzer))))
 
-(defn indexed [questionnaire]
+(defn indexed
+  "Iterate over all entries and add sequence number as ID if ID is missing."
+  [questionnaire]
   (loop [index 0
          entries questionnaire
          acc []]
     (if entries
-     (recur (inc index)
-            (next entries)
-            (conj acc (update (nth entries 0) :id #(or % (str index)))))
-     acc)))
+      (recur (inc index)
+             (next entries)
+             (conj acc (update (nth entries 0) :id #(or % (str index)))))
+      acc)))
 
-(defn normalize [questionnaire default-type options]
-  (let [analysis-options (merge default-text-analysis (select-keys options analysis-keys))]
+(defn normalize
+  "With global analysis configuration for each query:
+  - add ID if missing;
+  - construct field name;
+  - construct analyzer;
+  - construct Lucene MonitorQuery object."
+  [questionnaire default-type options]
+  (let [global-analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)]
     (->> questionnaire
-         ; Make sure that each dictionary entry has an :id
          indexed
-         ; Add text analysis details
          (r/map (fn [dictionary-entry]
-                  (prepare-query-entry dictionary-entry default-type analysis-options)))
+                  (prepare-query-entry dictionary-entry default-type global-analysis-conf)))
          (r/foldcat))))
 
 (defn get-monitor-queries
-  "Returns a list MonitorQuery vector"
+  "Returns a vector of MonitorQuery"
   [questionnaire]
   (->> questionnaire
        (r/map :monitor-query)

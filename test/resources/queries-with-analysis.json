@@ -1,0 +1,20 @@
+[
+  {
+    "id": "0",
+    "query": "dogs",
+    "analysis": {
+      "analyzer": {
+        "name": "English"
+      }
+    }
+  },
+  {
+    "id": "1",
+    "query": "dogs",
+    "analysis": {
+      "tokenizer": {
+        "name": "whitespace"
+      }
+    }
+  }
+]

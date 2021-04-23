@@ -1,0 +1,1602 @@
+[
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.Analyzer",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.CharArraySet",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.TokenStream",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ar.ArabicAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ar.ArabicNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ar.ArabicStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.bg.BulgarianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.bg.BulgarianStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.bn.BengaliAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.bn.BengaliNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.bn.BengaliStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.boost.DelimitedBoostTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.br.BrazilianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.br.BrazilianStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ca.CatalanAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ca.CatalanSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.charfilter.MappingCharFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.cjk.CJKAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.cjk.CJKBigramFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.cjk.CJKWidthCharFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.cjk.CJKWidthFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ckb.SoraniAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ckb.SoraniNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ckb.SoraniStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.commongrams.CommonGramsFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.commongrams.CommonGramsQueryFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.compound.DictionaryCompoundWordTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.compound.HyphenationCompoundWordTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.DecimalDigitFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.FlattenGraphFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.KeywordTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.LetterTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.core.LowerCaseFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.StopAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.StopFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.TypeTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.UpperCaseFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.core.WhitespaceTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.custom.CustomAnalyzer",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.custom.CustomAnalyzer$Builder",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.cz.CzechAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.cz.CzechStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.da.DanishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.da.DanishSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.de.GermanAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.de.GermanLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.de.GermanMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.de.GermanNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.de.GermanStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.el.GreekAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.el.GreekLowerCaseFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.el.GreekStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.en.EnglishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.en.EnglishMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.en.EnglishPossessiveFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.en.KStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.en.PorterStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.es.SpanishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.es.SpanishLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.es.SpanishMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.et.EstonianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.et.EstonianSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.eu.BasqueAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.eu.BasqueSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.fa.PersianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.fa.PersianCharFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.fa.PersianNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.fi.FinnishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.fi.FinnishLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.fr.FrenchAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.fr.FrenchLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.fr.FrenchMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ga.IrishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ga.IrishLowerCaseFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ga.IrishSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.gl.GalicianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.gl.GalicianMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.gl.GalicianStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.hi.HindiAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.hi.HindiNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.hi.HindiStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.hu.HungarianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.hu.HungarianLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.hunspell.HunspellStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.hy.ArmenianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.hy.ArmenianSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.id.IndonesianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.id.IndonesianStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.in.IndicNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.it.ItalianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.it.ItalianLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.lt.LithuanianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.lt.LithuanianSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.lv.LatvianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.lv.LatvianStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.minhash.MinHashFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.CapitalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.CodepointCountFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.DateRecognizerFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.DelimitedTermFrequencyTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.FingerprintFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.FixBrokenOffsetsFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.KeepWordFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.KeywordRepeatFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.LengthFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenCountFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenOffsetFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenPositionFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.ProtectedTermFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.RemoveDuplicatesTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.ScandinavianFoldingFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.ScandinavianNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.StemmerOverrideFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.TrimFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.TruncateTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.TypeAsSynonymFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.WordDelimiterFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ngram.EdgeNGramTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ngram.NGramFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ngram.NGramTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.nl.DutchAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.nl.DutchSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.nl.KPSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.no.NorwegianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.no.NorwegianLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.no.NorwegianMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.path.PathHierarchyTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.PatternCaptureGroupFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.PatternReplaceCharFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.PatternTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.SimplePatternSplitTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pattern.SimplePatternTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.payloads.DelimitedPayloadTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.payloads.NumericPayloadTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.payloads.TokenOffsetPayloadTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.payloads.TypeAsPayloadTokenFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pl.PolishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.pt.PortugueseAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.pt.PortugueseLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pt.PortugueseMinimalStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.pt.PortugueseStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.reverse.ReverseStringFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.ro.RomanianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ro.RomanianSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ru.RussianAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.ru.RussianLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.shingle.FixedShingleFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.shingle.ShingleFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.sr.SerbianNormalizationFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.ClassicAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.ClassicFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.ClassicTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.StandardAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.standard.StandardTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.UAX29URLEmailAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.standard.UAX29URLEmailTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.stempel.StempelPolishStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.sv.SwedishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.sv.SwedishLightStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.synonym.SynonymFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.synonym.SynonymGraphFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.th.ThaiAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.th.ThaiTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.tokenattributes.CharTermAttribute",
+    "allDeclaredConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.tokenattributes.KeywordAttributeImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.tokenattributes.PackedTokenAttributeImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.tr.ApostropheFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.tr.TurkishAnalyzer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.tr.TurkishLowerCaseFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.analysis.tr.TurkishSnowballStemTokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.util.CharFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.util.ElisionFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.util.TokenFilterFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.util.TokenizerFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.analysis.wikipedia.WikipediaTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.document.Document",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.document.Field",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.document.FieldType",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicFields": true,
+    "name": "org.apache.lucene.index.IndexOptions",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.HighlightsMatch",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "MATCHER"
+      }
+    ]
+  },
+  {
+    "allPublicFields": true,
+    "name": "org.apache.lucene.monitor.HighlightsMatch$Hit",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.MatchingQueries",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.Monitor",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.MonitorConfiguration",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.MonitorQuery",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.MonitorQuerySerializer",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.ScoringHighlightsMatch",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "MATCHER"
+      }
+    ]
+  },
+  {
+    "allPublicFields": true,
+    "name": "org.apache.lucene.monitor.ScoringHighlightsMatch$Hit",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.monitor.ScoringMatch",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "DEFAULT_MATCHER"
+      }
+    ]
+  },
+  {
+    "name": "org.apache.lucene.queryparser.classic.ParseException",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.classic.QueryParser",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.search.MatchAllDocsQuery",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.search.Query",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.store.DataOutput",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.ByteBlockPool",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "allPublicFields": true,
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.BytesRef",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.BytesRefHash",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.util.fst.Builder$Arc[]",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.fst.BytesStore",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.fst.FST",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.fst.FST$Arc",
+    "allDeclaredConstructors": true
+  }
+]

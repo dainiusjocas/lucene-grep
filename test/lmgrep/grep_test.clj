@@ -147,7 +147,7 @@
                    :post-tags       "<"
                    :template        "{{highlighted-line}}"
                    :queries-file    "test/resources/queries.json"}]
-      (is (str/blank?
+      (is (= ""
             (with-in-str text-from-stdin
                          (str/trim
                            (with-out-str
@@ -209,6 +209,28 @@
                               (with-out-str
                                 (grep/grep queries nil nil options))))))))))
 
+(deftest grepping-queries-from-file-with-analysis
+  (testing "analysis specified next to each query in a file"
+    (let [text-from-stdin "a white dog and a black cat"
+          queries []
+          options {:split        true
+                   :queries-file "test/resources/queries-with-analysis.json"
+                   :format       :json
+                   :with-details true}]
+      (is (= {:highlights  [{:begin-offset  8
+                             :dict-entry-id "0"
+                             :end-offset    11
+                             :meta          {}
+                             :query         "dogs"
+                             :type          "QUERY"}]
+              :line        "a white dog and a black cat"
+              :line-number 1}
+             (json-decode
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep queries nil nil options))))))))))
+
 (deftest grepping-when-no-match-with-flag-to-println-empty-line
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "foo"
@@ -234,3 +256,24 @@
                           (str/trim
                             (with-out-str
                               (grep/grep (map str (range size)) nil nil options)))))))))
+
+(deftest combination-of-flags-and-analysis-conf
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "jump"
+        options {:split true
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :with-empty-lines true
+                 :template "{{highlighted-line}}"}]
+
+    (testing "standard analyzer should produce no matches"
+      (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
+        (is (= "\n" (with-in-str text-from-stdin
+                                 (with-out-str
+                                   (grep/grep [query] nil nil options)))))))
+
+    (testing "English analyzer should produce a matche"
+      (let [options (assoc options :analysis {:analyzer {:name "english"}})]
+        (is (= "The quick brown fox >jumps< over the lazy dog\n" (with-in-str text-from-stdin
+                                 (with-out-str
+                                   (grep/grep [query] nil nil options)))))))))

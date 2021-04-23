@@ -6,6 +6,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Fixed/enhanced
 
+- Expose a declarative text analysis pipeline specification in JSON (see #81)
+- Provide a list of predefined analyzers
+- Support customizable char Filters
+- Support customizable tokenizers
+- Support customizable token filters  
 - Use Java PrintWriter to write to STDOUT (see #79)
 
 ## v2021.04.06

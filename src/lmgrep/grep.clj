@@ -7,6 +7,8 @@
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene]
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.analysis-conf :as ac]
             [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader File PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)))
@@ -106,7 +108,8 @@
   "Sequence of text into sequence of text token sequences. Output format is JSON.
   If given file path reads file otherwise stdin."
   [files-pattern files options]
-  (let [^Analyzer analyzer (text-analysis/analyzer-constructor options)
+  (let [analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)
+        ^Analyzer analyzer (analyzer/create analysis-conf)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))]
     (doseq [path (if files-pattern
                    (concat (fs/get-files files-pattern options)
@@ -146,4 +149,4 @@
   (lmgrep.grep/analyze-lines
     "test/resources/test.txt"
     nil
-    (text-analysis/analyzer-constructor {})))
+    {}))
