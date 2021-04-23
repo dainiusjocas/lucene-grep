@@ -18,5 +18,6 @@ WORKDIR /usr/src/app
 COPY deps.edn /usr/src/app/
 RUN clojure -P -M:native-linux-static
 COPY src/ /usr/src/app/src
+COPY graalvm/ /usr/src/app/graalvm
 
 RUN clojure -M:native-linux-static
