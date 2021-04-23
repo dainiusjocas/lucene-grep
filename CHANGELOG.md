@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.04.23
+
 ## Fixed/enhanced
 
 - Expose a declarative text analysis pipeline specification in JSON (see #81)
