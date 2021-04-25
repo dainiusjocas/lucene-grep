@@ -153,7 +153,7 @@ NOTE: question marks in `zsh` shell must be escaped, e.g. `--case-sensitive\?=tr
 
 ## Text Analysis
 
-The text analysis pipeline can be declaratively specified with the `--analysis` flag, e.g.:
+The [text analysis](https://www.jocas.lt/blog/post/lucene-text-analysis/) pipeline can be declaratively specified with the `--analysis` flag, e.g.:
 ```shell
 echo "<p>foo bars baz</p>" | \
   ./lmgrep \
