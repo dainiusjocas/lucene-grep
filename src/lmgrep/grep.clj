@@ -126,7 +126,7 @@
                              (text-analysis/text->token-strings line analyzer))))
                     line-in-chan
                     true
-                    (fn [^Throwable e]
+                    (fn [_]
                       (a/close! line-out-chan)
                       (System/exit 1)))
 
