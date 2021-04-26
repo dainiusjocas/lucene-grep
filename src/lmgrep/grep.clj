@@ -124,7 +124,11 @@
                     (map (fn [line]
                            (json/write-value-as-string
                              (text-analysis/text->token-strings line analyzer))))
-                    line-in-chan)
+                    line-in-chan
+                    true
+                    (fn [_]
+                      (a/close! line-out-chan)
+                      (System/exit 1)))
 
         ;; read lines in a thread pool
         (a/go

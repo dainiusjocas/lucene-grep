@@ -24,6 +24,13 @@ uberjar: pom.xml
 test:
 	clojure -M:test
 
+.PHONY: test-binary
+test-binary:
+	sh binary-test.sh
+
+.PHONY: test-all
+test-all: test build test-binary
+
 .PHONY: lint
 lint:
 	clojure -M:clj-kondo

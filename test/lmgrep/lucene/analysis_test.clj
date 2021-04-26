@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest testing is]]
             [clojure.string :as str]
             [lmgrep.lucene.analyzer :as analysis]
-            [lmgrep.lucene.text-analysis :as ta]))
+            [lmgrep.lucene.text-analysis :as ta]
+            [jsonista.core :as json]))
 
 (deftest predefined-analyzers
   (let [text "The brown foxes"
@@ -107,7 +108,9 @@
     (doseq [an analyzer-names]
       (try
         (let [analyzer (analysis/create {:analyzer {:name an}})]
-          (is (seq (ta/text->token-strings text analyzer))))
+          (is (seq (ta/text->token-strings text analyzer)))
+          (spit (format "test/resources/binary/analyzers/%s.json" an)
+                (json/write-value-as-string {:analyzer {:name an}})))
         (catch Exception e
           (println (format "Failed analyzer: '%s'" an))
           (.printStackTrace e))))))
@@ -121,7 +124,9 @@
     (doseq [char-filter-name char-filter-names]
       (try
         (let [analyzer (analysis/create {:char-filters [{:name char-filter-name}]})]
-          (is (seq (ta/text->token-strings text analyzer))))
+          (is (seq (ta/text->token-strings text analyzer))
+              (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
+                    (json/write-value-as-string {:char-filters [{:name char-filter-name}]}))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -138,7 +143,9 @@
     (doseq [tokenizer-name tokenizer-names]
       (try
         (let [analyzer (analysis/create {:tokenizer {:name tokenizer-name}})]
-          (is (seq (ta/text->token-strings text analyzer))))
+          (is (seq (ta/text->token-strings text analyzer)))
+          (spit (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)
+                (json/write-value-as-string {:tokenizer {:name tokenizer-name}})))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
@@ -151,14 +158,17 @@
                                "numericpayload" "hunspellstem" "edgengram" "patterncapturegroup"
                                "hyphenationcompoundword" "length" "type" "synonymgraph" "limittokenoffset"
                                "protectedterm" "limittokenposition" "patternreplace" "ngram" "codepointcount"}
-        token-filter-name (remove (fn [tn] (contains? with-required-params tn))
+        token-filter-names (remove (fn [tn] (contains? with-required-params tn))
                                   (keys components))]
-    (is (seq token-filter-name))
-    (doseq [tokenizer-name token-filter-name]
+    (is (seq token-filter-names))
+    (doseq [token-filter-name token-filter-names]
       (try
-        (let [analyzer (analysis/create {:token-filters [{:name tokenizer-name}]})]
-          (is (vector? (ta/text->token-strings text analyzer))))
+        (let [analyzer-conf {:token-filters [{:name token-filter-name}]}
+              analyzer (analysis/create analyzer-conf)]
+          (is (vector? (ta/text->token-strings text analyzer)))
+          (spit (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)
+                (json/write-value-as-string analyzer-conf)))
         (catch Exception e
           (println (format "Failed token filter name: '%s' class: '%s'"
-                           tokenizer-name (get components tokenizer-name)))
+                           token-filter-name (get components token-filter-name)))
           (throw e))))))

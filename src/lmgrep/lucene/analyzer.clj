@@ -123,21 +123,22 @@
           {} (CharFilterFactory/availableCharFilters)))
 
 (def token-filter-name->class
-  (assoc (reduce (fn [acc ^String token-filter-name]
-                   (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
-                 {} (TokenFilterFactory/availableTokenFilters))
-    (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
-    (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
-    (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
-    (namify "catalanSnowballStem") CatalanSnowballStemTokenFilterFactory
-    (namify "danishSnowballStem") DanishSnowballStemTokenFilterFactory
-    (namify "dutchSnowballStem") DutchSnowballStemTokenFilterFactory
-    (namify "basqueSnowballStem") EstonianSnowballStemTokenFilterFactory
-    (namify "irishSnowballStem") IrishSnowballStemTokenFilterFactory
-    (namify "kpSnowballStem") KPSnowballStemTokenFilterFactory
-    (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
-    (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
-    (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory))
+  (dissoc (assoc (reduce (fn [acc ^String token-filter-name]
+                           (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
+                         {} (TokenFilterFactory/availableTokenFilters))
+            (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
+            (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
+            (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
+            (namify "catalanSnowballStem") CatalanSnowballStemTokenFilterFactory
+            (namify "danishSnowballStem") DanishSnowballStemTokenFilterFactory
+            (namify "dutchSnowballStem") DutchSnowballStemTokenFilterFactory
+            (namify "basqueSnowballStem") EstonianSnowballStemTokenFilterFactory
+            (namify "irishSnowballStem") IrishSnowballStemTokenFilterFactory
+            (namify "kpSnowballStem") KPSnowballStemTokenFilterFactory
+            (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
+            (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
+            (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory)
+          "lovinssnowballstem" "concatenategraph"))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
