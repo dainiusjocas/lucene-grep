@@ -2,7 +2,7 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
-## Unreleased
+## v2021.04.26
 
 # Fixed/enhanced
 
@@ -133,7 +133,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Breaking changes
 
-## Unreleased
+## v2021.04.26
 
 - Removed token filters "lovinssnowballstem" "concatenategraph" because of compilation [issues](https://github.com/dainiusjocas/lucene-grep/issues/86)
 
