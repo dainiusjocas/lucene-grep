@@ -13,6 +13,7 @@ build-linux-static-with-docker:
 	docker create --name lmgrep-native-image-build lmgrep-native-image
 	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep
 
+.PHONY: pom.xml
 pom.xml:
 	clojure -Spom
 
