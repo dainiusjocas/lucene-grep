@@ -14,6 +14,7 @@ Collect only the classes needed for the compilation with all declared constructo
         (map (fn [entry]
                (assoc entry "allDeclaredConstructors" true))
              (filter
-               (fn [e] (re-matches #"org.apache.*" (get e "name")))
+               (fn [e] (or (re-matches #"org.apache.*" (get e "name"))
+                           (re-matches #"org.tartarus.*" (get e "name"))))
                (json/read-value (slurp "graalvm/reflect-config.json"))))))
 ```

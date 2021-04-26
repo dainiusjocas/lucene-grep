@@ -4,6 +4,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+# Fixed/enhanced
+
+- Snowball token filter classes are included into native binary
+- Exceptions in clojure.core.async pipeline are handled properly
+- Tests for native-image
+
 ## v2021.04.23
 
 ## Fixed/enhanced
@@ -126,6 +132,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 - CLI params for text analysis
 
 ## Breaking changes
+
+## Unreleased
+
+- Removed token filters "lovinssnowballstem" "concatenategraph" because of compilation [issues](https://github.com/dainiusjocas/lucene-grep/issues/86)
 
 ## v2021.01.13
 

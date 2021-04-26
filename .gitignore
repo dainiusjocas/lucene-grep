@@ -17,3 +17,5 @@ pom.xml.asc
 .env
 .lsp
 lmgrep-*.zip
+lmgrep.build_artifacts.txt
+lucene-grep.iml

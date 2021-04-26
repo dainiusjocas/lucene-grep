@@ -123,9 +123,10 @@
           {} (CharFilterFactory/availableCharFilters)))
 
 (def token-filter-name->class
-  (assoc (reduce (fn [acc ^String token-filter-name]
-                   (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
-                 {} (TokenFilterFactory/availableTokenFilters))
+  (assoc (dissoc (reduce (fn [acc ^String token-filter-name]
+                           (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
+                         {} (TokenFilterFactory/availableTokenFilters))
+                 "lovinssnowballstem" "concatenategraph")
     (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
     (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
     (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
