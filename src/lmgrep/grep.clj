@@ -110,7 +110,10 @@
   [files-pattern files options]
   (let [analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)
         ^Analyzer analyzer (analyzer/create analysis-conf)
-        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))]
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))
+        analysis-fn (if (get options :explain)
+                      text-analysis/text->tokens
+                      text-analysis/text->token-strings)]
     (doseq [path (if files-pattern
                    (concat (fs/get-files files-pattern options)
                            (fs/filter-files files))
@@ -123,7 +126,7 @@
                     line-out-chan
                     (map (fn [line]
                            (json/write-value-as-string
-                             (text-analysis/text->token-strings line analyzer))))
+                             (analysis-fn line analyzer))))
                     line-in-chan
                     true
                     (fn [_]
