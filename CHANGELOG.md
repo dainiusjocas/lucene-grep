@@ -2,6 +2,10 @@
 
 For a list of breaking changes, check [here](#breaking-changes).
 
+## Unreleased
+
+- `--explain` flag for the `--only-analyze` to return details of tokens
+
 ## v2021.04.26
 
 # Fixed/enhanced

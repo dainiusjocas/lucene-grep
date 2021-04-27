@@ -13,6 +13,23 @@
         analyzer (analysis/create {:analyzer {:name "CollationKeyAnalyzer"}})]
     (is (= ["The brown foxes"] (ta/text->token-strings text analyzer)))))
 
+(deftest detailed-analysis
+  (let [text "The brown foxes"
+        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+    (is (= [{:end_offset     9
+             :position       0
+             :positionLength 1
+             :start_offset   4
+             :token          "brown"
+             :type           "<ALPHANUM>"}
+            {:end_offset     15
+             :position       2
+             :positionLength 1
+             :start_offset   10
+             :token          "fox"
+             :type           "<ALPHANUM>"}]
+           (map (fn [m] (into {} m)) (ta/text->tokens text analyzer))))))
+
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
         analyzer (analysis/create
@@ -159,7 +176,7 @@
                                "hyphenationcompoundword" "length" "type" "synonymgraph" "limittokenoffset"
                                "protectedterm" "limittokenposition" "patternreplace" "ngram" "codepointcount"}
         token-filter-names (remove (fn [tn] (contains? with-required-params tn))
-                                  (keys components))]
+                                   (keys components))]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try

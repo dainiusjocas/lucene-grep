@@ -66,7 +66,7 @@
    [nil "--excludes EXCLUDES" "A GLOB that filters out files that were matched with a GLOB"]
    [nil "--skip-binary-files" "If a file that is detected to be binary should be skipped. Available for Linux and MacOS only."
     :default false]
-   [nil "--with-empty-lines" "When provided on the input that doesn't match write an empty line to STDOUT."
+   [nil "--with-empty-lines" "When provided on the input that does not match write an empty line to STDOUT."
     :default false]
    [nil "--with-scored-highlights" "ALPHA: Instructs to highlight with scoring."
     :default false]
@@ -80,6 +80,7 @@
     :parse-fn #(Integer/parseInt %)]
    [nil "--only-analyze" "When provided output will be analyzed text."
     :default false]
+   [nil "--explain" "Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze APi."]
    [nil "--analysis ANALYSIS" "The analysis chain configuration"
     :parse-fn #(json/read-value % json/keyword-keys-object-mapper)
     :default {}]

@@ -138,13 +138,14 @@ Supported options:
       --post-tags POST_TAGS                   A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
       --excludes EXCLUDES                     A GLOB that filters out files that were matched with a GLOB
       --skip-binary-files                     If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
-      --with-empty-lines                      When provided on the input that doesn't match write an empty line to STDOUT.
+      --with-empty-lines                      When provided on the input that does not match write an empty line to STDOUT.
       --with-scored-highlights                ALPHA: Instructs to highlight with scoring.
       --[no-]split                            If a file (or STDIN) should be split by newline.
       --hyperlink                             If a file should be printed as hyperlinks.
       --with-details                          For JSON and EDN output adds raw highlights list.
       --word-delimiter-graph-filter WDGF      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
       --only-analyze                          When provided output will be analyzed text.
+      --explain                               Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze APi.
       --analysis ANALYSIS                 {}  The analysis chain configuration
   -h, --help
 ```
@@ -438,6 +439,47 @@ The main thing to understand is that scoring is for every line separately in the
 Another consideration is that scoring is summed up for every line of all the matches. E.g. query "one two" is rewritten by Lucene into two term queries.
 
 Each individual score is BM25 which is default in Lucene.
+
+## `--only-analyze`
+
+Great for debugging.
+
+The output is a list tokens after analyzing the text, e.g.:
+```shell
+echo "Dogs and CAt" | ./lmgrep --only-analyze     
+# => ["dog","and","cat"]
+```
+
+In combination with `--explain` flag outputs the detailed analyzed text similar to Elasticsearch Analyze API, e.g.:
+```shell
+echo "Dogs and CAt" | ./lmgrep --only-analyze --explain | jq
+# => [
+  {
+    "token": "dog",
+    "position": 0,
+    "positionLength": 1,
+    "type": "<ALPHANUM>",
+    "end_offset": 4,
+    "start_offset": 0
+  },
+  {
+    "end_offset": 8,
+    "positionLength": 1,
+    "position": 1,
+    "start_offset": 5,
+    "type": "<ALPHANUM>",
+    "token": "and"
+  },
+  {
+    "position": 2,
+    "token": "cat",
+    "positionLength": 1,
+    "end_offset": 12,
+    "type": "<ALPHANUM>",
+    "start_offset": 9
+  }
+]
+```
 
 ## Future work
 
