@@ -134,13 +134,13 @@
 
 (deftest try-all-char-filters
   (let [text "cats and dogs"
-        with-required-params #{"patternreplace"}
-        char-filter-names (remove (fn [cfn] (contains? with-required-params cfn))
-                                  (keys analysis/char-filter-name->class))]
+        char-filter-names (keys analysis/char-filter-name->class)
+        args {"patternreplace" {"pattern" "foo"}}]
     (is (seq char-filter-names))
     (doseq [char-filter-name char-filter-names]
       (try
-        (let [analyzer (analysis/create {:char-filters [{:name char-filter-name}]})]
+        (let [analyzer (analysis/create {:char-filters [{:name char-filter-name
+                                                         :args (get args char-filter-name)}]})]
           (is (seq (ta/text->token-strings text analyzer))
               (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
                     (json/write-value-as-string {:char-filters [{:name char-filter-name}]}))))
