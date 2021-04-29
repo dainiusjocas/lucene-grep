@@ -1,0 +1,1 @@
+{"token-filters":[{"name":"type","args":{"types":"test/resources/stops.txt"}}]}
