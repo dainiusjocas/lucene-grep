@@ -34,7 +34,8 @@ NOTE: Not compatible with `grep`. When compared with `grep` the functionality is
 
 ## Quickstart
 
-Grab a binary from [Github releases](https://github.com/dainiusjocas/lucene-grep/releases), extract, and place it anywhere on the path.
+For installation options check [Installation section](https://github.com/dainiusjocas/lucene-grep#installation)
+For quick installation grab a binary from [Github releases](https://github.com/dainiusjocas/lucene-grep/releases), extract, and place it anywhere on the `$PATH`.
 
 In case you're running MacOS then give run permissions for the executable binary:
 ```shell
@@ -479,6 +480,23 @@ echo "Dogs and CAt" | ./lmgrep --only-analyze --explain | jq
     "start_offset": 9
   }
 ]
+```
+
+## Installation
+
+### Windows
+
+On Windows you can install using [scoop](https://scoop.sh/) and the [scoop-clojure](https://github.com/littleli/scoop-clojure) bucket.
+
+Or just follow these concrete steps:
+```shell
+# Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with
+# Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+
+scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
+scoop bucket add extras
+scoop install lmgrep
 ```
 
 ## Future work
