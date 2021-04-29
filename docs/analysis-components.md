@@ -129,7 +129,6 @@ Name of the analysis components is case-insensitive.
 |       turkishsnowballstem |               org.apache.lucene.analysis.tr.TurkishSnowballStemTokenFilterFactory |
 |        englishminimalstem |                     org.apache.lucene.analysis.en.EnglishMinimalStemFilterFactory |
 |              decimaldigit |                         org.apache.lucene.analysis.core.DecimalDigitFilterFactory |
-|        lovinssnowballstem |                org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory |
 |                  cjkwidth |                              org.apache.lucene.analysis.cjk.CJKWidthFilterFactory |
 |       galicianminimalstem |                    org.apache.lucene.analysis.gl.GalicianMinimalStemFilterFactory |
 |          russianlightstem |                       org.apache.lucene.analysis.ru.RussianLightStemFilterFactory |
@@ -154,7 +153,6 @@ Name of the analysis components is case-insensitive.
 |          swedishlightstem |                       org.apache.lucene.analysis.sv.SwedishLightStemFilterFactory |
 |     portugueseminimalstem |                  org.apache.lucene.analysis.pt.PortugueseMinimalStemFilterFactory |
 |             protectedterm |               org.apache.lucene.analysis.miscellaneous.ProtectedTermFilterFactory |
-|          concatenategraph |            org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory |
 |              flattengraph |                         org.apache.lucene.analysis.core.FlattenGraphFilterFactory |
 |            greeklowercase |                         org.apache.lucene.analysis.el.GreekLowerCaseFilterFactory |
 |             reversestring |                     org.apache.lucene.analysis.reverse.ReverseStringFilterFactory |
