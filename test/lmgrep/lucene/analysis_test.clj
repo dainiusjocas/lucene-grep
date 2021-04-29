@@ -139,11 +139,13 @@
     (is (seq char-filter-names))
     (doseq [char-filter-name char-filter-names]
       (try
-        (let [analyzer (analysis/create {:char-filters [{:name char-filter-name
-                                                         :args (get args char-filter-name)}]})]
+        (let [conf {:char-filters [(if-let [a (get args char-filter-name)]
+                                     {:name char-filter-name :args a}
+                                     {:name char-filter-name})]}
+              analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer))
               (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
-                    (json/write-value-as-string {:char-filters [{:name char-filter-name}]}))))
+                    (json/write-value-as-string conf))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -153,16 +155,20 @@
 (deftest try-all-tokenizers
   (let [text "cats and dogs"
         components analysis/tokenizer-name->class
-        with-required-params #{"simplepatternsplit" "simplepattern" "pattern"}
-        tokenizer-names (remove (fn [tn] (contains? with-required-params tn))
-                                (keys components))]
+        tokenizer-names (keys components)
+        args {"simplepatternsplit" {"pattern" " "}
+              "simplepattern" {"pattern" " "}
+              "pattern" {"pattern" " "}}]
     (is (seq tokenizer-names))
     (doseq [tokenizer-name tokenizer-names]
       (try
-        (let [analyzer (analysis/create {:tokenizer {:name tokenizer-name}})]
+        (let [conf {:tokenizer (if-let [a (get args tokenizer-name)]
+                                 {:name tokenizer-name :args a}
+                                 {:name tokenizer-name})}
+              analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer)))
           (spit (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)
-                (json/write-value-as-string {:tokenizer {:name tokenizer-name}})))
+                (json/write-value-as-string conf)))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
