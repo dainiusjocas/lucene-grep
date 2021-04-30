@@ -32,7 +32,15 @@
    (let [ic (a/chan p)
          oc (a/chan p)]
      (a/onto-chan! ic coll)
-     (a/pipeline (min p impl/MAX-QUEUE-SIZE) oc (map f) ic)
+     (a/pipeline (min p impl/MAX-QUEUE-SIZE)
+                 oc
+                 (map f)
+                 ic
+                 true
+                 (fn [^Throwable t]
+                   (.println System/err (format "Failed with: '%s'" (.toString t)))
+                   (a/close! oc)
+                   (System/exit 1)))
      (seq-of-chan oc)))
   ([f coll] (map-pipeline f 16 coll)))
 
