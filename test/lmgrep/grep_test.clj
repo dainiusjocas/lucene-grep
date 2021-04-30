@@ -148,10 +148,10 @@
                    :template        "{{highlighted-line}}"
                    :queries-file    "test/resources/queries.json"}]
       (is (= ""
-            (with-in-str text-from-stdin
-                         (str/trim
-                           (with-out-str
-                             (grep/grep queries nil nil options)))))))))
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep queries nil nil options)))))))))
 
 (defn json-decode [str]
   (if (str/blank? str)
@@ -274,6 +274,19 @@
 
     (testing "English analyzer should produce a matche"
       (let [options (assoc options :analysis {:analyzer {:name "english"}})]
-        (is (= "The quick brown fox >jumps< over the lazy dog\n" (with-in-str text-from-stdin
-                                 (with-out-str
-                                   (grep/grep [query] nil nil options)))))))))
+        (is (= "The quick brown fox >jumps< over the lazy dog\n"
+               (with-in-str text-from-stdin
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))))
+
+(deftest hyperlink-with-stdin
+  (let [text-from-stdin "this will generate an exception"
+        query "exception"
+        options {:split true
+                 :hyperlink true}]
+    (testing "hyperlinking on stdin should be ignored"
+      (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
+        (is (= "\u001B[0;35m*STDIN*\u001B[0m:\u001B[0;32m1\u001B[0m:this will generate an \u001B[1;31mexception\u001B[0m\n"
+               (with-in-str text-from-stdin
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))))

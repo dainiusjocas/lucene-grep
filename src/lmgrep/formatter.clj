@@ -35,7 +35,7 @@
                                 (:end-offset ann)))))))))))
 
 (defn file-string [file line-number options]
-  (if (:hyperlink options)
+  (if (and (:hyperlink options) file)
     (ansi/link file (str (.toURI (io/file file)) "#" line-number))
     file))
 

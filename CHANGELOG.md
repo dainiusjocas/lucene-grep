@@ -6,9 +6,13 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - `--explain` flag for the `--only-analyze` to return details of tokens
 
+## Fixed/enhanced
+
+- Hyperlinking on STDIN throws a NPE [#92](https://github.com/dainiusjocas/lucene-grep/issues/92)
+
 ## v2021.04.26
 
-# Fixed/enhanced
+## Fixed/enhanced
 
 - Snowball token filter classes are included into native binary
 - Exceptions in clojure.core.async pipeline are handled properly
