@@ -3,9 +3,13 @@ FROM findepi/graalvm:21.0.0-java11-native as BUILDER
 ENV GRAALVM_HOME=/graalvm
 ENV JAVA_HOME=/graalvm
 
-ENV CLOJURE_VERSION=1.10.2.774
+ENV CLOJURE_VERSION=1.10.3.822
 
-RUN apt-get install -y curl git
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    upx \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.sh \
     && chmod +x linux-install-$CLOJURE_VERSION.sh \
