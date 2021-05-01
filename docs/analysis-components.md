@@ -71,7 +71,6 @@ Name of the analysis components is case-insensitive.
 |        norwegianlightstem |                     org.apache.lucene.analysis.no.NorwegianLightStemFilterFactory |
 |       germannormalization |                    org.apache.lucene.analysis.de.GermanNormalizationFilterFactory |
 |          spanishlightstem |                       org.apache.lucene.analysis.es.SpanishLightStemFilterFactory |
-|                   synonym |                           org.apache.lucene.analysis.synonym.SynonymFilterFactory |
 |           limittokencount |             org.apache.lucene.analysis.miscellaneous.LimitTokenCountFilterFactory |
 |            indonesianstem |                         org.apache.lucene.analysis.id.IndonesianStemFilterFactory |
 |        hindinormalization |                     org.apache.lucene.analysis.hi.HindiNormalizationFilterFactory |

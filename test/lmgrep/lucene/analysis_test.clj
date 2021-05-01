@@ -177,8 +177,7 @@
 (deftest try-all-token-filters
   (let [text "cats and dogs"
         components analysis/token-filter-name->class
-        with-required-params #{"synonym"
-                               "hunspellstem"
+        with-required-params #{"hunspellstem"
                                "hyphenationcompoundword"}
         token-filter-names (remove (fn [tn] (contains? with-required-params tn))
                                    (keys components))

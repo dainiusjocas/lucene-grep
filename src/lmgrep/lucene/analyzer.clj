@@ -138,7 +138,9 @@
             (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
             (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
             (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory)
-          "lovinssnowballstem" "concatenategraph"))
+          "synonym"                                         ; because deprecated and requires a patch
+          "lovinssnowballstem"
+          "concatenategraph"))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
