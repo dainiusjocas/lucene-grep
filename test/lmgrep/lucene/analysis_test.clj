@@ -177,9 +177,7 @@
 (deftest try-all-token-filters
   (let [text "cats and dogs"
         components analysis/token-filter-name->class
-        with-required-params #{"hyphenationcompoundword"}
-        token-filter-names (remove (fn [tn] (contains? with-required-params tn))
-                                   (keys components))
+        token-filter-names (keys components)
         args {"limittokencount" {"maxTokenCount" 5}
               "delimitedpayload" {"encoder" "float"}
               "limittokenoffset" {"maxStartOffset" 5}
@@ -198,6 +196,7 @@
               "patterncapturegroup" {"pattern" " "}
               "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}
               "synonymgraph" {"synonyms" "test/resources/mapping.txt"}
+              "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
               "hunspellstem" {"dictionary" "test/resources/hunspell_dict.dic"
                               "affix" "test/resources/hunspell_dict.aff"}}]
     (is (seq token-filter-names))

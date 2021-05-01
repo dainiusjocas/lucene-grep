@@ -1,0 +1,1 @@
+{"token-filters":[{"name":"hyphenationcompoundword","args":{"hyphenator":"test/resources/hyphenation_hyphenator.xml"}}]}

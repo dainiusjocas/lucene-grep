@@ -24,8 +24,12 @@
                    ^String (get dict-entry :query)
                    (prepare-metadata (get dict-entry :type) (get dict-entry :meta)))
     (catch ParseException e
+      (when (System/getenv "DEBUG_MODE")
+        (.printStackTrace e))
       (.println System/err (format "Failed to parse query: '%s' with exception '%s'" dict-entry e)))
     (catch Exception e
+      (when (System/getenv "DEBUG_MODE")
+        (.printStackTrace e))
       (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
 
 (defrecord Dict [field-name monitor-analyzer monitor-query])

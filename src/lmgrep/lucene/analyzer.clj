@@ -185,7 +185,8 @@
 
         (.build cab)))
     (catch Exception e
-      ; TODO: Add debug info
+      (when (System/getenv "DEBUG_MODE")
+        (.printStackTrace e))
       (throw e))))
 
 (comment

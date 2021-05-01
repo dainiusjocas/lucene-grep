@@ -129,7 +129,9 @@
                              (analysis-fn line analyzer))))
                     line-in-chan
                     true
-                    (fn [_]
+                    (fn [^Throwable t]
+                      (when (System/getenv "DEBUG_MODE")
+                        (.printStackTrace t))
                       (a/close! line-out-chan)
                       (System/exit 1)))
 
