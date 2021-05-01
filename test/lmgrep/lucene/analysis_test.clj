@@ -177,7 +177,7 @@
 (deftest try-all-token-filters
   (let [text "cats and dogs"
         components analysis/token-filter-name->class
-        with-required-params #{"synonym" "synonymgraph"
+        with-required-params #{"synonym"
                                "hunspellstem"
                                "hyphenationcompoundword"}
         token-filter-names (remove (fn [tn] (contains? with-required-params tn))
@@ -198,7 +198,8 @@
                                 "typeMatch" "word"}
               "patternreplace" {"pattern" " "}
               "patterncapturegroup" {"pattern" " "}
-              "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}}]
+              "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}
+              "synonymgraph" {"synonyms" "test/resources/mapping.txt"}}]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try
