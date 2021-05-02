@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.05.02
+
 # Fixed/enhanced
 
 - `--explain` flag for the `--only-analyze` to return details of tokens
@@ -148,6 +150,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## Breaking changes
 
 ## Unreleased
+
+## v2021.05.02
 
 - removed `synonym` token filter, because deprecated and required a patch.
 
