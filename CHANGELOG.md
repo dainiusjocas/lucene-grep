@@ -8,6 +8,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - `--explain` flag for the `--only-analyze` to return details of tokens
 - `synonymgraph` token filter now can load synonyms from files
+- `hyphenationcompoundword` token filter now can load data from files
+- Windows installer based on scoop
+- Handle autocompleted files in Windows
 
 ## Fixed/enhanced
 
