@@ -9,7 +9,7 @@
   org.apache.lucene/lucene-monitor           {:mvn/version "8.8.2"}
   org.apache.lucene/lucene-analyzers-stempel {:mvn/version "8.8.2"}
   metosin/jsonista                           {:mvn/version "0.3.2"}
-  lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.4-SNAPSHOT"}
+  lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.4"}
   io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.2"}}
  :aliases
  {:dev
