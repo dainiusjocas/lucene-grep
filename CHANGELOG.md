@@ -4,7 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+# Fixed/enhanced
+
 - `--explain` flag for the `--only-analyze` to return details of tokens
+- `synonymgraph` token filter now can load synonyms from files
 
 ## Fixed/enhanced
 
@@ -140,6 +143,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 - CLI params for text analysis
 
 ## Breaking changes
+
+## Unreleased
+
+- removed `synonym` token filter, because deprecated and required a patch.
 
 ## v2021.04.26
 

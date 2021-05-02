@@ -1,0 +1,1 @@
+{"token-filters":[{"name":"synonymgraph","args":{"synonyms":"test/resources/mapping.txt"}}]}

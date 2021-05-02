@@ -334,6 +334,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.compound.DictionaryCompoundWordTokenFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -343,6 +351,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.compound.HyphenationCompoundWordTokenFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -469,6 +485,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.TypeTokenFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -739,14 +763,6 @@
     ]
   },
   {
-    "methods": [
-      {
-        "parameterTypes": [
-          "java.util.Map"
-        ],
-        "name": "<init>"
-      }
-    ],
     "name": "org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory",
     "allDeclaredConstructors": true
   },
@@ -1067,6 +1083,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.hunspell.HunspellStemFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1244,6 +1268,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.CodepointCountFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1253,24 +1285,6 @@
     ]
   },
   {
-    "methods": [
-      {
-        "parameterTypes": [],
-        "name": "<init>"
-      }
-    ],
-    "name": "org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilter$BytesRefBuilderTermAttributeImpl",
-    "allDeclaredConstructors": true
-  },
-  {
-    "methods": [
-      {
-        "parameterTypes": [
-          "java.util.Map"
-        ],
-        "name": "<init>"
-      }
-    ],
     "name": "org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1416,6 +1430,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.LengthFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1425,6 +1447,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenCountFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1434,6 +1464,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenOffsetFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1443,6 +1481,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.LimitTokenPositionFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1457,6 +1503,14 @@
     "allPublicConstructors": true
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.ProtectedTermFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1619,6 +1673,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1645,6 +1707,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ngram.NGramFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1756,6 +1826,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.PatternCaptureGroupFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1765,6 +1843,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.PatternReplaceCharFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1774,6 +1860,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1783,6 +1877,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.PatternTokenizerFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1792,6 +1894,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.SimplePatternSplitTokenizerFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1801,6 +1911,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pattern.SimplePatternTokenizerFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1810,6 +1928,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.payloads.DelimitedPayloadTokenFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1819,6 +1945,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.payloads.NumericPayloadTokenFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2169,6 +2303,20 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "boolean",
+          "boolean",
+          "org.apache.lucene.analysis.Analyzer"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.synonym.SolrSynonymParser",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "org.apache.lucene.analysis.synonym.SynonymFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2178,6 +2326,14 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.synonym.SynonymGraphFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2234,6 +2390,11 @@
     "allDeclaredConstructors": true
   },
   {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.tokenattributes.OffsetAttribute",
+    "allDeclaredConstructors": true
+  },
+  {
     "methods": [
       {
         "parameterTypes": [],
@@ -2251,6 +2412,21 @@
       }
     ],
     "name": "org.apache.lucene.analysis.tokenattributes.PayloadAttributeImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.tokenattributes.PositionLengthAttribute",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.analysis.tokenattributes.TypeAttribute",
     "allDeclaredConstructors": true
   },
   {
@@ -2553,6 +2729,7 @@
     ]
   },
   {
+    "allPublicMethods": true,
     "name": "org.apache.lucene.queryparser.classic.ParseException",
     "allDeclaredConstructors": true
   },
@@ -2648,6 +2825,11 @@
   {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.util.FrequencyTrackingRingBuffer$IntBag",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.util.IntsRef",
     "allDeclaredConstructors": true
   },
   {
@@ -2760,128 +2942,6 @@
       }
     ],
     "name": "org.tartarus.snowball.ext.FinnishStemmer",
-    "allDeclaredConstructors": true
-  },
-  {
-    "methods": [
-      {
-        "parameterTypes": [],
-        "name": "r_A"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_AA"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_B"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_BB"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_C"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_CC"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_D"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_E"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_F"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_G"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_H"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_I"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_J"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_K"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_L"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_M"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_N"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_O"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_P"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_Q"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_R"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_S"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_T"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_U"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_V"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_W"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_X"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_Y"
-      },
-      {
-        "parameterTypes": [],
-        "name": "r_Z"
-      }
-    ],
-    "name": "org.tartarus.snowball.ext.LovinsStemmer",
     "allDeclaredConstructors": true
   }
 ]

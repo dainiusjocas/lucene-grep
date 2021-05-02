@@ -36,6 +36,8 @@
               (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
               (grep/grep [lucene-query] file-pattern files options))))))
     (catch Exception e
+      (when (System/getenv "DEBUG_MODE")
+        (.printStackTrace e))
       (.println System/err (.getMessage e))
       (System/exit 1)))
   (System/exit 0))

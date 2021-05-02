@@ -1,0 +1,1 @@
+{"token-filters":[{"name":"protectedterm","args":{"protected":"test/resources/stops.txt"}}]}

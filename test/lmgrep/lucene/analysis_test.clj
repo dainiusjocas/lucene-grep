@@ -134,16 +134,18 @@
 
 (deftest try-all-char-filters
   (let [text "cats and dogs"
-        with-required-params #{"patternreplace"}
-        char-filter-names (remove (fn [cfn] (contains? with-required-params cfn))
-                                  (keys analysis/char-filter-name->class))]
+        char-filter-names (keys analysis/char-filter-name->class)
+        args {"patternreplace" {"pattern" "foo"}}]
     (is (seq char-filter-names))
     (doseq [char-filter-name char-filter-names]
       (try
-        (let [analyzer (analysis/create {:char-filters [{:name char-filter-name}]})]
+        (let [conf {:char-filters [(if-let [a (get args char-filter-name)]
+                                     {:name char-filter-name :args a}
+                                     {:name char-filter-name})]}
+              analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer))
               (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
-                    (json/write-value-as-string {:char-filters [{:name char-filter-name}]}))))
+                    (json/write-value-as-string conf))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -153,16 +155,20 @@
 (deftest try-all-tokenizers
   (let [text "cats and dogs"
         components analysis/tokenizer-name->class
-        with-required-params #{"simplepatternsplit" "simplepattern" "pattern"}
-        tokenizer-names (remove (fn [tn] (contains? with-required-params tn))
-                                (keys components))]
+        tokenizer-names (keys components)
+        args {"simplepatternsplit" {"pattern" " "}
+              "simplepattern" {"pattern" " "}
+              "pattern" {"pattern" " "}}]
     (is (seq tokenizer-names))
     (doseq [tokenizer-name tokenizer-names]
       (try
-        (let [analyzer (analysis/create {:tokenizer {:name tokenizer-name}})]
+        (let [conf {:tokenizer (if-let [a (get args tokenizer-name)]
+                                 {:name tokenizer-name :args a}
+                                 {:name tokenizer-name})}
+              analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer)))
           (spit (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)
-                (json/write-value-as-string {:tokenizer {:name tokenizer-name}})))
+                (json/write-value-as-string conf)))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
@@ -171,16 +177,34 @@
 (deftest try-all-token-filters
   (let [text "cats and dogs"
         components analysis/token-filter-name->class
-        with-required-params #{"synonym" "limittokencount" "delimitedpayload" "dictionarycompoundword"
-                               "numericpayload" "hunspellstem" "edgengram" "patterncapturegroup"
-                               "hyphenationcompoundword" "length" "type" "synonymgraph" "limittokenoffset"
-                               "protectedterm" "limittokenposition" "patternreplace" "ngram" "codepointcount"}
-        token-filter-names (remove (fn [tn] (contains? with-required-params tn))
-                                   (keys components))]
+        token-filter-names (keys components)
+        args {"limittokencount" {"maxTokenCount" 5}
+              "delimitedpayload" {"encoder" "float"}
+              "limittokenoffset" {"maxStartOffset" 5}
+              "length" {"min" 1 "max" 5}
+              "type" {"types" "test/resources/stops.txt"}
+              "ngram" {"minGramSize" 1
+                       "maxGramSize" 5}
+              "protectedterm" {"protected" "test/resources/stops.txt"}
+              "edgengram" {"minGramSize" 1
+                           "maxGramSize" 5}
+              "limittokenposition" {"maxTokenPosition" 2}
+              "codepointcount" {"min" 1 "max" 5}
+              "numericpayload" {"payload" 24
+                                "typeMatch" "word"}
+              "patternreplace" {"pattern" " "}
+              "patterncapturegroup" {"pattern" " "}
+              "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}
+              "synonymgraph" {"synonyms" "test/resources/mapping.txt"}
+              "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
+              "hunspellstem" {"dictionary" "test/resources/hunspell_dict.dic"
+                              "affix" "test/resources/hunspell_dict.aff"}}]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try
-        (let [analyzer-conf {:token-filters [{:name token-filter-name}]}
+        (let [analyzer-conf {:token-filters [(if-let [a (get args token-filter-name)]
+                                               {:name token-filter-name :args a}
+                                               {:name token-filter-name})]}
               analyzer (analysis/create analyzer-conf)]
           (is (vector? (ta/text->token-strings text analyzer)))
           (spit (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)

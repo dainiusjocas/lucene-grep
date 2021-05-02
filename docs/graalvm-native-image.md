@@ -9,6 +9,8 @@ Run the Application with the `-J-agentlib:native-image-agent=config-output-dir=`
 Collect only the classes needed for the compilation with all declared constructors.
 
 ```clojure
+(require '[jsonista.core :as json])
+
 (spit "graalvm/lucene-reflect-config.json"
       (json/write-value-as-string
         (map (fn [entry]
