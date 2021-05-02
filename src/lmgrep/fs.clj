@@ -24,7 +24,8 @@
 
 ; TODO: Support regex pattern
 (defn get-files [^String glob options]
-  (let [glob-file (io/file glob)
+  (let [glob (str/replace glob #"^.\\" "")
+        glob-file (io/file glob)
         pathname-parent (or (.getParent glob-file) ".")
         starting-folder (if (= "**" pathname-parent)
                           "."
