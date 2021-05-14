@@ -8,13 +8,13 @@
   org.apache.lucene/lucene-core              {:mvn/version "8.8.2"}
   org.apache.lucene/lucene-monitor           {:mvn/version "8.8.2"}
   org.apache.lucene/lucene-analyzers-stempel {:mvn/version "8.8.2"}
-  metosin/jsonista                           {:mvn/version "0.3.2"}
+  metosin/jsonista                           {:mvn/version "0.3.3"}
   lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.4"}
   io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.2"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.910"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.918"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -22,7 +22,7 @@
   :test
   {:extra-paths ["test" "test/resources"]
    :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha     "b6b3193fcc42659d7e46ecd1884a228993441182"}}
+                                            :sha     "2d69f33d7980c3353b246c28f72ffeafbd9f2fab"}}
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]

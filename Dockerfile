@@ -3,7 +3,7 @@ FROM findepi/graalvm:21.0.0-java11-native as BUILDER
 ENV GRAALVM_HOME=/graalvm
 ENV JAVA_HOME=/graalvm
 
-ENV CLOJURE_VERSION=1.10.3.822
+ENV CLOJURE_VERSION=1.10.3.839
 
 RUN apt-get update && apt-get install -y \
     curl \
