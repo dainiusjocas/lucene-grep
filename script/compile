@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+$GRAALVM_HOME/bin/native-image \
+    -jar target/lmgrep-uber.jar \
+    --no-server \
+    --no-fallback \
+    --initialize-at-build-time \
+    -H:+ReportExceptionStackTraces \
+    -H:ReflectionConfigurationFiles=$(pwd)/graalvm/lucene-reflect-config.json \
+    -H:+AddAllCharsets \
+    --static \
+    --libc=musl \
+    -H:Name=lmgrep
+
+#upx -7 -k lmgrep
