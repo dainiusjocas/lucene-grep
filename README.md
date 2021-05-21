@@ -484,6 +484,22 @@ echo "Dogs and CAt" | ./lmgrep --only-analyze --explain | jq
 
 ## Installation
 
+### Brew
+
+Linux and macOS binaries are provided via `brew`.
+
+Install:
+
+```
+brew install dainiusjocas/brew/lmgrep
+```
+
+Upgrade:
+
+```
+brew upgrade lmgrep
+```
+
 ### Windows
 
 On Windows you can install using [scoop](https://scoop.sh/) and the [scoop-clojure](https://github.com/littleli/scoop-clojure) bucket.
