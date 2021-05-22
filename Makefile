@@ -12,11 +12,29 @@ build:
 
 .PHONY: build-linux-static
 build-linux-static:
-	clojure -M:native-linux-static
+	LMGREP_STATIC=true script/compile
+
+.PHONY: build-linux-static-musl
+build-linux-static-musl:
+	LMGREP_STATIC=true LMGREP_MUSL=true script/compile
 
 .PHONY: build-linux-static-with-docker
 build-linux-static-with-docker:
-	docker build -f Dockerfile -t lmgrep-native-image .
+	docker build \
+		--build-arg LMGREP_STATIC=true \
+		-f Dockerfile \
+		-t lmgrep-native-image .
+	docker rm lmgrep-native-image-build || true
+	docker create --name lmgrep-native-image-build lmgrep-native-image
+	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep
+
+.PHONY: build-linux-static-musl-with-docker
+build-linux-static-musl-with-docker:
+	docker build \
+		--build-arg LMGREP_STATIC=true \
+		--build-arg LMGREP_MUSL=true \
+		-f Dockerfile \
+		-t lmgrep-native-image .
 	docker rm lmgrep-native-image-build || true
 	docker create --name lmgrep-native-image-build lmgrep-native-image
 	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep

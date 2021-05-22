@@ -41,4 +41,11 @@ COPY script/ /usr/src/app/script
 
 RUN clojure -Spom
 RUN clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
+
+ARG LMGREP_STATIC
+ENV LMGREP_STATIC=$LMGREP_STATIC
+
+ARG LMGREP_MUSL
+ENV LMGREP_MUSL=$LMGREP_MUSL
+
 RUN ./script/compile
