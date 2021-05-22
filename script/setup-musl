@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+MUSL_DIR=${HOME}/.musl
+
+MUSL_GCC_COMPILER=${HOME}/.musl/bin/musl-gcc
+
+if [ -f "$MUSL_GCC_COMPILER" ]; then
+    echo "MUSL is already setup at ${MUSL_DIR}"
+    exit 0
+fi
+
+MUSL_VERSION=1.2.2
+ZLIB_VERSION=1.2.11
+
+mkdir $MUSL_DIR || true
+cd $MUSL_DIR
+curl https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz -o musl-${MUSL_VERSION}.tar.gz \
+    && tar zxvf musl-${MUSL_VERSION}.tar.gz \
+    && cd musl-${MUSL_VERSION} \
+    && ./configure --disable-shared --prefix=${MUSL_DIR} \
+    && make \
+    && make install \
+    && curl https://zlib.net/zlib-${ZLIB_VERSION}.tar.gz -o zlib-${ZLIB_VERSION}.tar.gz \
+    && tar zxvf zlib-${ZLIB_VERSION}.tar.gz \
+    && cd zlib-${ZLIB_VERSION} \
+    && ./configure --static --prefix=${MUSL_DIR} \
+    && make \
+    && make install
+
+export PATH=$PATH:${MUSL_DIR}/bin
