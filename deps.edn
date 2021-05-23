@@ -31,33 +31,4 @@
   :uberjar
   {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
    :exec-fn      hf.depstar/uberjar
-   :exec-args    {:aot true}}
-  :native
-  {:main-opts  ["-m" "clj.native-image" "lmgrep.core"
-                "--no-fallback"
-                "--initialize-at-build-time"
-                "-H:+ReportExceptionStackTraces"
-                "-H:+AddAllCharsets"
-                "-H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json"
-                "-H:Name=lmgrep"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}
-  :native-linux-static
-  {:main-opts  ["-m" "clj.native-image" "lmgrep.core"
-                "--no-fallback"
-                "--static"
-                "--initialize-at-build-time"
-                "-H:+ReportExceptionStackTraces"
-                "-H:+AddAllCharsets"
-                "-H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json"
-                "-H:Name=lmgrep"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}}}
+   :exec-args    {:aot true}}}}
