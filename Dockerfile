@@ -38,6 +38,7 @@ RUN clojure -P && clojure -P -M:uberjar
 COPY src/ /usr/src/app/src
 COPY graalvm/ /usr/src/app/graalvm
 COPY script/ /usr/src/app/script
+COPY resources/ /usr/src/app/resources
 
 RUN clojure -Spom
 RUN clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core

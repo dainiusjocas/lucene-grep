@@ -7,15 +7,15 @@ uberjar: pom.xml
 	clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
 
 .PHONY: build
-build:
+build: uberjar
 	script/compile
 
 .PHONY: build-linux-static
-build-linux-static:
+build-linux-static: uberjar
 	LMGREP_STATIC=true script/compile
 
 .PHONY: build-linux-static-musl
-build-linux-static-musl:
+build-linux-static-musl: uberjar
 	LMGREP_STATIC=true LMGREP_MUSL=true script/compile
 
 docker_build = (docker build --build-arg $1 --build-arg $2 -f Dockerfile -t lmgrep-native-image .; \
