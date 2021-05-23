@@ -4,11 +4,16 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## New
+
+- Support for multiple Lucene query parsers with flag`--query-parser`
+
 # Fixed/enhanced
 
 - MacOS and Linux installation via `brew`
 - Base static linux build on musl. The binary should now work in most linuxes out of the box.
 - Upgrade to graalvm-ce:21.1.0
+- Query parsing errors propagates exceptions
 
 ## v2021.05.02
 
