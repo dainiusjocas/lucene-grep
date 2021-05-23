@@ -1,5 +1,5 @@
 {:paths
- ["src"]
+ ["src" "resources"]
  :deps
  {org.clojure/clojure                        {:mvn/version "1.10.3"}
   org.clojure/tools.cli                      {:mvn/version "1.0.206"}
@@ -8,13 +8,13 @@
   org.apache.lucene/lucene-core              {:mvn/version "8.8.2"}
   org.apache.lucene/lucene-monitor           {:mvn/version "8.8.2"}
   org.apache.lucene/lucene-analyzers-stempel {:mvn/version "8.8.2"}
-  metosin/jsonista                           {:mvn/version "0.3.2"}
+  metosin/jsonista                           {:mvn/version "0.3.3"}
   lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.4"}
   io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.2"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.910"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.922"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -22,7 +22,7 @@
   :test
   {:extra-paths ["test" "test/resources"]
    :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha     "b6b3193fcc42659d7e46ecd1884a228993441182"}}
+                                            :sha     "18518c4f8c4142f87efe51ed566a2ae70de01dcb"}}
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
@@ -31,33 +31,4 @@
   :uberjar
   {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
    :exec-fn      hf.depstar/uberjar
-   :exec-args    {:aot true}}
-  :native
-  {:main-opts  ["-m" "clj.native-image" "lmgrep.core"
-                "--no-fallback"
-                "--initialize-at-build-time"
-                "-H:+ReportExceptionStackTraces"
-                "-H:+AddAllCharsets"
-                "-H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json"
-                "-H:Name=lmgrep"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}
-  :native-linux-static
-  {:main-opts  ["-m" "clj.native-image" "lmgrep.core"
-                "--no-fallback"
-                "--static"
-                "--initialize-at-build-time"
-                "-H:+ReportExceptionStackTraces"
-                "-H:+AddAllCharsets"
-                "-H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json"
-                "-H:Name=lmgrep"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "4604ae76855e09cdabc0a2ecc5a7de2cc5b775d6"}}}}}
+   :exec-args    {:aot true}}}}

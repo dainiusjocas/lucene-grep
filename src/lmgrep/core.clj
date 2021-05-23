@@ -1,10 +1,14 @@
 (ns lmgrep.core
-  (:require [lmgrep.cli :as cli]
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]
+            [lmgrep.cli :as cli]
             [lmgrep.grep :as grep])
   (:gen-class))
 
+(def version (str/trim (slurp (io/resource "LMGREP_VERSION"))))
+
 (defn print-summary-msg [summary]
-  (println "Lucene Monitor based grep-like utility.")
+  (println (format "Lucene-grep %s" version))
   (println "Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]")
   (println "Supported options:")
   (println summary))
