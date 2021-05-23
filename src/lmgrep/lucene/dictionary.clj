@@ -6,7 +6,9 @@
   (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
-           (org.apache.lucene.analysis Analyzer)))
+           (org.apache.lucene.analysis Analyzer)
+           (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
+           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -16,21 +18,34 @@
                    {})]
     (assoc str->str "_type" type)))
 
+(defn construct-query [dict-entry ^String field-name ^Analyzer monitor-analyzer]
+  (case (keyword (get dict-entry :query-parser))
+    :classic (.parse (QueryParser. field-name monitor-analyzer)
+                     ^String (get dict-entry :query))
+    :complex-phrase (.parse (ComplexPhraseQueryParser. field-name monitor-analyzer)
+                            ^String (get dict-entry :query))
+    :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
+                                       (get dict-entry :query))
+                                     field-name (BasicQueryFactory.))
+    (.parse (QueryParser. field-name monitor-analyzer)
+            ^String (get dict-entry :query))))
+
 (defn query->monitor-query [dict-entry field-name monitor-analyzer]
   (try
     (MonitorQuery. ^String (get dict-entry :id)
-                   ^Query (.parse (QueryParser. ^String field-name ^Analyzer monitor-analyzer)
-                                  ^String (get dict-entry :query))
+                   ^Query (construct-query dict-entry field-name monitor-analyzer)
                    ^String (get dict-entry :query)
                    (prepare-metadata (get dict-entry :type) (get dict-entry :meta)))
     (catch ParseException e
       (when (System/getenv "DEBUG_MODE")
+        (.println System/err (format "Failed to parse query: '%s' with exception '%s'" dict-entry e))
         (.printStackTrace e))
-      (.println System/err (format "Failed to parse query: '%s' with exception '%s'" dict-entry e)))
+      (throw e))
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
+        (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e))
         (.printStackTrace e))
-      (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e)))))
+      (throw e))))
 
 (defrecord Dict [field-name monitor-analyzer monitor-query])
 

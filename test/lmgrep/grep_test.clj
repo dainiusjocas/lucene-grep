@@ -272,7 +272,7 @@
                                  (with-out-str
                                    (grep/grep [query] nil nil options)))))))
 
-    (testing "English analyzer should produce a matche"
+    (testing "English analyzer should produce a match"
       (let [options (assoc options :analysis {:analyzer {:name "english"}})]
         (is (= "The quick brown fox >jumps< over the lazy dog\n"
                (with-in-str text-from-stdin
@@ -290,3 +290,152 @@
                (with-in-str text-from-stdin
                             (with-out-str
                               (grep/grep [query] nil nil options)))))))))
+
+(deftest grepping-with-complex-phrase-query-parser
+  (let [text-from-stdin "john foo peters post"
+        query "\"john peters\"~2"
+        options {:split true
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :template "{{highlighted-line}}"}]
+    (testing "without complex phrase flag doesn't match"
+      (is (= ">john foo peters< post"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))
+
+    (testing "with complex phrase query parser matches"
+      (let [options (assoc options :query-parser "complex-phrase")]
+        (is (= ">john< foo >peters< post"
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep [query] nil nil options))))))))
+
+    (testing "fuzzy phrase with complex-phrase"
+      (let [text-from-stdin "jonathann peterson post"
+            query "\"(john jon jonathan~) peters*\""
+            options (assoc options :query-parser "complex-phrase")]
+        (is (= ">jonathann< >peterson< post"
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep [query] nil nil options))))))))))
+
+(deftest grepping-with-the-surround-query-parser
+  (testing "basic query"
+    (let [text-from-stdin "nike and adidas"
+          query "2W(nike, adidas)"
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :stem? false
+                   :query-parser "surround"}]
+      (is (= ">nike< and >adidas<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options))))))
+
+      (testing "too large distance"
+        (is (empty?
+              (with-in-str "nike and some adidas"
+                           (str/trim
+                             (with-out-str
+                               (grep/grep [query] nil nil options)))))))
+
+      (testing "out of order"
+        (is (empty?
+              (with-in-str "adidas and nike"
+                           (str/trim
+                             (with-out-str
+                               (grep/grep [query] nil nil options)))))))))
+
+  (testing "unordered"
+    (let [text-from-stdin "adidas and nike"
+          query "2N(nike, adidas)"
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :stem? false
+                   :query-parser "surround"}]
+      (is (= ">adidas< and >nike<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options))))))))
+
+  (testing "fuzzy match"
+    (let [text-from-stdin "adidas and nikon"
+          query "2N(nik*, adidas)"
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :stem? false
+                   :query-parser "surround"}]
+      (is (= ">adidas< and >nikon<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))
+    (let [text-from-stdin "adibas and nikon"
+          query "2N(nik*, adi?as)"
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :stem? false
+                   :query-parser "surround"}]
+      (is (= ">adibas< and >nikon<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options))))))))
+
+  (testing "quoting"
+    (let [text-from-stdin "adidas foos"
+          query "OR(\"adidas foo\"*, nike)"                 ; `adidas foo` should be one term
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :stem? false
+                   :tokenizer :keyword
+                   :query-parser "surround"}]
+      (is (= ">adidas foos<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))))
+
+(deftest grepping-multiple-queries-from-file-with-query-parsers
+  (let [text-from-stdin "john foo peterson post"
+        queries []
+        options {:split true
+                 :format       :json
+                 :with-details true
+                 :queries-file "test/resources/queries-query-parsers.json"}]
+    (is (= {:highlights  [{:begin-offset  0
+                           :dict-entry-id "1"
+                           :end-offset    4
+                           :meta          {}
+                           :query         "3N(joh*, peters*)"
+                           :type          "QUERY"}
+                          {:begin-offset  9
+                           :dict-entry-id "1"
+                           :end-offset    17
+                           :meta          {}
+                           :query         "3N(joh*, peters*)"
+                           :type          "QUERY"}]
+            :line        "john foo peterson post"
+            :line-number 1}
+           (json/read-value
+             (with-in-str text-from-stdin
+                         (str/trim
+                           (with-out-str
+                             (grep/grep queries nil nil options))))
+             json/keyword-keys-object-mapper)))))

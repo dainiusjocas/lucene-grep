@@ -86,7 +86,9 @@
       (throw (Exception. (format "File '%s' doesn't exist." file-path))))))
 
 (defn combine-questionnaire [lucene-query-strings options]
-  (into (mapv (fn [lucene-query-string] {:query lucene-query-string}) lucene-query-strings)
+  (into (mapv (fn [lucene-query-string] {:query lucene-query-string
+                                         :query-parser (get options :query-parser)})
+              lucene-query-strings)
         (when-let [queries-file-path (:queries-file options)]
           (read-questionnaire-from-file queries-file-path))))
 
