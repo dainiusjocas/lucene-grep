@@ -37,11 +37,18 @@
 (defn options-to-str [options]
   (print-str (mapv name (sort options))))
 
+(def query-parsers #{:classic :complex-phrase :surround})
+
 (def cli-options
   [["-q" "--query QUERY"
     "Lucene query string(s). If specified then all the positional arguments are interpreted as files."
     :multi true
     :update-fn conj]
+
+   [nil "--query-parser QUERY_PARSER" (str "Which query parser to use, one of: " (options-to-str query-parsers))
+    :parse-fn #(keyword (str/lower-case %))
+    :validate [#(contains? query-parsers %) (str "Query parser must be one of: " (options-to-str query-parsers))]]
+
    [nil "--queries-file QUERIES_FILE"
     "A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files."]
    [nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))

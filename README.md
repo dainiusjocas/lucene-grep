@@ -12,6 +12,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_2_0
   - token filters
   - stemmers for multiple languages
   - predefined analyzers
+- Support multiple query parsers (classic, complex phrase, surround)
 - Text output is colored or separated with customizable tags
 - Supports printing file names as hyperlinks for click to open (check support for your terminal [here](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda))
 - Text output supports templates
@@ -154,10 +155,10 @@ NOTE: when the Lucene queries are specified as a positional argument or with `-q
 
 ## Supported options
 ```shell
-Lucene Monitor based grep-like utility.
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
   -q, --query QUERY                           Lucene query string(s). If specified then all the positional arguments are interpreted as files.
+      --query-parser QUERY_PARSER             Which query parser to use, one of: [classic complex-phrase surround]
       --queries-file QUERIES_FILE             A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
       --tokenizer TOKENIZER                   Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE        If text should be case sensitive

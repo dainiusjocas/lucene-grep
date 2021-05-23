@@ -1,0 +1,10 @@
+[
+  {
+    "query": "\"john peters\"~2",
+    "query-parser": "complex-phrase"
+  },
+  {
+    "query": "3N(joh*, peters*)",
+    "query-parser": "surround"
+  }
+]
