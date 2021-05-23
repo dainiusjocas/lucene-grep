@@ -18,26 +18,22 @@ build-linux-static:
 build-linux-static-musl:
 	LMGREP_STATIC=true LMGREP_MUSL=true script/compile
 
+docker_build = (docker build --build-arg $1 --build-arg $2 -f Dockerfile -t lmgrep-native-image .; \
+				docker rm lmgrep-native-image-build || true; \
+				docker create --name lmgrep-native-image-build lmgrep-native-image; \
+				docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep)
+
+.PHONY: build-linux-with-docker
+build-linux-with-docker:
+	$(call docker_build, LMGREP_STATIC=false, LMGREP_MUSL=false)
+
 .PHONY: build-linux-static-with-docker
 build-linux-static-with-docker:
-	docker build \
-		--build-arg LMGREP_STATIC=true \
-		-f Dockerfile \
-		-t lmgrep-native-image .
-	docker rm lmgrep-native-image-build || true
-	docker create --name lmgrep-native-image-build lmgrep-native-image
-	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep
+	$(call docker_build, LMGREP_STATIC=true, LMGREP_MUSL=false)
 
 .PHONY: build-linux-static-musl-with-docker
 build-linux-static-musl-with-docker:
-	docker build \
-		--build-arg LMGREP_STATIC=true \
-		--build-arg LMGREP_MUSL=true \
-		-f Dockerfile \
-		-t lmgrep-native-image .
-	docker rm lmgrep-native-image-build || true
-	docker create --name lmgrep-native-image-build lmgrep-native-image
-	docker cp lmgrep-native-image-build:/usr/src/app/lmgrep lmgrep
+	$(call docker_build, LMGREP_STATIC=true, LMGREP_MUSL=true)
 
 .PHONY: test
 test:
