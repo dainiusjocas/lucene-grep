@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.05.23
+
 ## New
 
 - Support for multiple Lucene query parsers with flag`--query-parser`
