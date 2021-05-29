@@ -295,6 +295,22 @@
   (let [text-from-stdin "john foo peters post"
         query "\"john peters\"~2"
         options {:split true
+                 :query-parser "simple"
+                 :pre-tags ">"
+                 :post-tags "<"
+                 :template "{{highlighted-line}}"}]
+    (testing "simple case"
+      (is (= ">john foo peters< post"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep [query] nil nil options)))))))))
+
+(deftest grepping-with-standard-query-parser
+  (let [text-from-stdin "john foo peters post"
+        query "\"john peters\"~2"
+        options {:split true
+                 :query-parser "standard"
                  :pre-tags ">"
                  :post-tags "<"
                  :template "{{highlighted-line}}"}]

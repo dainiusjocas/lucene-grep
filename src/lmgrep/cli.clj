@@ -37,7 +37,7 @@
 (defn options-to-str [options]
   (print-str (mapv name (sort options))))
 
-(def query-parsers #{:classic :complex-phrase :surround :simple})
+(def query-parsers #{:classic :complex-phrase :surround :simple :standard})
 
 (def cli-options
   [["-q" "--query QUERY"
