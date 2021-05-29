@@ -18,17 +18,25 @@
                    {})]
     (assoc str->str "_type" type)))
 
-(defn construct-query [dict-entry ^String field-name ^Analyzer monitor-analyzer]
+(defn ^Query classic-query [dict-entry field-name monitor-analyzer]
+  (.parse (doto (QueryParser. field-name monitor-analyzer)
+            (.setAllowLeadingWildcard true))
+          ^String (get dict-entry :query)))
+
+(defn ^Query complex-phrase-query [dict-entry field-name monitor-analyzer]
+  (.parse (doto
+            (ComplexPhraseQueryParser. field-name monitor-analyzer)
+            (.setAllowLeadingWildcard true))
+          ^String (get dict-entry :query)))
+
+(defn ^Query construct-query [dict-entry ^String field-name ^Analyzer monitor-analyzer]
   (case (keyword (get dict-entry :query-parser))
-    :classic (.parse (QueryParser. field-name monitor-analyzer)
-                     ^String (get dict-entry :query))
-    :complex-phrase (.parse (ComplexPhraseQueryParser. field-name monitor-analyzer)
-                            ^String (get dict-entry :query))
+    :classic (classic-query dict-entry field-name monitor-analyzer)
+    :complex-phrase (complex-phrase-query dict-entry field-name monitor-analyzer)
     :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
                                        (get dict-entry :query))
                                      field-name (BasicQueryFactory.))
-    (.parse (QueryParser. field-name monitor-analyzer)
-            ^String (get dict-entry :query))))
+    (classic-query dict-entry field-name monitor-analyzer)))
 
 (defn query->monitor-query [dict-entry field-name monitor-analyzer]
   (try
