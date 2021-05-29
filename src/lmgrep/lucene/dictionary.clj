@@ -8,7 +8,8 @@
            (org.apache.lucene.search Query)
            (org.apache.lucene.analysis Analyzer)
            (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
-           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)))
+           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
+           (org.apache.lucene.queryparser.simple SimpleQueryParser)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -27,6 +28,8 @@
     :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
                                        (get dict-entry :query))
                                      field-name (BasicQueryFactory.))
+    :simple (.parse (SimpleQueryParser. monitor-analyzer field-name)
+                    (get dict-entry :query))
     (.parse (QueryParser. field-name monitor-analyzer)
             ^String (get dict-entry :query))))
 
