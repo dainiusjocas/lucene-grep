@@ -60,7 +60,6 @@
            (r/foldcat)))))
 
 (comment
-  (time (count (lmgrep.fs/get-files "/home/dj/foo.log" {})))
   (lmgrep.fs/get-files "*.md" {})
 
   (lmgrep.fs/get-files "*.md" {:excludes "README.md"})
