@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## Fixed/enhanced
+
+- Check if the glob is actually a file.
+
 ## v2021.05.23
 
 ## New

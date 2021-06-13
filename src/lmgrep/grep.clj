@@ -96,8 +96,8 @@
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
         highlighter-fn (lucene/highlighter questionnaire options)]
     (if files-pattern
-      (doseq [path (concat (fs/get-files files-pattern options)
-                           (fs/filter-files files))]
+      (doseq [path (into (fs/get-files files-pattern options)
+                         (fs/filter-files files))]
         (if (:split options)
           (with-open [rdr (io/reader path)]
             (match-lines highlighter-fn path (line-seq rdr) options))
@@ -123,11 +123,12 @@
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
-                      text-analysis/text->token-strings)]
-    (doseq [path (if files-pattern
-                   (concat (fs/get-files files-pattern options)
-                           (fs/filter-files files))
-                   [nil])]
+                      text-analysis/text->token-strings)
+        files-to-analyze (if files-pattern
+                           (into (fs/get-files files-pattern options)
+                                 (fs/filter-files files))
+                           [nil])]
+    (doseq [path files-to-analyze]
       (let [line-in-chan (a/chan 1024)
             line-out-chan (a/chan (* 2 1024))]
 
