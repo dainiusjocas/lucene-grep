@@ -13,6 +13,15 @@
              (with-out-str
                (grep/grep [query] file nil options)))))))
 
+(deftest grepping-file-with-no-split
+  (let [file "test/resources/test.txt"
+        query "fox"
+        options {:split false :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
+    (is (= "The quick brown >fox< jumps over the lazy dog"
+           (str/trim
+             (with-out-str
+               (grep/grep [query] file nil options)))))))
+
 (deftest grepping-stdin
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
