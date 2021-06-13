@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [clojure.core.async :as a]
             [clojure.core.async.impl.protocols :as impl]
+            [clojure.core.reducers :as r]
             [jsonista.core :as json]
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
@@ -123,11 +124,12 @@
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* (* 1024 8192)))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
-                      text-analysis/text->token-strings)]
-    (doseq [path (if files-pattern
-                   (concat (fs/get-files files-pattern options)
-                           (fs/filter-files files))
-                   [nil])]
+                      text-analysis/text->token-strings)
+        fta (if files-pattern
+              (into (fs/get-files files-pattern options)
+                    (fs/filter-files files))
+              [nil])]
+    (doseq [path fta]
       (let [line-in-chan (a/chan 1024)
             line-out-chan (a/chan (* 2 1024))]
 
@@ -165,7 +167,7 @@
         (.flush writer)))))
 
 (comment
-  (lmgrep.grep/analyze-lines
-    "test/resources/test.txt"
-    nil
-    {}))
+  (time (lmgrep.grep/analyze-lines
+     "test/resources/test.txt"
+     nil
+     {})))

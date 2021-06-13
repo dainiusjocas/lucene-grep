@@ -1,7 +1,8 @@
 (ns lmgrep.fs
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as sh]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.core.reducers :as r])
   (:import (java.nio.file FileSystems PathMatcher Path)
            (java.io File)))
 
@@ -13,11 +14,6 @@
 (defn binary-file? [^String file-path]
   (.contains ^String (:out (sh/sh "file" file-options file-path))
              "charset=binary"))
-
-(defn remove-binary-files [file-paths options]
-  (if (and (:skip-binary-files options) file-options)
-    (remove binary-file? file-paths)
-    file-paths))
 
 (defn filter-files [files]
   (filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
@@ -36,28 +32,35 @@
         ^PathMatcher exclude-matcher (when-let [excludes-glob (:excludes options)]
                                        (.getPathMatcher
                                          (FileSystems/getDefault)
-                                         (str "glob:" excludes-glob)))]
-    (remove-binary-files
+                                         (str "glob:" excludes-glob)))
+        binary-file-pred-fn (fn [^String file-path]
+                              (and (get options :skip-binary-files)
+                                   file-options
+                                   (binary-file? file-path)))]
+    (if (.isFile glob-file)
+      [(.getPath glob-file)]
       (->> starting-folder
            io/file
            file-seq
-           (filter (fn [^File f] (.isFile f)))
-           (filter (fn [^File f]
-                     (if (or (.getParent glob-file) (re-find #"\*\*" glob))
-                       (.matches grammar-matcher ^Path (.toPath ^File f))
-                       (when (= starting-folder (str (.getParent (.toPath ^File f))))
-                         (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
-           (remove (fn [^File f]
-                     (if exclude-matcher
-                       (if (re-find #"\*\*" (:excludes options))
-                         (.matches exclude-matcher ^Path (.toPath ^File f))
+           (r/filter (fn [^File f] (.isFile f)))
+           (r/filter (fn [^File f]
+                       (if (or (.getParent glob-file) (re-find #"\*\*" glob))
+                         (.matches grammar-matcher ^Path (.toPath ^File f))
                          (when (= starting-folder (str (.getParent (.toPath ^File f))))
-                           (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
-                       false)))
-           (mapv #(.getPath ^File %)))
-      options)))
+                           (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
+           (r/remove (fn [^File f]
+                       (if exclude-matcher
+                         (if (re-find #"\*\*" (:excludes options))
+                           (.matches exclude-matcher ^Path (.toPath ^File f))
+                           (when (= starting-folder (str (.getParent (.toPath ^File f))))
+                             (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
+                         false)))
+           (r/map (fn [^File f] (.getPath f)))
+           (r/remove binary-file-pred-fn)
+           (r/foldcat)))))
 
 (comment
+  (time (count (lmgrep.fs/get-files "/home/dj/foo.log" {})))
   (lmgrep.fs/get-files "*.md" {})
 
   (lmgrep.fs/get-files "*.md" {:excludes "README.md"})
