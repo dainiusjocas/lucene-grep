@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [clojure.core.async :as a]
             [clojure.core.async.impl.protocols :as impl]
-            [clojure.core.reducers :as r]
             [jsonista.core :as json]
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
