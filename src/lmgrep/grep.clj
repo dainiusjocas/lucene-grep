@@ -167,7 +167,7 @@
         (.flush writer)))))
 
 (comment
-  (time (lmgrep.grep/analyze-lines
-     "test/resources/test.txt"
-     nil
-     {})))
+  (lmgrep.grep/analyze-lines
+    "test/resources/test.txt"
+    nil
+    {}))
