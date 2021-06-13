@@ -124,11 +124,11 @@
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
                       text-analysis/text->token-strings)
-        fta (if files-pattern
-              (into (fs/get-files files-pattern options)
-                    (fs/filter-files files))
-              [nil])]
-    (doseq [path fta]
+        files-to-analyze (if files-pattern
+                           (into (fs/get-files files-pattern options)
+                                 (fs/filter-files files))
+                           [nil])]
+    (doseq [path files-to-analyze]
       (let [line-in-chan (a/chan 1024)
             line-out-chan (a/chan (* 2 1024))]
 
