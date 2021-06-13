@@ -4,7 +4,7 @@
 
 (deftest filter-for-files
   (let [files ["src" "deps.edn"]]
-    (is (= ["deps.edn"] (fs/filter-files files)))))
+    (is (= ["deps.edn"] (into [] (fs/filter-files files))))))
 
 (deftest binary-file-shipping
   (when (contains? #{"Linux" "Mac OS X"} (System/getProperty "os.name"))

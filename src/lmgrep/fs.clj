@@ -16,7 +16,7 @@
              "charset=binary"))
 
 (defn filter-files [files]
-  (filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
+  (r/filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
 
 ; TODO: Support regex pattern
 (defn get-files [^String glob options]

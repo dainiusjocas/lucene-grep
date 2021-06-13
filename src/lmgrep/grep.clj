@@ -96,8 +96,8 @@
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
         highlighter-fn (lucene/highlighter questionnaire options)]
     (if files-pattern
-      (doseq [path (concat (fs/get-files files-pattern options)
-                           (fs/filter-files files))]
+      (doseq [path (into (fs/get-files files-pattern options)
+                         (fs/filter-files files))]
         (if (:split options)
           (with-open [rdr (io/reader path)]
             (match-lines highlighter-fn path (line-seq rdr) options))
