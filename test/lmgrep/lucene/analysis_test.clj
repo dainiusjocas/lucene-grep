@@ -194,6 +194,7 @@
                                 "typeMatch" "word"}
               "patternreplace" {"pattern" " "}
               "patterncapturegroup" {"pattern" " "}
+              "patterntyping" {"patternFile" "test/resources/pattern.txt"}
               "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}
               "synonymgraph" {"synonyms" "test/resources/mapping.txt"}
               "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
