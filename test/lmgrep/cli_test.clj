@@ -10,7 +10,8 @@
    :split                       true
    :with-details                false
    :with-empty-lines            false
-   :with-scored-highlights      false})
+   :with-scored-highlights      false
+   :concurrency                 8})
 
 (deftest args-handling
   (testing "positional arguments"
