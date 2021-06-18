@@ -91,6 +91,9 @@
    [nil "--analysis ANALYSIS" "The analysis chain configuration"
     :parse-fn #(json/read-value % json/keyword-keys-object-mapper)
     :default {}]
+   [nil "--concurrency CONCURRENCY" "How many threads to use to match text while preserving the input order."
+    :parse-fn #(Integer/parseInt %)
+    :default 8]
    ["-h" "--help"]])
 
 (defn handle-args [args]
