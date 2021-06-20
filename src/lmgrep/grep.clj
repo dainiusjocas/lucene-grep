@@ -68,7 +68,7 @@
 
 (defn match-lines [highlighter-fn file-path lines options]
   (let [parallel-matcher (matcher-fn highlighter-fn file-path options)
-        concurrency 1
+        concurrency (get options :concurrency 8)
         numbered-lines (map-indexed (fn [line-str line-number] (LineNrStr. line-str line-number)) lines)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out*))
         with-empty-lines (:with-empty-lines options)]

@@ -248,7 +248,7 @@
     ; Lucene has a bug that fails to find all matches when called concurrently
     ; https://issues.apache.org/jira/browse/LUCENE-9791
     ; therefore the test is not stable
-    (let [size 10
+    (let [size 50
           text (str/join "\n" (range size))
           options {:split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
       (is (= (str/join "\n" (map (fn [s] (str ">" s "<")) (range size)))
