@@ -5,7 +5,7 @@
             [clojure.core.reducers :as r]
             [babashka.fs :as bfs])
   (:import (java.nio.file FileSystems PathMatcher Path Files LinkOption)
-           (java.io File)))
+           (java.io File IOException)))
 
 (def file-options (case (System/getProperty "os.name")
                     "Linux" "-ib"
@@ -33,47 +33,47 @@
 
 ; TODO: Support regex pattern
 #_(defn get-files
-  "Given GLOB string, infers what is the root dir and returns a list of paths
-  to files whose name matches the GLOB.
-  Options:
-  - :excludes GLOB to excludes files
-  - :skip-binary-files check if a file is a binary (only for linux and macos)"
-  [^String glob options]
-  (let [glob (str/replace glob #"^.\\" "")                  ; on Windows Terminal: .\README.md => README.md
-        ^File glob-file (io/file glob)
-        ^String root-folder (infer-root-folder glob)
-        ^PathMatcher grammar-matcher (.getPathMatcher
-                                       (FileSystems/getDefault)
-                                       (str "glob:" glob))
-        ^PathMatcher exclude-matcher (when-let [excludes-glob (:excludes options)]
-                                       (.getPathMatcher
+    "Given GLOB string, infers what is the root dir and returns a list of paths
+    to files whose name matches the GLOB.
+    Options:
+    - :excludes GLOB to excludes files
+    - :skip-binary-files check if a file is a binary (only for linux and macos)"
+    [^String glob options]
+    (let [glob (str/replace glob #"^.\\" "")                  ; on Windows Terminal: .\README.md => README.md
+          ^File glob-file (io/file glob)
+          ^String root-folder (infer-root-folder glob)
+          ^PathMatcher grammar-matcher (.getPathMatcher
                                          (FileSystems/getDefault)
-                                         (str "glob:" excludes-glob)))
-        binary-file-pred-fn (fn [^String file-path]
-                              (and (get options :skip-binary-files)
-                                   file-options
-                                   (binary-file? file-path)))]
-    (if (.isFile glob-file)
-      [(.getPath glob-file)]
-      (->> root-folder
-           io/file
-           file-seq
-           (r/filter (fn [^File f] (.isFile f)))
-           (r/filter (fn [^File f]
-                       (if (or (.getParent glob-file) (re-find #"\*\*" glob))
-                         (.matches grammar-matcher ^Path (.toPath ^File f))
-                         (when (= root-folder (str (.getParent (.toPath ^File f))))
-                           (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
-           (r/remove (fn [^File f]
-                       (if exclude-matcher
-                         (if (re-find #"\*\*" (:excludes options))
-                           (.matches exclude-matcher ^Path (.toPath ^File f))
+                                         (str "glob:" glob))
+          ^PathMatcher exclude-matcher (when-let [excludes-glob (:excludes options)]
+                                         (.getPathMatcher
+                                           (FileSystems/getDefault)
+                                           (str "glob:" excludes-glob)))
+          binary-file-pred-fn (fn [^String file-path]
+                                (and (get options :skip-binary-files)
+                                     file-options
+                                     (binary-file? file-path)))]
+      (if (.isFile glob-file)
+        [(.getPath glob-file)]
+        (->> root-folder
+             io/file
+             file-seq
+             (r/filter (fn [^File f] (.isFile f)))
+             (r/filter (fn [^File f]
+                         (if (or (.getParent glob-file) (re-find #"\*\*" glob))
+                           (.matches grammar-matcher ^Path (.toPath ^File f))
                            (when (= root-folder (str (.getParent (.toPath ^File f))))
-                             (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
-                         false)))
-           (r/map (fn [^File f] (.getPath f)))
-           (r/remove binary-file-pred-fn)
-           (r/foldcat)))))
+                             (.matches grammar-matcher ^Path (.getFileName (.toPath ^File f)))))))
+             (r/remove (fn [^File f]
+                         (if exclude-matcher
+                           (if (re-find #"\*\*" (:excludes options))
+                             (.matches exclude-matcher ^Path (.toPath ^File f))
+                             (when (= root-folder (str (.getParent (.toPath ^File f))))
+                               (.matches exclude-matcher ^Path (.getFileName (.toPath ^File f)))))
+                           false)))
+             (r/map (fn [^File f] (.getPath f)))
+             (r/remove binary-file-pred-fn)
+             (r/foldcat)))))
 
 (def windows?
   (-> (System/getProperty "os.name")
@@ -154,8 +154,9 @@
                                (match path))
                              :continue)
         :visit-file-failed (if handle-error
-                             (fn [path _attrs]
-                               (.println System/err (format "Visiting %s failed" path))
+                             (fn [path ^IOException exception]
+                               (when (System/getenv "DEBUG_MODE")
+                                 (.println System/err (format "Visiting %s failed: %s" path (type exception))))
                                :skip-subtree)
                              nil)})
      (let [results (persistent! @results)
