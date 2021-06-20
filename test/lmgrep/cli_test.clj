@@ -3,15 +3,16 @@
             [lmgrep.cli :as cli]))
 
 (def default-options
-  {:analysis                    {}
-   :hyperlink                   false
-   :only-analyze                false
-   :skip-binary-files           false
-   :split                       true
-   :with-details                false
-   :with-empty-lines            false
-   :with-scored-highlights      false
-   :concurrency                 8})
+  {:analysis               {}
+   :hyperlink              false
+   :only-analyze           false
+   :skip-binary-files      false
+   :split                  true
+   :with-details           false
+   :with-empty-lines       false
+   :with-scored-highlights false
+   :concurrency            8
+   :hidden                 true})
 
 (deftest args-handling
   (testing "positional arguments"
