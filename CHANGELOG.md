@@ -12,6 +12,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Faster file system search with GLOB
 - Flag to limit the depth of file system traversal`--max-depth`
 - Flag to skip hidden files `--[no-]hidden`
+- Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
+- Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
 
 ## v2021.05.23
 
