@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [clojure.core.reducers :as r]
             [babashka.fs :as bfs])
-  (:import (java.nio.file FileSystems PathMatcher Path Files LinkOption)
+  (:import (java.nio.file FileSystems Path Files LinkOption)
            (java.io File IOException)))
 
 (set! *warn-on-reflection* true)
@@ -139,31 +139,17 @@
 
 (comment
   (lmgrep.fs/get-files "*.md" {})
-  (lmgrep.fs/files-get "*.md" {})
-  (lmgrep.fs/files-get "**.md" {})
+  (lmgrep.fs/get-files "**.md" {})
 
-  (time (lmgrep.fs/get-files "/home/dj/vinted/**/.env" {}))
-  (time (lmgrep.fs/files-get "/home/dj/vinted/**/.env" {}))
-  (time (lmgrep.fs/files-get "/home/dj/**/.env" {}))
-
-  (lmgrep.fs/files-get "/home/dj/.zshrc" {})
-  (lmgrep.fs/files-get "**/lucene" {})
   (lmgrep.fs/get-files "**/lucene" {})
 
   (lmgrep.fs/get-files "docs/**.png" {:skip-binary-files true})
-  (lmgrep.fs/files-get "docs/**.png" {:skip-binary-files true})
-  (lmgrep.fs/files-get "docs/**.png" {:skip-binary-files false})
-
-
-
+  (lmgrep.fs/get-files "docs/**.png" {:skip-binary-files false})
 
   (lmgrep.fs/get-files "*.md" {:excludes "README.md"})
-  (lmgrep.fs/files-get "*.md" {:excludes "README.md"})
-  (lmgrep.fs/files-get "*.md" {})
   (lmgrep.fs/get-files "**/*.md" {:excludes "README.md"})
-  (lmgrep.fs/files-get "**/*.md" {:excludes "README.md"})
-  (lmgrep.fs/files-get "**/*.md" {:excludes "**/README.md"})
-  (lmgrep.fs/files-get "**.md" {})
+  (lmgrep.fs/get-files "**/*.md" {:excludes "**/README.md"})
+  (lmgrep.fs/get-files "**.md" {})
 
   (lmgrep.fs/get-files "*.clj" {})
   (lmgrep.fs/get-files "./src/lmgrep/*.clj" {})
@@ -171,4 +157,5 @@
   (lmgrep.fs/get-files "**.clj" {:excludes "**test*"})
   (lmgrep.fs/get-files "**/*.clj" {})
   (time (count (lmgrep.fs/get-files "**.*" {:skip-binary-files true})))
+  (time (count (lmgrep.fs/get-files "**.*" {:skip-binary-files false})))
   (lmgrep.fs/get-files "/var/log/**.log" {}))

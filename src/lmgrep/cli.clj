@@ -73,6 +73,10 @@
    [nil "--excludes EXCLUDES" "A GLOB that filters out files that were matched with a GLOB"]
    [nil "--skip-binary-files" "If a file that is detected to be binary should be skipped. Available for Linux and MacOS only."
     :default false]
+   [nil "--[no-]hidden" "Search in hidden files. Default: true."
+    :default true]
+   [nil "--max-depth N" "In case of a recursive GLOB, how deep to search for input files."
+    :parse-fn #(Integer/parseInt %)]
    [nil "--with-empty-lines" "When provided on the input that does not match write an empty line to STDOUT."
     :default false]
    [nil "--with-scored-highlights" "ALPHA: Instructs to highlight with scoring."
