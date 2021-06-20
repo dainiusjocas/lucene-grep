@@ -3,7 +3,7 @@
 Run the Application with the `-J-agentlib:native-image-agent=config-output-dir=` to get the reflection config.
 
 ```shell
- echo "cats and dogs"  | clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M -m lmgrep.core  --only-analyze
+clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:test
 ```
 
 Collect only the classes needed for the compilation with all declared constructors.

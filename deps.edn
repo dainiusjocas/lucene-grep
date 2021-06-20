@@ -10,6 +10,7 @@
   org.apache.lucene/lucene-analyzers-stempel {:mvn/version "8.9.0"}
   metosin/jsonista                           {:mvn/version "0.3.3"}
   lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.4"}
+  babashka/fs                                {:mvn/version "0.0.5"}
   io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.2"}}
  :aliases
  {:dev

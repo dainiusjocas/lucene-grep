@@ -1,1 +1,1 @@
-{"token-filters":[{"name":"dropifflagged"}]}
+{"token-filters":[{"name":"dropifflagged","args":{"dropFlags":"2"}}]}

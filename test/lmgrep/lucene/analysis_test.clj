@@ -178,28 +178,29 @@
   (let [text "cats and dogs"
         components analysis/token-filter-name->class
         token-filter-names (keys components)
-        args {"limittokencount" {"maxTokenCount" 5}
-              "delimitedpayload" {"encoder" "float"}
-              "limittokenoffset" {"maxStartOffset" 5}
-              "length" {"min" 1 "max" 5}
-              "type" {"types" "test/resources/stops.txt"}
-              "ngram" {"minGramSize" 1
-                       "maxGramSize" 5}
-              "protectedterm" {"protected" "test/resources/stops.txt"}
-              "edgengram" {"minGramSize" 1
-                           "maxGramSize" 5}
-              "limittokenposition" {"maxTokenPosition" 2}
-              "codepointcount" {"min" 1 "max" 5}
-              "numericpayload" {"payload" 24
-                                "typeMatch" "word"}
-              "patternreplace" {"pattern" " "}
-              "patterncapturegroup" {"pattern" " "}
-              "patterntyping" {"patternFile" "test/resources/pattern.txt"}
-              "dictionarycompoundword" {"dictionary" "test/resources/stops.txt"}
-              "synonymgraph" {"synonyms" "test/resources/mapping.txt"}
+        args {"limittokencount"         {"maxTokenCount" 5}
+              "delimitedpayload"        {"encoder" "float"}
+              "limittokenoffset"        {"maxStartOffset" 5}
+              "length"                  {"min" 1 "max" 5}
+              "type"                    {"types" "test/resources/stops.txt"}
+              "ngram"                   {"minGramSize" 1
+                                         "maxGramSize" 5}
+              "protectedterm"           {"protected" "test/resources/stops.txt"}
+              "edgengram"               {"minGramSize" 1
+                                         "maxGramSize" 5}
+              "limittokenposition"      {"maxTokenPosition" 2}
+              "codepointcount"          {"min" 1 "max" 5}
+              "numericpayload"          {"payload"   24
+                                         "typeMatch" "word"}
+              "patternreplace"          {"pattern" " "}
+              "patterncapturegroup"     {"pattern" " "}
+              "patterntyping"           {"patternFile" "test/resources/pattern.txt"}
+              "dictionarycompoundword"  {"dictionary" "test/resources/stops.txt"}
+              "synonymgraph"            {"synonyms" "test/resources/mapping.txt"}
               "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
-              "hunspellstem" {"dictionary" "test/resources/hunspell_dict.dic"
-                              "affix" "test/resources/hunspell_dict.aff"}}]
+              "hunspellstem"            {"dictionary" "test/resources/hunspell_dict.dic"
+                                         "affix"      "test/resources/hunspell_dict.aff"}
+              "dropifflagged"           {"dropFlags" "2"}}]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try

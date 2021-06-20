@@ -1336,6 +1336,23 @@
         "name": "<init>"
       }
     ],
+    "name": "org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.FingerprintFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
@@ -1886,6 +1903,23 @@
       }
     ],
     "name": "org.apache.lucene.analysis.pattern.PatternTokenizerFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.pattern.PatternTypingFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
       {
@@ -2740,6 +2774,44 @@
     "allPublicConstructors": true
   },
   {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.flexible.standard.StandardQueryParser",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.simple.SimpleQueryParser",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.surround.parser.QueryParser",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.lucene.queryparser.surround.query.BasicQueryFactory",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "allPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.surround.query.SrndQuery",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.search.AutomatonQuery",
+    "allDeclaredConstructors": true
+  },
+  {
     "methods": [
       {
         "parameterTypes": [],
@@ -2767,6 +2839,11 @@
       }
     ],
     "name": "org.apache.lucene.search.MaxNonCompetitiveBoostAttributeImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allDeclaredFields": true,
+    "name": "org.apache.lucene.search.MultiTermQuery",
     "allDeclaredConstructors": true
   },
   {
