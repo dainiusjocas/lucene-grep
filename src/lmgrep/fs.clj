@@ -22,8 +22,7 @@
   (r/filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
 
 (defn infer-root-folder
-  "Take the lowest directory that does not contain wildcards.
-  Peel back GLOB pattern up to the root directory"
+  "Peel the GLOB pattern up to the directory from which to start file search."
   [^String glob]
   (loop [^File glob-file (io/file glob)]
     (let [^String pathname-parent (or (.getParent glob-file) ".")]
