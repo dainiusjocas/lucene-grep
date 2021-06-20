@@ -46,8 +46,11 @@
   - :hidden: match hidden files. Note: on Windows files starting with
   a dot are not hidden, unless their hidden attribute is set.
   - :follow-links: follow symlinks.
+  - :max-depth: how deep to go in FS tree.
   - :handle-error: just skip the problematic (e.g. no permission) files.
-  - :only-files: remove directories from the result"
+  - :only-files: remove directories from the result.
+  - :skip-binary-files: skip files that are binary.
+  - :excludes: GLOB that removes files."
   ([root pattern] (fs-glob root pattern nil))
   ([root pattern {:keys [hidden follow-links max-depth
                          handle-error only-files skip-binary-files
