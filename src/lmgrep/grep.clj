@@ -127,13 +127,20 @@
         files-to-analyze (if files-pattern
                            (into (fs/get-files files-pattern options)
                                  (fs/filter-files files))
-                           [nil])]
+                           [nil])
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
     (doseq [path files-to-analyze]
-      (let [line-in-chan (a/chan 1024)
-            line-out-chan (a/chan (* 2 1024))]
+      (let [not-done (atom 0)
+            line-in-chan (a/chan 1024)
+            line-out-chan (a/chan (* 2 1024))
+            process (fn [line]
+                      (let [res (json/write-value-as-string
+                                  (analysis-fn line analyzer))]
+                        ;(.println System/err (format ">>>>>%s" res))
+                        (a/>!! line-out-chan res)))]
 
         ;; parallel processing pipeline on a threadpool
-        (a/pipeline (* 4 (.availableProcessors (Runtime/getRuntime)))
+        #_(a/pipeline (* 4 (.availableProcessors (Runtime/getRuntime)))
                     line-out-chan
                     (map (fn [line]
                            (json/write-value-as-string
@@ -145,6 +152,21 @@
                         (.printStackTrace t))
                       (a/close! line-out-chan)
                       (System/exit 1)))
+
+        ;; Start as many as there are CPU worker threads
+        (dotimes [_ concurrency]
+          (swap! not-done inc)
+          (a/thread
+            (let [line (a/<!! line-in-chan)]
+              ;(.println System/err (format "INPUT: %s" line))
+              (if line
+                (do
+                  (process line)
+                  (recur))
+                (let [unfinished (swap! not-done dec)]
+                  ;(.println System/err unfinished)
+                  (when (zero? unfinished)
+                    (a/close! line-out-chan)))))))
 
         ;; read lines in a thread pool
         (a/go
