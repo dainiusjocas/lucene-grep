@@ -1,11 +1,11 @@
 (ns lmgrep.only-analyze
-  (:require [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.analysis-conf :as ac]
-            [clojure.core.async :as a]
-            [lmgrep.lucene.text-analysis :as text-analysis]
-            [lmgrep.fs :as fs]
+  (:require [clojure.core.async :as a]
+            [clojure.java.io :as io]
             [jsonista.core :as json]
-            [clojure.java.io :as io])
+            [lmgrep.lucene.analysis-conf :as ac]
+            [lmgrep.lucene.text-analysis :as text-analysis]
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.fs :as fs])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)))
 
@@ -48,17 +48,17 @@
 (defn read-input-lines-to-channel
   "Starts a thread that reads strings from an input reader and puts them to a channel."
   [^BufferedReader input-reader channel]
-  (a/thread
+  (a/go
     (with-open [^BufferedReader rdr input-reader]
       (loop [^String line (.readLine rdr)]
         (if (nil? line)
           (a/close! channel)
           (do
-            (a/>!! channel line)
+            (a/>! channel line)
             (recur (.readLine rdr))))))))
 
 (defn write-output-from-channel
-  "Write to data from a channel to PrintWriter on the main thread."
+  "Write data from a channel to the PrintWriter. Intended to be run on the main thread."
   [^PrintWriter writer channel]
   (loop [^String line (a/<!! channel)]
     (when-not (nil? line)
