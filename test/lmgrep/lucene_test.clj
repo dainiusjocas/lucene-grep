@@ -3,7 +3,9 @@
             [clojure.string :as str]
             [lmgrep.formatter :as formatter]
             [lmgrep.grep :as grep]
-            [lmgrep.lucene :as lucene]))
+            [lmgrep.lucene :as lucene]
+            [jsonista.core :as json]
+            [clojure.string :as s]))
 
 (deftest highlighting-test
   (testing "coloring the output"
@@ -48,7 +50,7 @@
              ((lucene/highlighter dictionary {}) text))))))
 
 (deftest only-analysis
-  (testing "file input"
+  (testing "file input ordered"
     (let [file-path "test/resources/test.txt"
           options {}]
       (is (= 2 (count
@@ -56,10 +58,19 @@
                    (str/trim
                      (with-out-str
                        (grep/analyze-lines file-path nil options)))))))))
-  (testing "multiple lines from stdin"
+  (testing "multiple lines from stdin ordered"
     (let [text-from-stdin "foo bar \nbaz quux"
           analyzer {}]
       (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
              (with-in-str text-from-stdin
                           (with-out-str
-                            (grep/analyze-lines nil nil analyzer))))))))
+                            (grep/analyze-lines nil nil analyzer)))))))
+
+  (testing "multiple lines from stdin not ordered"
+    (let [text-from-stdin "foo bar \nbaz quux"
+          analyzer {:preserve-order false}]
+      (is (= #{["foo" "bar"] ["baz" "quux"]}
+             (set (map json/read-value (s/split-lines
+                                         (with-in-str text-from-stdin
+                                                      (with-out-str
+                                                        (grep/analyze-lines nil nil analyzer)))))))))))
