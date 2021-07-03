@@ -7,8 +7,10 @@
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.fs :as fs])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
-           (org.apache.lucene.analysis Analyzer)))
+           (org.apache.lucene.analysis Analyzer)
+           (java.util.concurrent ExecutorService Executors TimeUnit)))
 
+(set! *warn-on-reflection* true)
 
 (defn only-analyze-unordered
   "Given a line-in-chan that contains strings to analyze, passes every string to the analyze-fn whose
@@ -66,13 +68,47 @@
       (recur (a/<!! channel))))
   (.flush writer))
 
+(defn unordered-analysis
+  "Reads strings from the reader line by line, processes each line on an ExecutorService
+   thread pool then sends the lines to anather single thread ExecutorService for writing
+   the output lines to a writer.
+   When the input is consumed the text analysis thread pool is gracefully shut down.
+   Then the writer thread pool is gracefully shut down."
+  [reader ^PrintWriter writer analysis-fn analyzer concurrency]
+  (let [^ExecutorService analyzer-pool (Executors/newFixedThreadPool concurrency)
+        ^ExecutorService writer-pool (Executors/newSingleThreadExecutor)]
+    (with-open [^BufferedReader rdr reader]
+      (loop [^String line (.readLine rdr)]
+        (when-not (nil? line)
+          (.submit analyzer-pool
+                   ^Runnable (fn []
+                               (let [out-str (json/write-value-as-string
+                                               (analysis-fn line analyzer))]
+                                 (.submit writer-pool
+                                          ^Runnable (fn [] (.println writer out-str))))))
+          (recur (.readLine rdr))))
+      (.shutdown analyzer-pool)
+      (.awaitTermination analyzer-pool 60 TimeUnit/SECONDS)
+      (.shutdown writer-pool)
+      (.awaitTermination writer-pool 60 TimeUnit/SECONDS)
+      (.flush writer))))
+
+(defn ordered-analysis [reader writer analysis-fn analyzer concurrency]
+  (let [line-in-chan (a/chan 1024)
+        line-out-chan (a/chan 1024)
+        analyze-fn (fn [line] (json/write-value-as-string (analysis-fn line analyzer)))]
+    (only-analyze-ordered analyze-fn line-in-chan line-out-chan concurrency)
+    (read-input-lines-to-channel reader line-in-chan)
+    (write-output-from-channel writer line-out-chan)))
+
 (defn analyze-lines
-  "Sequence of text into sequence of text token sequences. Output format is JSON.
-  If given file path reads file otherwise stdin."
+  "Sequence of strings into sequence of text token sequences. Output format is JSON.
+  If given file path reads file otherwise stdin.
+
+  Options:
+  - :preserve-order should the output preserve the order of the input."
   [files-pattern files options]
-  (let [line-in-buffer-size (* 1024 8)
-        line-out-buffer-size (* 1024 8)
-        reader-buffer-size (* 1024 8192)
+  (let [reader-buffer-size (* 2 1024 8192)
         print-writer-buffer-size (* 8192 8192)
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
@@ -87,20 +123,20 @@
         ^Analyzer analyzer (analyzer/create analysis-conf)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))]
     (doseq [path files-to-analyze]
-      (let [line-in-chan (a/chan line-in-buffer-size)
-            line-out-chan (a/chan line-out-buffer-size)
-            analyze-fn (fn [line] (json/write-value-as-string (analysis-fn line analyzer)))]
+      (let [reader (if path
+                     (io/reader path)
+                     (BufferedReader. *in* reader-buffer-size))]
         (if preserve-order?
-          (only-analyze-ordered analyze-fn line-in-chan line-out-chan concurrency)
-          (only-analyze-unordered analyze-fn line-in-chan line-out-chan concurrency))
-        (read-input-lines-to-channel (if path
-                                       (io/reader path)
-                                       (BufferedReader. *in* reader-buffer-size))
-                                     line-in-chan)
-        (write-output-from-channel writer line-out-chan)))))
+          (ordered-analysis reader writer analysis-fn analyzer concurrency)
+          (unordered-analysis reader writer analysis-fn analyzer concurrency))))))
 
 (comment
   (lmgrep.only-analyze/analyze-lines
     "test/resources/test.txt"
     nil
-    {}))
+    {:preserve-order true})
+
+  (lmgrep.only-analyze/analyze-lines
+    "test/resources/test.txt"
+    nil
+    {:preserve-order false}))
