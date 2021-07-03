@@ -98,6 +98,10 @@
    [nil "--concurrency CONCURRENCY" "How many concurrent threads to use for processing."
     :parse-fn #(Integer/parseInt %)
     :default 8]
+   [nil "--reader-buffer-size BUFFER_SIZE" "Buffer size of the BufferedReader in bytes."
+    :parse-fn #(Integer/parseInt %)]
+   [nil "--writer-buffer-size BUFFER_SIZE" "Buffer size of the BufferedWriter in bytes."
+    :parse-fn #(Integer/parseInt %)]
    [nil "--[no-]preserve-order" "If the input order should be preserved."
     :default true]
    ["-h" "--help"]])

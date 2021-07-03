@@ -106,10 +106,14 @@
   If given file path reads file otherwise stdin.
 
   Options:
-  - :preserve-order should the output preserve the order of the input."
+  - :concurrency how many threads to use for text analysis.
+  - :explain should the token have the positional and other information.
+  - :preserve-order should the output preserve the order of the input.
+  - :reader-buffer-size in bytes
+  - :writer-buffer-size in bytes"
   [files-pattern files options]
-  (let [reader-buffer-size (* 2 1024 8192)
-        print-writer-buffer-size (* 8192 8192)
+  (let [reader-buffer-size (get options :reader-buffer-size (* 2 1024 8192))
+        print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)
