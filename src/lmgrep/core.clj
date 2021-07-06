@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [lmgrep.cli :as cli]
+            [lmgrep.only-analyze :as analyze]
             [lmgrep.grep :as grep])
   (:gen-class))
 
@@ -27,7 +28,7 @@
         (print-summary-msg summary)
         (System/exit 1))
       (if (:only-analyze options)
-        (grep/analyze-lines (first positional-arguments) (rest positional-arguments) options)
+        (analyze/analyze-lines (first positional-arguments) (rest positional-arguments) options)
         (do
           (when (or (:help options) (zero-queries? arguments options))
             (print-summary-msg summary)

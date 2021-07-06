@@ -14,6 +14,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Flag to skip hidden files `--[no-]hidden`
 - Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
+- Flag `--[no-]preserve-order` that attempts to increase throughput while not preserving the order, applicable to `--only-analyze`
+- Flag `--reader-buffer-size` in bytes
+- Flag `--writer-buffer-size` in bytes
 
 ## v2021.05.23
 

@@ -12,7 +12,8 @@
    :with-empty-lines       false
    :with-scored-highlights false
    :concurrency            8
-   :hidden                 true})
+   :hidden                 true
+   :preserve-order         true})
 
 (deftest args-handling
   (testing "positional arguments"

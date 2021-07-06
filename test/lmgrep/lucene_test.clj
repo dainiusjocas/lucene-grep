@@ -1,8 +1,6 @@
 (ns lmgrep.lucene-test
   (:require [clojure.test :refer [deftest is testing]]
-            [clojure.string :as str]
             [lmgrep.formatter :as formatter]
-            [lmgrep.grep :as grep]
             [lmgrep.lucene :as lucene]))
 
 (deftest highlighting-test
@@ -46,20 +44,3 @@
                :query         "best class"
                :type          "QUERY"}]
              ((lucene/highlighter dictionary {}) text))))))
-
-(deftest only-analysis
-  (testing "file input"
-    (let [file-path "test/resources/test.txt"
-          options {}]
-      (is (= 2 (count
-                 (str/split-lines
-                   (str/trim
-                     (with-out-str
-                       (grep/analyze-lines file-path nil options)))))))))
-  (testing "multiple lines from stdin"
-    (let [text-from-stdin "foo bar \nbaz quux"
-          analyzer {}]
-      (is (= "[\"foo\",\"bar\"]\n[\"baz\",\"quux\"]\n"
-             (with-in-str text-from-stdin
-                          (with-out-str
-                            (grep/analyze-lines nil nil analyzer))))))))

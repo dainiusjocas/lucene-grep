@@ -15,7 +15,7 @@
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.931"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.11.935"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -23,13 +23,13 @@
   :test
   {:extra-paths ["test" "test/resources"]
    :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha     "62ef1de18e076903374306060ac0e8a752e57c86"}}
+                                            :sha     "f597341b6ca7bb4cf027e0a34a6710ca9cb969da"}}
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
    :extra-deps {clj-kondo/clj-kondo {:mvn/version "2021.06.18"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :uberjar
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot true}}}}
