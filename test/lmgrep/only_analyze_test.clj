@@ -1,5 +1,5 @@
 (ns lmgrep.only-analyze-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.only-analyze :as analyze]))
