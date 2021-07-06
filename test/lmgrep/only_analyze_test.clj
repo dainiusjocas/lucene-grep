@@ -42,5 +42,4 @@
                                    (str/split-lines
                                      (with-out-str
                                        (analyze/analyze-lines file-path nil unordered-options))))]
-      (is (= (set ordered-tokens) (set unordered-tokens)))
-      (is (= ordered-tokens unordered-tokens)))))
+      (is (= (set ordered-tokens) (set unordered-tokens))))))
