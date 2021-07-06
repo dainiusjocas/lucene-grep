@@ -7,10 +7,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## Fixed/enhanced
 
 - Updated to Lucene 8.9.0
-- Check if the glob is actually a file.
 - Flag to specify the input matching concurrency `--concurrency`
 - Faster file system search with GLOB
-- Flag to limit the depth of file system traversal`--max-depth`
+- Flag to limit the depth of file system traversal `--max-depth`
 - Flag to skip hidden files `--[no-]hidden`
 - Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter

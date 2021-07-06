@@ -7,7 +7,7 @@
             [lmgrep.fs :as fs]
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene])
-  (:import (java.io BufferedReader File PrintWriter BufferedWriter)))
+  (:import (java.io BufferedReader File PrintWriter BufferedWriter FileReader)))
 
 (set! *warn-on-reflection* true)
 
@@ -65,8 +65,9 @@
 (defn match-lines [highlighter-fn file-path lines options]
   (let [parallel-matcher (matcher-fn highlighter-fn file-path options)
         concurrency (get options :concurrency 8)
+        print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
         numbered-lines (map-indexed (fn [line-str line-number] (LineNrStr. line-str line-number)) lines)
-        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out*))
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
         with-empty-lines (:with-empty-lines options)]
     (doseq [^String to-print (map-pipeline parallel-matcher concurrency numbered-lines)]
       (if (.equals "" to-print)
@@ -90,16 +91,17 @@
 
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
+        reader-buffer-size (get options :reader-buffer-size (* 2 1024 8192))
         highlighter-fn (lucene/highlighter questionnaire options)]
     (if files-pattern
-      (doseq [path (into (fs/get-files files-pattern options)
-                         (fs/filter-files files))]
+      (doseq [^String path (into (fs/get-files files-pattern options)
+                                 (fs/filter-files files))]
         (if (:split options)
-          (with-open [rdr (io/reader path)]
+          (with-open [^BufferedReader rdr (BufferedReader. (FileReader. path) reader-buffer-size)]
             (match-lines highlighter-fn path (line-seq rdr) options))
           (match-lines highlighter-fn path [(slurp path)] options)))
       (if (:split options)
-        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in*)) options)
+        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in* reader-buffer-size)) options)
         (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options)))))
 
 (comment
