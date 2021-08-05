@@ -101,6 +101,15 @@
     (read-input-lines-to-channel reader line-in-chan)
     (write-output-from-channel writer line-out-chan)))
 
+(defn analyze-to-graph [input-reader ^PrintWriter writer analyzer]
+  (with-open [^BufferedReader rdr input-reader]
+    (loop [^String line (.readLine rdr)]
+      (if (nil? line)
+        (.flush writer)
+        (do
+          (.println writer (text-analysis/text->graph line analyzer))
+          (recur (.readLine rdr)))))))
+
 (defn analyze-lines
   "Sequence of strings into sequence of text token sequences. Output format is JSON.
   If given file path reads file otherwise stdin.
@@ -130,9 +139,11 @@
       (let [reader (if path
                      (io/reader path)
                      (BufferedReader. *in* reader-buffer-size))]
-        (if preserve-order?
-          (ordered-analysis reader writer analysis-fn analyzer concurrency)
-          (unordered-analysis reader writer analysis-fn analyzer concurrency))))))
+        (if (get options :graph)
+          (analyze-to-graph reader writer analyzer)
+          (if preserve-order?
+            (ordered-analysis reader writer analysis-fn analyzer concurrency)
+            (unordered-analysis reader writer analysis-fn analyzer concurrency)))))))
 
 (comment
   (lmgrep.only-analyze/analyze-lines

@@ -1,7 +1,7 @@
 (ns lmgrep.lucene.text-analysis
   (:require [lmgrep.lucene.analyzer :as analyzer])
-  (:import (java.io StringReader)
-           (org.apache.lucene.analysis Analyzer TokenStream)
+  (:import (java.io StringReader PrintWriter StringWriter)
+           (org.apache.lucene.analysis Analyzer TokenStream TokenStreamToDot)
            (org.apache.lucene.analysis.tokenattributes CharTermAttribute OffsetAttribute
                                                        PositionIncrementAttribute TypeAttribute
                                                        PositionLengthAttribute)))
@@ -23,6 +23,29 @@
 (comment
   (text->token-strings
     "foo text bar BestClass fooo name"
+    (analyzer/create
+      {:tokenizer {:name "whitespace" :args {:rule "java"}},
+       :token-filters [{:name "worddelimitergraph"
+                        :args {"generateWordParts" 1
+                               "generateNumberParts" 1
+                               "preserveOriginal" 1
+                               "splitOnCaseChange" 1}}
+                       {:name "lowercase"}
+                       {:name "englishMinimalStem"}]})))
+
+(defn text->graph
+  "Given a text turns into a TokenStream that will be writen out to dot language."
+  [^String text ^Analyzer analyzer]
+  (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
+        ^StringWriter sw (StringWriter.)]
+    (.toDot (TokenStreamToDot. text token-stream (PrintWriter. sw)))
+    (.end token-stream)
+    (.close token-stream)
+    (.toString sw)))
+
+(comment
+  (text->graph
+    "fooBarBazs"
     (analyzer/create
       {:tokenizer {:name "whitespace" :args {:rule "java"}},
        :token-filters [{:name "worddelimitergraph"

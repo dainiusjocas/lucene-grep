@@ -91,7 +91,8 @@
     :parse-fn #(Integer/parseInt %)]
    [nil "--only-analyze" "When provided output will be analyzed text."
     :default false]
-   [nil "--explain" "Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze APi."]
+   [nil "--explain" "Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze API."]
+   [nil "--graph" "Modifies --only-analyze. Output is a string that can be fed to the `dot` program."]
    [nil "--analysis ANALYSIS" "The analysis chain configuration"
     :parse-fn #(json/read-value % json/keyword-keys-object-mapper)
     :default {}]
