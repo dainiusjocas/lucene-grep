@@ -13,6 +13,11 @@
         analyzer (analysis/create {:analyzer {:name "CollationKeyAnalyzer"}})]
     (is (= ["The brown foxes"] (ta/text->token-strings text analyzer)))))
 
+(deftest graph-from-token-stream
+  (let [text "The brown foxes"
+        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+    (is (string? (ta/text->graph text analyzer)))))
+
 (deftest detailed-analysis
   (let [text "The brown foxes"
         analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
