@@ -16,6 +16,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Flag `--[no-]preserve-order` that attempts to increase throughput while not preserving the order, applicable to `--only-analyze`
 - Flag `--reader-buffer-size` in bytes
 - Flag `--writer-buffer-size` in bytes
+- Flag `--graph` to modify `--only-analyze` that output a dot program for visualization of a token stream
 
 ## v2021.05.23
 
