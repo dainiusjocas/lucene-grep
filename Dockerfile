@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-ce:21.1.0 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:21.2.0 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 

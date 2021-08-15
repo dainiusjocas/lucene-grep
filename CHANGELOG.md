@@ -4,19 +4,24 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
-## Fixed/enhanced
+## New
 
-- Updated to Lucene 8.9.0
 - Flag to specify the input matching concurrency `--concurrency`
-- Faster file system search with GLOB
-- Flag to limit the depth of file system traversal `--max-depth`
-- Flag to skip hidden files `--[no-]hidden`
-- Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
-- Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
 - Flag `--[no-]preserve-order` that attempts to increase throughput while not preserving the order, applicable to `--only-analyze`
 - Flag `--reader-buffer-size` in bytes
 - Flag `--writer-buffer-size` in bytes
 - Flag `--graph` to modify `--only-analyze` that output a dot program for visualization of a token stream
+- Flag to limit the depth of file system traversal `--max-depth`
+- Flag to skip hidden files `--[no-]hidden`
+- Add support for the `org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory` token filter
+- Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
+- Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
+
+## Fixed/enhanced
+
+- Updated to Lucene 8.9.0
+- Updated to GraalVM 21.2.0
+- Faster file system search with GLOB
 
 ## v2021.05.23
 
