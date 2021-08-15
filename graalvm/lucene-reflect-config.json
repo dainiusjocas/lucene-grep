@@ -1299,6 +1299,24 @@
     ]
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilter$BytesRefBuilderTermAttributeImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory",
     "allDeclaredConstructors": true,
     "fields": [
