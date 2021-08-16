@@ -13,6 +13,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Flag `--graph` to modify `--only-analyze` that output a dot program for visualization of a token stream
 - Flag to limit the depth of file system traversal `--max-depth`
 - Flag to skip hidden files `--[no-]hidden`
+- Add support for the `org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
@@ -21,6 +22,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Updated to Lucene 8.9.0
 - Updated to GraalVM 21.2.0
+- Updated to quarkus-lucene 0.3 
 - Faster file system search with GLOB
 
 ## v2021.05.23
