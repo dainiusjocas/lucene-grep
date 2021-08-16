@@ -175,3 +175,4 @@ Name of the analysis components is case-insensitive.
 |           hyphenatedwords |             org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilterFactory |
 |    lithuaniansnowballstem |            org.apache.lucene.analysis.lt.LithuanianSnowballStemTokenFilterFactory |
 |        danishsnowballstem |                org.apache.lucene.analysis.da.DanishSnowballStemTokenFilterFactory |
+|          concatenategraph |            org.apache.lucene.analysis.miscellaneous.ConcatenateGraphFilterFactory |
