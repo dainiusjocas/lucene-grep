@@ -11,7 +11,7 @@
   metosin/jsonista                           {:mvn/version "0.3.3"}
   lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.5"}
   babashka/fs                                {:mvn/version "0.0.5"}
-  io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.2"}}
+  io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.3"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
