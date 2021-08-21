@@ -2,15 +2,12 @@
   (:require [clojure.core.reducers :as r]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.field-name :as field-name]
+            [lmgrep.lucene.query-parser :as query-parser]
             [lmgrep.lucene.analysis-conf :as ac])
-  (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
+  (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
-           (org.apache.lucene.analysis Analyzer)
-           (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
-           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
-           (org.apache.lucene.queryparser.simple SimpleQueryParser)
-           (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)))
+           (org.apache.lucene.analysis Analyzer)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -20,46 +17,10 @@
                    {})]
     (assoc str->str "_type" type)))
 
-(defn configure-query-parser [qp questionnaire-entry]
-  (if-let [query-parser-conf (get questionnaire-entry :query-parser-conf)]
-    (doto qp
-      (.setAllowLeadingWildcard (get query-parser-conf :allow-leading-wildcard true)))
-    qp))
-
-(defn ^Query classic-query [questionnaire-entry field-name monitor-analyzer]
-  (.parse (configure-query-parser
-            (QueryParser. field-name monitor-analyzer)
-            questionnaire-entry)
-          ^String (get questionnaire-entry :query)))
-
-(defn ^Query complex-phrase-query [questionnaire-entry field-name monitor-analyzer]
-  (.parse (configure-query-parser
-            (ComplexPhraseQueryParser. field-name monitor-analyzer)
-            questionnaire-entry)
-          ^String (get questionnaire-entry :query)))
-
-(defn standard-query [questionnaire-entry field-name monitor-analyzer]
-  (.parse (configure-query-parser
-            (StandardQueryParser. monitor-analyzer)
-            questionnaire-entry)
-          ^String (get questionnaire-entry :query) field-name))
-
-(defn ^Query construct-query [questionnaire-entry ^String field-name ^Analyzer monitor-analyzer]
-  (case (keyword (get questionnaire-entry :query-parser))
-    :classic (classic-query questionnaire-entry field-name monitor-analyzer)
-    :complex-phrase (complex-phrase-query questionnaire-entry field-name monitor-analyzer)
-    :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
-                                       (get questionnaire-entry :query))
-                                     field-name (BasicQueryFactory.))
-    :simple (.parse (SimpleQueryParser. monitor-analyzer field-name)
-                    (get questionnaire-entry :query))
-    :standard (standard-query questionnaire-entry field-name monitor-analyzer)
-    (classic-query questionnaire-entry field-name monitor-analyzer)))
-
 (defn query->monitor-query [questionnaire-entry field-name monitor-analyzer]
   (try
     (MonitorQuery. ^String (get questionnaire-entry :id)
-                   ^Query (construct-query questionnaire-entry field-name monitor-analyzer)
+                   ^Query (query-parser/construct-query questionnaire-entry field-name monitor-analyzer)
                    ^String (get questionnaire-entry :query)
                    (prepare-metadata (get questionnaire-entry :type) (get questionnaire-entry :meta)))
     (catch ParseException e
