@@ -8,7 +8,9 @@
            (org.apache.lucene.search Query)
            (org.apache.lucene.analysis Analyzer)
            (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
-           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)))
+           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
+           (org.apache.lucene.queryparser.simple SimpleQueryParser)
+           (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -18,40 +20,56 @@
                    {})]
     (assoc str->str "_type" type)))
 
-(defn ^Query classic-query [dict-entry field-name monitor-analyzer]
-  (.parse (doto (QueryParser. field-name monitor-analyzer)
-            (.setAllowLeadingWildcard true))
-          ^String (get dict-entry :query)))
+(defn configure-query-parser [qp questionnaire-entry]
+  (if-let [query-parser-conf (get questionnaire-entry :query-parser-conf)]
+    (doto qp
+      (.setAllowLeadingWildcard (get query-parser-conf :allow-leading-wildcard true)))
+    qp))
 
-(defn ^Query complex-phrase-query [dict-entry field-name monitor-analyzer]
-  (.parse (doto
+(defn ^Query classic-query [questionnaire-entry field-name monitor-analyzer]
+  (.parse (configure-query-parser
+            (QueryParser. field-name monitor-analyzer)
+            questionnaire-entry)
+          ^String (get questionnaire-entry :query)))
+
+(defn ^Query complex-phrase-query [questionnaire-entry field-name monitor-analyzer]
+  (.parse (configure-query-parser
             (ComplexPhraseQueryParser. field-name monitor-analyzer)
-            (.setAllowLeadingWildcard true))
-          ^String (get dict-entry :query)))
+            questionnaire-entry)
+          ^String (get questionnaire-entry :query)))
 
-(defn ^Query construct-query [dict-entry ^String field-name ^Analyzer monitor-analyzer]
-  (case (keyword (get dict-entry :query-parser))
-    :classic (classic-query dict-entry field-name monitor-analyzer)
-    :complex-phrase (complex-phrase-query dict-entry field-name monitor-analyzer)
+(defn standard-query [questionnaire-entry field-name monitor-analyzer]
+  (.parse (configure-query-parser
+            (StandardQueryParser. monitor-analyzer)
+            questionnaire-entry)
+          ^String (get questionnaire-entry :query) field-name))
+
+(defn ^Query construct-query [questionnaire-entry ^String field-name ^Analyzer monitor-analyzer]
+  (case (keyword (get questionnaire-entry :query-parser))
+    :classic (classic-query questionnaire-entry field-name monitor-analyzer)
+    :complex-phrase (complex-phrase-query questionnaire-entry field-name monitor-analyzer)
     :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
-                                       (get dict-entry :query))
+                                       (get questionnaire-entry :query))
                                      field-name (BasicQueryFactory.))
-    (classic-query dict-entry field-name monitor-analyzer)))
+    :simple (.parse (SimpleQueryParser. monitor-analyzer field-name)
+                    (get questionnaire-entry :query))
+    :standard (standard-query questionnaire-entry field-name monitor-analyzer)
+    (classic-query questionnaire-entry field-name monitor-analyzer)))
 
-(defn query->monitor-query [dict-entry field-name monitor-analyzer]
+(defn query->monitor-query [questionnaire-entry field-name monitor-analyzer]
   (try
-    (MonitorQuery. ^String (get dict-entry :id)
-                   ^Query (construct-query dict-entry field-name monitor-analyzer)
-                   ^String (get dict-entry :query)
-                   (prepare-metadata (get dict-entry :type) (get dict-entry :meta)))
+    (MonitorQuery. ^String (get questionnaire-entry :id)
+                   ^Query (construct-query questionnaire-entry field-name monitor-analyzer)
+                   ^String (get questionnaire-entry :query)
+                   (prepare-metadata (get questionnaire-entry :type) (get questionnaire-entry :meta)))
     (catch ParseException e
       (when (System/getenv "DEBUG_MODE")
-        (.println System/err (format "Failed to parse query: '%s' with exception '%s'" dict-entry e))
+        (.println System/err (format "Failed to parse query: '%s' with exception '%s'" questionnaire-entry e))
         (.printStackTrace e))
       (throw e))
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
-        (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e))
+        (.println System/err (format "Failed create query: '%s' with '%s'" questionnaire-entry e))
         (.printStackTrace e))
       (throw e))))
 
@@ -98,8 +116,8 @@
   (let [global-analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)]
     (->> questionnaire
          indexed
-         (r/map (fn [dictionary-entry]
-                  (prepare-query-entry dictionary-entry default-type global-analysis-conf)))
+         (r/map (fn [questionnaire-entry]
+                  (prepare-query-entry questionnaire-entry default-type global-analysis-conf)))
          (r/foldcat))))
 
 (defn get-monitor-queries
