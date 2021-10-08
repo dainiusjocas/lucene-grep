@@ -98,6 +98,13 @@
         (is (not= porter-stemmer-name lowercased-ported-stemmer-name))
         (is (= (ta/text->token-strings text analyzer-1) (ta/text->token-strings text analyzer-2)))))))
 
+(deftest foo
+  (testing "MappingCharFilter file resources"
+    (let [text "pink summer dress clothing"
+          analyzer (analysis/create {:token-filters [{:name "synonymgraph"
+                                                      :args {:synonyms "test/resources/mapping.txt"}}]})]
+      (is (= ["my"] (ta/text->token-strings text analyzer))))))
+
 (deftest tokenizer-tests
   (let [text "The quick brown fox"
         analyzer (analysis/create {:tokenizer {:name "edgengram"

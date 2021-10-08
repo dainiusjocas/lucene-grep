@@ -1,1 +1,2 @@
-"foo" => "bar"
+summer dress => "FOO_1"
+dress clothing => "FOO_2"
