@@ -1,0 +1,6 @@
+[
+  {
+    "query": "*fox",
+    "query-parser-conf": {"allow-leading-wildcard": false}
+  }
+]

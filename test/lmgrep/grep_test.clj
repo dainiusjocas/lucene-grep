@@ -488,4 +488,12 @@
                    :pre-tags ">" :post-tags "<"
                    :template "{{highlighted-line}}"
                    :query-parser-conf {:allow-leading-wildcard false}}]
-      (is (thrown? Exception (grep/grep [query] file nil options))))))
+      (is (thrown? Exception (grep/grep [query] file nil options)))))
+
+  (testing "explicitly declared :allow-leading-wildcard false causes exception in queries file"
+    (let [file "test/resources/test.txt"
+          options {:split true
+                   :pre-tags ">" :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :queries-file "test/resources/query-parser-conf.json"}]
+      (is (thrown? Exception (grep/grep [] file nil options))))))
