@@ -1,6 +1,5 @@
 (ns lmgrep.lucene.query-parser-test
   (:require [clojure.test :refer :all]
-            [clojure.reflect :as reflect]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.query-parser :as qp])
   (:import (org.apache.lucene.queryparser.classic QueryParser QueryParser$Operator)
@@ -8,7 +7,8 @@
            (org.apache.lucene.search BooleanClause$Occur)
            (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)
            (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
-           (java.lang.reflect Field)))
+           (java.lang.reflect Field)
+           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)))
 
 (def field-name "field-name")
 (def analyzer (analyzer/create {}))
@@ -103,3 +103,13 @@
       (is (instance? ComplexPhraseQueryParser qp))
       (is (not= (get-private-field-value default-qp "inOrder")
                 (get-private-field-value qp "inOrder"))))))
+
+(deftest surround-qp-configuration
+  (testing "configurability"
+    (let [config {:max-basic-queries (long 123)}
+          default-qp (qp/surround empty-config)
+          qp (qp/surround config)]
+      (is (instance? BasicQueryFactory default-qp))
+      (is (instance? BasicQueryFactory qp))
+      (is (= [1024 123]
+             [(.getMaxBasicQueries default-qp) (.getMaxBasicQueries qp)])))))

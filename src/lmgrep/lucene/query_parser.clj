@@ -19,48 +19,53 @@
 
 ; ComplexPhraseQueryParser
 (def complex-phrase-query-parser
-  {:in-order true})
+  {:in-order {:default true
+              :handler (fn [^ComplexPhraseQueryParser qp conf]
+                         (.setInOrder qp (get conf :in-order)))}})
 
 ; + QueryParser
 (def query-parser-defaults
-  {:auto-generate-phrase-queries false
-   :split-on-whitespace true})
+  {:auto-generate-phrase-queries {:default false
+                                  :handler (fn [^QueryParser qp conf]
+                                             (.setAutoGeneratePhraseQueries
+                                               qp
+                                               (get conf :auto-generate-phrase-queries)))}
+   :split-on-whitespace          {:default true
+                                  :handler (fn [^QueryParser qp conf]
+                                             (.setSplitOnWhitespace
+                                               qp (get conf :split-on-whitespace)))}})
 
 ; + QueryParserBase
 (def query-parser-base-defaults
-  {:max-determinized-states 10000})
+  {:max-determinized-states {:default 10000
+                             :handler (fn [^QueryParserBase qp conf]
+                                        (.setMaxDeterminizedStates
+                                          qp
+                                          (int (get conf :max-determinized-states))))}})
 
 ; + QueryBuilder
 (def query-builder-defaults
-  {:enable-position-increments                     true
-   :enable-graph-queries                           true
-   :auto-generate-multi-term-synonyms-phrase-query false})
+  {:enable-position-increments                     {:default true
+                                                    :handler (fn [^QueryBuilder qp conf]
+                                                               (.setEnablePositionIncrements
+                                                                 qp (get conf :enable-position-increments)))}
+   :enable-graph-queries                           {:default true
+                                                    :handler (fn [^QueryBuilder qp conf]
+                                                               (.setEnableGraphQueries
+                                                                 qp
+                                                                 (get conf :enable-graph-queries)))}
+   :auto-generate-multi-term-synonyms-phrase-query {:default false
+                                                    :handler (fn [^QueryBuilder qp conf]
+                                                               (.setAutoGenerateMultiTermSynonymsPhraseQuery
+                                                                 qp (get conf :auto-generate-multi-term-synonyms-phrase-query)))}})
 
 ; - SimpleQueryParser
 (def simple-query-parser-defaults
-  {:flags            -1
-   :default-operator "should"})
-
-; - CommonQueryParserConfiguration
-(def common-query-parser-configuration-defaults
-  {:allow-leading-wildcard     false
-   :enable-position-increments false
-   :multi-term-rewrite-method  "CONSTANT_SCORE_REWRITE"
-   :fuzzy-prefix-length        0
-   :locale                     "en"
-   :time-zone                  nil
-   :phrase-slop                0
-   :fuzzy-min-sim              (float 2)
-   :date-resolution            nil})
-
-(comment
-  (sort (map name (keys (merge common-query-parser-configuration-defaults
-                          simple-query-parser-defaults
-                          query-builder-defaults
-                          query-parser-base-defaults
-                          query-parser-defaults
-                          complex-phrase-query-parser
-                          basic-query-factory-defaults)))))
+  {:default-operator {:default "should"
+                      :handler (fn [^SimpleQueryParser qp conf]
+                                 (.setDefaultOperator qp (BooleanClause$Occur/valueOf
+                                                           (str/upper-case
+                                                             (get conf :default-operator)))))}})
 
 (defn with-default [kw conf defaults]
   (let [conf-val (get conf kw)]
@@ -68,101 +73,65 @@
       (get defaults kw)
       conf-val)))
 
+(defn set-conf [qp conf defaults]
+  (doseq [[key {:keys [handler]}] defaults]
+    (when-not (nil? (get conf key))
+      (handler qp conf))))
+
+
+; - CommonQueryParserConfiguration
+(def common-query-parser-configuration-defaults
+  {:allow-leading-wildcard     {:default false
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setAllowLeadingWildcard
+                                             qp
+                                             (get conf :allow-leading-wildcard)))}
+   :enable-position-increments {:default false
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setEnablePositionIncrements
+                                             qp
+                                             (get conf :enable-position-increments)))}
+   :multi-term-rewrite-method  {:default "CONSTANT_SCORE_REWRITE"
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           ; TODO: proper resolution
+                                           (.setMultiTermRewriteMethod qp MultiTermQuery/CONSTANT_SCORE_REWRITE))}
+   :fuzzy-prefix-length        {:default 0
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setFuzzyPrefixLength
+                                             qp (int (get conf :fuzzy-prefix-length))))}
+   :locale                     {:default "en"
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setLocale qp (Locale. (get conf :locale))))}
+   :time-zone                  {:default nil
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setTimeZone
+                                             qp (TimeZone/getTimeZone ^String (get conf :time-zone))))}
+   :phrase-slop                {:default 0
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setPhraseSlop
+                                             qp (int (get conf :phrase-slop))))}
+   :fuzzy-min-sim              {:default (float 2)
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setFuzzyMinSim
+                                             qp (float (get conf :fuzzy-min-sim))))}
+   :date-resolution            {:default nil
+                                :handler (fn [^CommonQueryParserConfiguration qp conf]
+                                           (.setDateResolution
+                                             qp (DateTools$Resolution/valueOf (get conf :date-resolution))))}})
+
 (defn configure [query-parser conf]
   (when (instance? SimpleQueryParser query-parser)
-    (let [^SimpleQueryParser qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :default-operator)))
-          (.setDefaultOperator (BooleanClause$Occur/valueOf
-                                 (str/upper-case
-                                   (with-default :default-operator conf {}))))))))
-
+    (set-conf query-parser conf simple-query-parser-defaults))
   (when (instance? QueryParser query-parser)
-    (let [^QueryParser qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :split-on-whitespace)))
-          (.setSplitOnWhitespace
-            (with-default :split-on-whitespace conf query-parser-defaults)))
-        (cond->
-          (not (nil? (get conf :auto-generate-phrase-queries)))
-          (.setAutoGeneratePhraseQueries
-            (with-default :auto-generate-phrase-queries conf query-parser-defaults))))))
-
+    (set-conf query-parser conf query-parser-defaults))
   (when (instance? QueryParserBase query-parser)
-    (let [^QueryParserBase qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :max-determinized-states)))
-          (.setMaxDeterminizedStates
-            (int
-              (with-default :max-determinized-states conf query-parser-base-defaults)))))))
-
+    (set-conf query-parser conf query-parser-base-defaults))
   (when (instance? QueryBuilder query-parser)
-    (let [^QueryBuilder qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :enable-position-increments)))
-          (.setEnablePositionIncrements
-            (with-default :enable-position-increments conf query-builder-defaults)))
-        (cond->
-          (not (nil? (get conf :enable-graph-queries)))
-          (.setEnableGraphQueries
-            (with-default :enable-graph-queries conf query-builder-defaults)))
-        (cond->
-          (not (nil? (get conf :auto-generate-multi-term-synonyms-phrase-query)))
-          (.setAutoGenerateMultiTermSynonymsPhraseQuery
-            (with-default :auto-generate-multi-term-synonyms-phrase-query conf query-builder-defaults))))))
-
+    (set-conf query-parser conf query-builder-defaults))
   (when (instance? CommonQueryParserConfiguration query-parser)
-    (let [^CommonQueryParserConfiguration qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :allow-leading-wildcard)))
-          (.setAllowLeadingWildcard
-            (with-default :allow-leading-wildcard conf common-query-parser-configuration-defaults)))
-        (cond->
-          (not (nil? (get conf :enable-position-increments)))
-          (.setEnablePositionIncrements
-            (with-default :enable-position-increments conf common-query-parser-configuration-defaults)))
-        (cond->
-          (not (nil? (get conf :multi-term-rewrite-method)))
-          ; TODO: proper resolution
-          (.setMultiTermRewriteMethod MultiTermQuery/CONSTANT_SCORE_REWRITE
-                                      #_(with-default :multi-term-rewrite-method conf common-query-parser-configuration-defaults)))
-        (cond->
-          (not (nil? (get conf :fuzzy-prefix-length)))
-          (.setFuzzyPrefixLength
-            (int (with-default :fuzzy-prefix-length conf common-query-parser-configuration-defaults))))
-        (cond->
-          (not (nil? (get conf :locale)))
-          (.setLocale
-            (Locale. (with-default :locale conf common-query-parser-configuration-defaults))))
-        (cond->
-          (not (nil? (get conf :time-zone)))
-          (.setTimeZone
-            (TimeZone/getTimeZone ^String (with-default :time-zone conf common-query-parser-configuration-defaults))))
-        (cond->
-          (not (nil? (get conf :phrase-slop)))
-          (.setPhraseSlop
-            (int (with-default :phrase-slop conf common-query-parser-configuration-defaults))))
-        (cond->
-          (not (nil? (get conf :fuzzy-min-sim)))
-          (.setFuzzyMinSim
-            (float (with-default :fuzzy-min-sim conf common-query-parser-configuration-defaults))))
-        (cond->
-          (not (nil? (get conf :date-resolution)))
-          (.setDateResolution
-            (DateTools$Resolution/valueOf (with-default :date-resolution conf common-query-parser-configuration-defaults)))))))
-
+    (set-conf query-parser conf common-query-parser-configuration-defaults))
   (when (instance? ComplexPhraseQueryParser query-parser)
-    (let [^ComplexPhraseQueryParser qp query-parser]
-      (doto qp
-        (cond->
-          (not (nil? (get conf :in-order)))
-          (.setInOrder (with-default :in-order conf complex-phrase-query-parser))))))
-
+    (set-conf query-parser conf complex-phrase-query-parser))
   query-parser)
 
 (defn classic [conf field-name analyzer]
