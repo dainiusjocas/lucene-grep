@@ -64,7 +64,7 @@ jobs:
           echo "MUSL_DIR=${HOME}/.musl" >> $GITHUB_ENV
           echo "PATH=$PATH:${HOME}/.musl/bin" >> $GITHUB_ENV
           echo $PATH
-          LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
+          PATH=$PATH:${HOME}/.musl/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
           zip lmgrep-${RELEASE_VERSION#v*}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
           ls
 #
