@@ -4,7 +4,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_2_0
 ## Features
 
 - Supports Lucene query syntax as described [here](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
-- Multipline queries can be provided
+- Multiple queries can be provided
 - Queries can be loaded from a file
 - Supports Lucene text analysis configuration for:
   - char filters
@@ -12,7 +12,7 @@ Grep-like utility based on [Lucene Monitor](https://lucene.apache.org/core/8_2_0
   - token filters
   - stemmers for multiple languages
   - predefined analyzers
-- Support multiple query parsers (classic, complex phrase, surround)
+- Support multiple query parsers (classic, complex phrase, standard, simple, and surround)
 - Text output is colored or separated with customizable tags
 - Supports printing file names as hyperlinks for click to open (check support for your terminal [here](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda))
 - Text output supports templates
@@ -158,7 +158,7 @@ NOTE: when the Lucene queries are specified as a positional argument or with `-q
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
   -q, --query QUERY                           Lucene query string(s). If specified then all the positional arguments are interpreted as files.
-      --query-parser QUERY_PARSER             Which query parser to use, one of: [classic complex-phrase surround]
+      --query-parser QUERY_PARSER             Which query parser to use, one of: [classic complex-phrase simple standard surround]
       --queries-file QUERIES_FILE             A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
       --tokenizer TOKENIZER                   Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
       --case-sensitive? CASE_SENSITIVE        If text should be case sensitive
@@ -172,6 +172,8 @@ Supported options:
       --post-tags POST_TAGS                   A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
       --excludes EXCLUDES                     A GLOB that filters out files that were matched with a GLOB
       --skip-binary-files                     If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --[no-]hidden                           Search in hidden files. Default: true.
+      --max-depth N                           In case of a recursive GLOB, how deep to search for input files.
       --with-empty-lines                      When provided on the input that does not match write an empty line to STDOUT.
       --with-scored-highlights                ALPHA: Instructs to highlight with scoring.
       --[no-]split                            If a file (or STDIN) should be split by newline.
@@ -179,9 +181,16 @@ Supported options:
       --with-details                          For JSON and EDN output adds raw highlights list.
       --word-delimiter-graph-filter WDGF      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
       --only-analyze                          When provided output will be analyzed text.
-      --explain                               Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze APi.
+      --explain                               Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze API.
+      --graph                                 Modifies --only-analyze. Output is a string that can be fed to the `dot` program.
       --analysis ANALYSIS                 {}  The analysis chain configuration
+      --query-parser-conf CONF                The configuration for the query parser.
+      --concurrency CONCURRENCY           8   How many concurrent threads to use for processing.
+      --reader-buffer-size BUFFER_SIZE        Buffer size of the BufferedReader in bytes.
+      --writer-buffer-size BUFFER_SIZE        Buffer size of the BufferedWriter in bytes.
+      --[no-]preserve-order                   If the input order should be preserved.
   -h, --help
+
 ```
 
 NOTE: question marks in `zsh` shell must be escaped, e.g. `--case-sensitive\?=true` or within double quotes e.g. `"--case-sensitive?=true"` 
@@ -419,6 +428,27 @@ echo "GraalVM is awesome" | ./lmgrep "\"awesome graalvm\"~3"
 *STDIN*:1:GraalVM is awesome
 ```
 However, if order is important there is no way to enforce it Lucene query syntax.
+
+## Lucene query parsers
+
+Currently, 5 [Lucene query parsers](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html) are supported:
+
+- classic: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
+- complex-phrase: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
+- simple: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
+- standard: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
+- surround: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
+
+### Query parser configuration
+
+Additional configuration to query parsers can be passed with the `--query-parser-conf` flag, e.g.:
+
+```shell
+./lmgrep "query" --query-parser-conf='{"allow-leading-wildcard": false}'
+```
+
+The value must be a JSON string.
+For the supported configuration values consult the [documentation](docs/query-parsers.md).
 
 ## Development
 

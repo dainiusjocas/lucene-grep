@@ -96,6 +96,8 @@
    [nil "--analysis ANALYSIS" "The analysis chain configuration"
     :parse-fn #(json/read-value % json/keyword-keys-object-mapper)
     :default {}]
+   [nil "--query-parser-conf CONF" "The configuration for the query parser."
+    :parse-fn #(json/read-value % json/keyword-keys-object-mapper)]
    [nil "--concurrency CONCURRENCY" "How many concurrent threads to use for processing."
     :parse-fn #(Integer/parseInt %)
     :default 8]

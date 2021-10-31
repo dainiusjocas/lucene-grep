@@ -15,7 +15,7 @@
 
 ; BasicQueryFactory
 (def basic-query-factory-defaults
-  {:maxBasicQueries 1024})
+  {:max-basic-queries 1024})
 
 ; ComplexPhraseQueryParser
 (def complex-phrase-query-parser
@@ -52,6 +52,15 @@
    :phrase-slop                0
    :fuzzy-min-sim              (float 2)
    :date-resolution            nil})
+
+(comment
+  (sort (map name (keys (merge common-query-parser-configuration-defaults
+                          simple-query-parser-defaults
+                          query-builder-defaults
+                          query-parser-base-defaults
+                          query-parser-defaults
+                          complex-phrase-query-parser
+                          basic-query-factory-defaults)))))
 
 (defn with-default [kw conf defaults]
   (let [conf-val (get conf kw)]
@@ -174,7 +183,10 @@
   (let [max-basic-queries (int (get conf :max-basic-queries 1024))]
     (BasicQueryFactory. max-basic-queries)))
 
-(defn create [query-parser-name conf ^String field-name ^Analyzer analyzer]
+(defn create
+  "Constructs an Object that can be used for later query parsing.
+  https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html"
+  [query-parser-name conf ^String field-name ^Analyzer analyzer]
   (case query-parser-name
     :classic (classic conf field-name analyzer)
     :complex-phrase (complex-phrase conf field-name analyzer)
