@@ -52,7 +52,7 @@
       (is (= QueryParser$Operator/OR (.getDefaultOperator query-parser)))))
 
   (testing "query-parser-base config"
-    (let [config {:max-determinized-states 123}
+    (let [config {:determinize-work-limit 123}
           default-qp (qp/classic empty-config field-name analyzer)
           qp (qp/classic config field-name analyzer)]
       (is (instance? QueryParser qp))
