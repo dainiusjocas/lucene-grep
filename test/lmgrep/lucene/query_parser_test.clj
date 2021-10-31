@@ -1,14 +1,26 @@
 (ns lmgrep.lucene.query-parser-test
   (:require [clojure.test :refer :all]
+            [clojure.reflect :as reflect]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.query-parser :as qp])
   (:import (org.apache.lucene.queryparser.classic QueryParser QueryParser$Operator)
            (org.apache.lucene.queryparser.simple SimpleQueryParser)
-           (org.apache.lucene.search BooleanClause BooleanClause$Occur)))
+           (org.apache.lucene.search BooleanClause$Occur)
+           (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)
+           (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
+           (java.lang.reflect Field)))
 
 (def field-name "field-name")
 (def analyzer (analyzer/create {}))
 (def empty-config {})
+
+(defn get-private-field-value [obj field-name]
+  ;Field f = obj.getClass().getDeclaredField("stuffIWant"); //NoSuchFieldException
+  ;f.setAccessible(true);
+  ;Hashtable iWantThis = (Hashtable) f.get(obj); //IllegalAccessException
+  (let [^Field f (.getDeclaredField (.getClass obj) field-name)]
+    (.setAccessible f true)
+    (.get f obj)))
 
 (deftest simple-query-parser-creation
   (testing "configuration differences"
@@ -16,11 +28,12 @@
                   :default-operator "must"}
           default-qp (qp/simple empty-config field-name analyzer)
           qp (qp/simple config field-name analyzer)]
-      ; TODO: flag behavior only from the query string parsing output
       (is (instance? SimpleQueryParser default-qp))
       (is (instance? SimpleQueryParser qp))
       (is (= BooleanClause$Occur/SHOULD (.getDefaultOperator default-qp)))
-      (is (= BooleanClause$Occur/MUST (.getDefaultOperator qp)))))
+      (is (= BooleanClause$Occur/MUST (.getDefaultOperator qp)))
+      (is (= [-1 123] [(get-private-field-value default-qp "flags")
+                       (get-private-field-value qp "flags")]))))
 
   (testing "undefined params"
     (let [config {:flags "foo"
@@ -61,3 +74,32 @@
       (is (= false (.getEnableGraphQueries qp)))
       (is (= false (.getAutoGenerateMultiTermSynonymsPhraseQuery default-qp)))
       (is (= true (.getAutoGenerateMultiTermSynonymsPhraseQuery qp))))))
+
+(deftest standard-qp-configuration
+  (testing "if params are applied"
+    (let [config {:allow-leading-wildcard     false
+                  :enable-position-increments false
+                  :multi-term-rewrite-method  "CONSTANT_SCORE_REWRITE"
+                  :fuzzy-prefix-length        0
+                  :locale                     "en"
+                  :time-zone                  nil
+                  :phrase-slop                0
+                  :fuzzy-min-sim              (float 2.1)
+                  :date-resolution            nil}
+          default-qp (qp/standard empty-config analyzer)
+          qp (qp/standard config analyzer)]
+      (is (instance? StandardQueryParser default-qp))
+      (is (instance? StandardQueryParser qp))
+
+      (is (= 2.0 (.getFuzzyMinSim default-qp)))
+      (is (= (float 2.1) (.getFuzzyMinSim qp))))))
+
+(deftest complex-phrase-query-parser
+  (testing "if config is applied"
+    (let [config {:in-order false}
+          default-qp (qp/complex-phrase empty-config field-name analyzer)
+          qp (qp/complex-phrase config field-name analyzer)]
+      (is (instance? ComplexPhraseQueryParser default-qp))
+      (is (instance? ComplexPhraseQueryParser qp))
+      (is (not= (get-private-field-value default-qp "inOrder")
+                (get-private-field-value qp "inOrder"))))))
