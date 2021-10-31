@@ -5,7 +5,7 @@
            (org.apache.lucene.queryparser.flexible.standard StandardQueryParser CommonQueryParserConfiguration)
            (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
            (org.apache.lucene.queryparser.simple SimpleQueryParser)
-           (org.apache.lucene.search Query BooleanClause$Occur MultiTermQuery MultiTermQuery$RewriteMethod)
+           (org.apache.lucene.search BooleanClause$Occur MultiTermQuery)
            (org.apache.lucene.analysis Analyzer)
            (org.apache.lucene.util QueryBuilder)
            (java.util Locale TimeZone)
@@ -59,24 +59,18 @@
       (get defaults kw)
       conf-val)))
 
-(defn configure-query-parser [qp conf]
-
-  (comment
-    "Order is important"
-    "only apply when value is provided"
-    "meaning the defaults should not be set!!!")
-
-  (when (instance? SimpleQueryParser qp)
-    (let [^SimpleQueryParser qp qp]
+(defn configure [query-parser conf]
+  (when (instance? SimpleQueryParser query-parser)
+    (let [^SimpleQueryParser qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :default-operator)))
           (.setDefaultOperator (BooleanClause$Occur/valueOf
                                  (str/upper-case
-                                   (with-default :default-operator conf simple-query-parser-defaults))))))))
+                                   (with-default :default-operator conf {}))))))))
 
-  (when (instance? QueryParser qp)
-    (let [^QueryParser qp qp]
+  (when (instance? QueryParser query-parser)
+    (let [^QueryParser qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :split-on-whitespace)))
@@ -87,8 +81,8 @@
           (.setAutoGeneratePhraseQueries
             (with-default :auto-generate-phrase-queries conf query-parser-defaults))))))
 
-  (when (instance? QueryParserBase qp)
-    (let [^QueryParserBase qp qp]
+  (when (instance? QueryParserBase query-parser)
+    (let [^QueryParserBase qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :max-determinized-states)))
@@ -96,8 +90,8 @@
             (int
               (with-default :max-determinized-states conf query-parser-base-defaults)))))))
 
-  (when (instance? QueryBuilder qp)
-    (let [^QueryBuilder qp qp]
+  (when (instance? QueryBuilder query-parser)
+    (let [^QueryBuilder qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :enable-position-increments)))
@@ -112,8 +106,8 @@
           (.setAutoGenerateMultiTermSynonymsPhraseQuery
             (with-default :auto-generate-multi-term-synonyms-phrase-query conf query-builder-defaults))))))
 
-  (when (instance? CommonQueryParserConfiguration qp)
-    (let [^CommonQueryParserConfiguration qp qp]
+  (when (instance? CommonQueryParserConfiguration query-parser)
+    (let [^CommonQueryParserConfiguration qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :allow-leading-wildcard)))
@@ -153,73 +147,38 @@
           (.setDateResolution
             (DateTools$Resolution/valueOf (with-default :date-resolution conf common-query-parser-configuration-defaults)))))))
 
-  (when (instance? ComplexPhraseQueryParser qp)
-    (let [^ComplexPhraseQueryParser qp qp]
+  (when (instance? ComplexPhraseQueryParser query-parser)
+    (let [^ComplexPhraseQueryParser qp query-parser]
       (doto qp
         (cond->
           (not (nil? (get conf :in-order)))
           (.setInOrder (with-default :in-order conf complex-phrase-query-parser))))))
 
-  qp)
+  query-parser)
 
-;;;;;;;;;; These functions invokes the constructor and then passed it
-;;;;;;;;;; to the configuration function
+(defn classic [conf field-name analyzer]
+  (configure (QueryParser. field-name analyzer) conf))
 
-(defn classic-qp [query-parser-conf field-name analyzer]
-  (configure-query-parser
-    (QueryParser. field-name analyzer)
-    query-parser-conf))
+(defn complex-phrase [conf field-name analyzer]
+  (configure (ComplexPhraseQueryParser. field-name analyzer) conf))
 
-(defn complex-phrase-qp [query-parser-conf field-name analyzer]
-  (configure-query-parser
-    (ComplexPhraseQueryParser. field-name analyzer)
-    query-parser-conf))
+(defn standard [conf analyzer]
+  (configure (StandardQueryParser. analyzer) conf))
 
-(defn standard-qp [query-parser-conf _ analyzer]
-  (configure-query-parser
-    (StandardQueryParser. analyzer)
-    query-parser-conf))
+(defn ^SimpleQueryParser simple [conf ^String field-name ^Analyzer analyzer]
+  (let [flags (int (get conf :flags -1))
+        sqp (SimpleQueryParser. analyzer {field-name (float 1)} flags)]
+    (configure sqp conf)))
 
-(defn ^SimpleQueryParser simple-qp [conf ^String field-name ^Analyzer analyzer]
-  (let [sqp (SimpleQueryParser. analyzer
-                                {field-name (float 1)}
-                                (int (or (get conf :flags)
-                                         (get simple-query-parser-defaults :flags))))]
-    (configure-query-parser sqp conf)))
+(defn surround [conf]
+  (let [max-basic-queries (int (get conf :max-basic-queries 1024))]
+    (BasicQueryFactory. max-basic-queries)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn ^Query complex-phrase-query [query-string query-parser-conf ^String field-name analyzer]
-  (let [^ComplexPhraseQueryParser qp (complex-phrase-qp query-parser-conf field-name analyzer)]
-    (.parse qp ^String query-string)))
-
-(defn ^Query standard-query [query-string query-parser-conf ^String field-name analyzer]
-  (let [^StandardQueryParser qp (standard-qp query-parser-conf field-name analyzer)]
-    (.parse qp ^String query-string field-name)))
-
-(defn ^Query surround-query
-  "Monitor analyzer is not applied on the query terms."
-  [query-string query-parser-conf field-name analyzer]
-  (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
-                           query-string)
-                         field-name (BasicQueryFactory.)))
-
-(defn ^Query classic-query [query-string query-parser-conf field-name analyzer]
-  (let [^QueryParser qp (classic-qp query-parser-conf field-name analyzer)]
-    (.parse qp ^String query-string)))
-
-(defn ^Query simple-query [query-string query-parser-conf ^String field-name ^Analyzer analyzer]
-  (let [sqp (simple-qp query-parser-conf ^String field-name ^Analyzer analyzer)]
-    (.parse sqp query-string)))
-
-(defn ^Query construct-query [questionnaire-entry ^String field-name ^Analyzer analyzer]
-  (let [^String query-string (get questionnaire-entry :query)
-        query-parser-name (keyword (get questionnaire-entry :query-parser))
-        query-parser-conf (get questionnaire-entry :query-parser-conf)]
-    (case query-parser-name
-      :classic (classic-query query-string query-parser-conf field-name analyzer)
-      :complex-phrase (complex-phrase-query query-string query-parser-conf field-name analyzer)
-      :surround (surround-query query-string query-parser-conf field-name analyzer)
-      :simple (simple-query query-string query-parser-conf field-name analyzer)
-      :standard (standard-query query-string query-parser-conf field-name analyzer)
-      (classic-query query-string query-parser-conf field-name analyzer))))
+(defn create [query-parser-name conf ^String field-name ^Analyzer analyzer]
+  (case query-parser-name
+    :classic (classic conf field-name analyzer)
+    :complex-phrase (complex-phrase conf field-name analyzer)
+    :surround (surround conf)
+    :simple (simple conf field-name analyzer)
+    :standard (standard conf analyzer)
+    (classic conf field-name analyzer)))
