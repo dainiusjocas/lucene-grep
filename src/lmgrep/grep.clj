@@ -82,10 +82,14 @@
         (json/read-value is json/keyword-keys-object-mapper))
       (throw (Exception. (format "File '%s' doesn't exist." file-path))))))
 
+(def DEFAULT_QUERY_PARSER :classic)
+(def DEFAULT_QUERY_PARSER_CONF {:allow-leading-wildcard true})
+
 (defn combine-questionnaire [lucene-query-strings options]
-  (into (mapv (fn [lucene-query-string] {:query lucene-query-string
-                                         :query-parser (get options :query-parser)
-                                         :query-parser-conf (get options :query-parser-conf)})
+  (into (mapv (fn [lucene-query-string] {:query             lucene-query-string
+                                         :query-parser      (get options :query-parser DEFAULT_QUERY_PARSER)
+                                         :query-parser-conf (merge DEFAULT_QUERY_PARSER_CONF
+                                                                   (get options :query-parser-conf))})
               lucene-query-strings)
         (when-let [queries-file-path (:queries-file options)]
           (read-questionnaire-from-file queries-file-path))))

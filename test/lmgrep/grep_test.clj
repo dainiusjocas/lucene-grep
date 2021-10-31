@@ -471,19 +471,21 @@
              json/keyword-keys-object-mapper)))))
 
 (deftest allowing-leading-wildcards-for-classic-query-parser
-  (testing "by default it should fail"
-    (let [file "test/resources/test.txt"
-          query "*fox"
-          options {:split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
-      (is (thrown? Exception (grep/grep [query] file nil options)))))
-
-  (testing "with proper setup the test works"
+  (testing "by default query parser allows loading wildcards"
     (let [file "test/resources/test.txt"
           query "*fox"
           options {:split true :pre-tags ">" :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :query-parser-conf {:allow-leading-wildcard true}}]
+                   :template "{{highlighted-line}}"}]
       (is (= "The quick brown >fox< jumps over the lazy dog"
              (str/trim
                (with-out-str
-                 (grep/grep [query] file nil options))))))))
+                 (grep/grep [query] file nil options)))))))
+
+  (testing "explicitly declared :allow-leading-wildcard false causes exception"
+    (let [file "test/resources/test.txt"
+          query "*fox"
+          options {:split true
+                   :pre-tags ">" :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :query-parser-conf {:allow-leading-wildcard false}}]
+      (is (thrown? Exception (grep/grep [query] file nil options))))))
