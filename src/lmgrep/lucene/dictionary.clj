@@ -2,15 +2,13 @@
   (:require [clojure.core.reducers :as r]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.field-name :as field-name]
+            [lmgrep.lucene.query :as q]
+            [lmgrep.lucene.query-parser :as query-parser]
             [lmgrep.lucene.analysis-conf :as ac])
-  (:import (org.apache.lucene.queryparser.classic QueryParser ParseException)
+  (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
-           (org.apache.lucene.analysis Analyzer)
-           (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
-           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
-           (org.apache.lucene.queryparser.simple SimpleQueryParser)
-           (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)))
+           (org.apache.lucene.analysis Analyzer)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -20,36 +18,24 @@
                    {})]
     (assoc str->str "_type" type)))
 
-(defn construct-query [dict-entry ^String field-name ^Analyzer monitor-analyzer]
-  (case (keyword (get dict-entry :query-parser))
-    :classic (.parse (QueryParser. field-name monitor-analyzer)
-                     ^String (get dict-entry :query))
-    :complex-phrase (.parse (ComplexPhraseQueryParser. field-name monitor-analyzer)
-                            ^String (get dict-entry :query))
-    :surround (.makeLuceneQueryField (org.apache.lucene.queryparser.surround.parser.QueryParser/parse
-                                       (get dict-entry :query))
-                                     field-name (BasicQueryFactory.))
-    :simple (.parse (SimpleQueryParser. monitor-analyzer field-name)
-                    (get dict-entry :query))
-    :standard (.parse (StandardQueryParser. monitor-analyzer)
-                      (get dict-entry :query) field-name)
-    (.parse (QueryParser. field-name monitor-analyzer)
-            ^String (get dict-entry :query))))
-
-(defn query->monitor-query [dict-entry field-name monitor-analyzer]
+(defn query->monitor-query [questionnaire-entry field-name monitor-analyzer]
   (try
-    (MonitorQuery. ^String (get dict-entry :id)
-                   ^Query (construct-query dict-entry field-name monitor-analyzer)
-                   ^String (get dict-entry :query)
-                   (prepare-metadata (get dict-entry :type) (get dict-entry :meta)))
+    (let [query (get questionnaire-entry :query)
+          query-parser-name (keyword (get questionnaire-entry :query-parser))
+          query-parser-conf (get questionnaire-entry :query-parser-conf)
+          qp (query-parser/create query-parser-name query-parser-conf field-name monitor-analyzer)]
+      (MonitorQuery. ^String (get questionnaire-entry :id)
+                     ^Query (q/parse qp query query-parser-name field-name)
+                     ^String query
+                     (prepare-metadata (get questionnaire-entry :type) (get questionnaire-entry :meta))))
     (catch ParseException e
       (when (System/getenv "DEBUG_MODE")
-        (.println System/err (format "Failed to parse query: '%s' with exception '%s'" dict-entry e))
+        (.println System/err (format "Failed to parse query: '%s' with exception '%s'" questionnaire-entry e))
         (.printStackTrace e))
       (throw e))
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
-        (.println System/err (format "Failed create query: '%s' with '%s'" dict-entry e))
+        (.println System/err (format "Failed create query: '%s' with '%s'" questionnaire-entry e))
         (.printStackTrace e))
       (throw e))))
 
@@ -96,8 +82,8 @@
   (let [global-analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)]
     (->> questionnaire
          indexed
-         (r/map (fn [dictionary-entry]
-                  (prepare-query-entry dictionary-entry default-type global-analysis-conf)))
+         (r/map (fn [questionnaire-entry]
+                  (prepare-query-entry questionnaire-entry default-type global-analysis-conf)))
          (r/foldcat))))
 
 (defn get-monitor-queries

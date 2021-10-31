@@ -17,6 +17,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Add support for the `org.apache.lucene.analysis.en.LovinsSnowballStemTokenFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.miscellaneous.DropIfFlaggedFilterFactory` token filter
 - Add support for the `org.apache.lucene.analysis.pattern.PatternTypingFilter` token filter
+- Support configuration of various query parsers with a flag `--query-parser-conf`
 
 ## Fixed/enhanced
 
