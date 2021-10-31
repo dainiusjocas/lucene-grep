@@ -1,8 +1,8 @@
-FROM ghcr.io/graalvm/graalvm-ce:21.2.0 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:java11-21.3.0 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 
-ENV CLOJURE_VERSION=1.10.3.839
+ENV CLOJURE_VERSION=1.10.3.1013
 
 ENV MUSL_DIR=${HOME}/.musl
 ENV MUSL_VERSION=1.2.2
@@ -21,6 +21,7 @@ RUN mkdir $MUSL_DIR \
     && ./configure --static --prefix=${MUSL_DIR} \
     && make \
     && make install \
+    && cp ${MUSL_DIR}/bin/musl-gcc ${MUSL_DIR}/bin/x86_64-linux-musl-gcc \
     && gu install native-image
 
 ENV PATH=$PATH:${MUSL_DIR}/bin
