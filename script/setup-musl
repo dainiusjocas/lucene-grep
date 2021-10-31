@@ -4,7 +4,7 @@ set -euo pipefail
 
 MUSL_DIR=${HOME}/.musl
 
-MUSL_GCC_COMPILER=${HOME}/.musl/bin/musl-gcc
+MUSL_GCC_COMPILER=${MUSL_DIR}/bin/musl-gcc
 
 if [ -f "$MUSL_GCC_COMPILER" ]; then
     echo "MUSL is already setup at ${MUSL_DIR}"
@@ -29,4 +29,5 @@ curl https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz -o musl-${MUSL_V
     && make \
     && make install
 
+cp $MUSL_GCC_COMPILER ${MUSL_DIR}/bin/x86_64-linux-musl-gcc
 export PATH=$PATH:${MUSL_DIR}/bin
