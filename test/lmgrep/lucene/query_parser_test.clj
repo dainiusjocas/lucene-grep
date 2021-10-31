@@ -57,8 +57,8 @@
           qp (qp/classic config field-name analyzer)]
       (is (instance? QueryParser qp))
       (is (instance? QueryParser default-qp))
-      (is (= 123 (.getMaxDeterminizedStates qp)))
-      (is (= 10000 (.getMaxDeterminizedStates default-qp)))))
+      (is (= 123 (.getDeterminizeWorkLimit qp)))
+      (is (= 10000 (.getDeterminizeWorkLimit default-qp)))))
 
   (testing "query-builder config"
     (let [config {:enable-position-increments                     false
