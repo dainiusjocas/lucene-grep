@@ -1,5 +1,5 @@
 (ns lmgrep.lucene.query-parser-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.query-parser :as qp])
   (:import (org.apache.lucene.queryparser.classic QueryParser QueryParser$Operator)
