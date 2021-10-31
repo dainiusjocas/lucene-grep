@@ -31,10 +31,10 @@
      :handler (fn [^QueryParser qp conf]
                 (.setSplitOnWhitespace qp (get conf :split-on-whitespace)))}}
    QueryParserBase
-   {:max-determinized-states
+   {:determinize-work-limit
     {:default 10000
      :handler (fn [^QueryParserBase qp conf]
-                (.setMaxDeterminizedStates qp (int (get conf :max-determinized-states))))}}
+                (.setDeterminizeWorkLimit qp (int (get conf :determinize-work-limit))))}}
    QueryBuilder
    {:enable-position-increments
     {:default true

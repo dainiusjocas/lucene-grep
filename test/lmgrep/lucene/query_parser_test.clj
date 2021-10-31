@@ -52,13 +52,13 @@
       (is (= QueryParser$Operator/OR (.getDefaultOperator query-parser)))))
 
   (testing "query-parser-base config"
-    (let [config {:max-determinized-states 123}
+    (let [config {:determinize-work-limit 123}
           default-qp (qp/classic empty-config field-name analyzer)
           qp (qp/classic config field-name analyzer)]
       (is (instance? QueryParser qp))
       (is (instance? QueryParser default-qp))
-      (is (= 123 (.getMaxDeterminizedStates qp)))
-      (is (= 10000 (.getMaxDeterminizedStates default-qp)))))
+      (is (= 123 (.getDeterminizeWorkLimit qp)))
+      (is (= 10000 (.getDeterminizeWorkLimit default-qp)))))
 
   (testing "query-builder config"
     (let [config {:enable-position-increments                     false
