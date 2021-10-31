@@ -8,16 +8,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+#        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest]
         include:
           - os: ubuntu-latest
             platform: linux
             gu-binary: gu
             arch: 'amd64'
-          - os: macos-latest
-            platform: macos
-            gu-binary: gu
-            arch: 'amd64'
+#          - os: macos-latest
+#            platform: macos
+#            gu-binary: gu
+#            arch: 'amd64'
 
     steps:
       - uses: actions/checkout@master
@@ -47,81 +48,83 @@ jobs:
 
       - name: Compile uberjar
         run: |
+          echo $RELEASE_VERSION > resources/LMGREP_VERSION
           clojure -Spom
           clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
 
-      - name: Compile native image
-        run: |
-          LMGREP_STATIC=false bash script/compile
-          zip lmgrep-${RELEASE_VERSION#v*}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
+#      - name: Compile native image
+#        run: |
+#          LMGREP_STATIC=false bash script/compile
+#          zip lmgrep-${RELEASE_VERSION#v*}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
 
       - name: Setup MUSL and compile static native-image on linux
         if: ${{ matrix.platform == 'linux' }}
         run: |
           bash script/setup-musl
           echo "MUSL_DIR=${HOME}/.musl" >> $GITHUB_ENV
-          echo "PATH=$PATH:${MUSL_DIR}/bin" >> $GITHUB_ENV
+          echo "PATH=$PATH:${HOME}/.musl/bin" >> $GITHUB_ENV
+          echo $PATH
           LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
           zip lmgrep-${RELEASE_VERSION#v*}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
           ls
-
-  compile-windows-native-image:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ windows-latest ]
-        include:
-          - os: windows-latest
-            platform: windows
-            arch: 'amd64'
-    steps:
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: '0'
-
-      - name: Set env
-        run: |
-          echo ("RELEASE_VERSION=vlatest") >> $env:GITHUB_ENV
-
-      - name: Prepare java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-
-      - name: Install clojure tools-deps
-        uses: DeLaGuardo/setup-clojure@master
-        with:
-          tools-deps: 1.10.3.1013
-          cli: 1.10.3.1013
-
-      - name: Compile uberjar on windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          clojure -Spom
-          clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
-        shell: powershell
-
-      - uses: ilammy/msvc-dev-cmd@v1.10.0
-      - uses: microsoft/setup-msbuild@v1
-      - name: Set env
-        shell: powershell
-        run: |
-          echo ("LMGREP_VERSION=" + $(cat resources/LMGREP_VERSION)) >> $env:GITHUB_ENV
-
-      - uses: ayltai/setup-graalvm@v1
-        with:
-          java-version: 11
-          graalvm-version: 21.3.0
-          native-image: true
-
-      - name: Build native image
-        run: |
-          native-image -jar "target/lmgrep-uber.jar" -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -J-Xmx8g
-        shell: powershell
-
-      - name: Zip executable
-        shell: powershell
-        run: |
-          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION.replace('v', ''))-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
-          ls
+#
+#  compile-windows-native-image:
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ windows-latest ]
+#        include:
+#          - os: windows-latest
+#            platform: windows
+#            arch: 'amd64'
+#    steps:
+#      - uses: actions/checkout@master
+#        with:
+#          fetch-depth: '0'
+#
+#      - name: Set env
+#        run: |
+#          echo ("RELEASE_VERSION=vlatest") >> $env:GITHUB_ENV
+#
+#      - name: Prepare java
+#        uses: actions/setup-java@v2
+#        with:
+#          distribution: 'zulu'
+#          java-version: '11'
+#
+#      - name: Install clojure tools-deps
+#        uses: DeLaGuardo/setup-clojure@master
+#        with:
+#          tools-deps: 1.10.3.1013
+#          cli: 1.10.3.1013
+#
+#      - name: Compile uberjar on windows
+#        if: ${{ matrix.os == 'windows-latest' }}
+#        run: |
+#          clojure -Spom
+#          clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
+#        shell: powershell
+#
+#      - uses: ilammy/msvc-dev-cmd@v1.10.0
+#      - uses: microsoft/setup-msbuild@v1
+#      - name: Set env
+#        shell: powershell
+#        run: |
+#          echo ("LMGREP_VERSION=" + $(cat resources/LMGREP_VERSION)) >> $env:GITHUB_ENV
+#
+#      - uses: ayltai/setup-graalvm@v1
+#        with:
+#          java-version: 11
+#          graalvm-version: 21.3.0
+#          native-image: true
+#
+#      - name: Build native image
+#        run: |
+#          native-image -jar "target/lmgrep-uber.jar" -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -J-Xmx8g
+#        shell: powershell
+#
+#      - name: Zip executable
+#        shell: powershell
+#        run: |
+#          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION.replace('v', ''))-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
+#          ls
