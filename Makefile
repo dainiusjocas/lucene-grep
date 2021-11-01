@@ -17,7 +17,8 @@ build-linux-static: uberjar
 
 .PHONY: build-linux-static-musl
 build-linux-static-musl: uberjar
-	LMGREP_STATIC=true LMGREP_MUSL=true script/compile
+	./script/setup-musl
+	PATH=$$PATH:$(pwd)/.musl/x86_64-linux-musl-native/bin LMGREP_STATIC=true LMGREP_MUSL=true script/compile
 
 docker_build = (docker build --build-arg $1 --build-arg $2 -f Dockerfile -t lmgrep-native-image .; \
 				docker rm lmgrep-native-image-build || true; \

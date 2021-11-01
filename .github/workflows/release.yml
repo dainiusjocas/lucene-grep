@@ -56,8 +56,8 @@ jobs:
         if: ${{ matrix.platform == 'linux' }}
         run: |
           bash script/setup-musl
-          echo "MUSL_DIR=${HOME}/.musl" >> $GITHUB_ENV
-          echo "PATH=$PATH:${MUSL_DIR}/bin" >> $GITHUB_ENV
+          echo "TOOLCHAIN_DIR=$(pwd)/.musl/TOOLCHAIN_DIR" >> $GITHUB_ENV
+          echo "PATH=$PATH:${TOOLCHAIN_DIR}/bin" >> $GITHUB_ENV
 
 #      - name: Compile native image
 #        run: |
@@ -67,8 +67,7 @@ jobs:
       - name: Setup MUSL and compile static native-image on linux
         if: ${{ matrix.platform == 'linux' }}
         run: |
-          echo $PATH
-          PATH=$PATH:${MUSL_DIR}/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
+          PATH=$PATH:${TOOLCHAIN_DIR}/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
           zip lmgrep-${RELEASE_VERSION#v*}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
           ls
 #
