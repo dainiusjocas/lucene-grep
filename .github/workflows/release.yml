@@ -168,7 +168,7 @@ jobs:
 
       - name: Build native image
         run: |
-          native-image -jar "target/lmgrep-uber.jar" -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -J-Xmx8g
+          native-image -jar "target/lmgrep-uber.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
         shell: powershell
 
       - name: Zip executable
