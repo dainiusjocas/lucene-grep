@@ -1,29 +1,44 @@
 [
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.Analyzer",
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Collection",
+          "boolean"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.CharArraySet",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.TokenStream",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.TokenStreamToDot",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ar.ArabicAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -60,9 +75,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.bg.BulgarianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -82,9 +103,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.bn.BengaliAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -138,9 +165,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.br.BrazilianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -160,9 +193,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ca.CatalanAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -211,9 +250,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.cjk.CJKAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -267,9 +312,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ckb.SoraniAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -408,9 +459,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.KeywordAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -464,14 +521,28 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.SimpleAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [
+          "org.apache.lucene.analysis.CharArraySet"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.StopAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -508,9 +579,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.UnicodeWhitespaceAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -530,9 +607,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.core.WhitespaceAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -552,19 +635,25 @@
     ]
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.custom.CustomAnalyzer",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.custom.CustomAnalyzer$Builder",
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.cz.CzechAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -584,9 +673,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.da.DanishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -601,9 +696,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.de.GermanAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -674,9 +775,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.el.GreekAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -713,9 +820,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.en.EnglishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -798,9 +911,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.es.SpanishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -837,9 +956,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.et.EstonianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -854,18 +979,30 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.eu.BasqueAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "name": "org.apache.lucene.analysis.eu.BasqueSnowballStemTokenFilterFactory",
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.fa.PersianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -902,9 +1039,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.fi.FinnishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -924,9 +1067,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.fr.FrenchAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -963,9 +1112,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ga.IrishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -997,9 +1152,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.gl.GalicianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1036,9 +1197,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.hi.HindiAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1075,9 +1242,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.hu.HungarianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1114,9 +1287,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.hy.ArmenianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1131,9 +1310,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.id.IndonesianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1170,9 +1355,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.it.ItalianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1192,9 +1383,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.lt.LithuanianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1209,9 +1406,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.lv.LatvianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1547,9 +1750,9 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
     "name": "org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1790,9 +1993,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.nl.DutchAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -1819,9 +2028,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.no.NorwegianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2062,14 +2277,26 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pl.PolishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.pt.PortugueseAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2140,9 +2367,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ro.RomanianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2157,9 +2390,15 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.ru.RussianAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2247,9 +2486,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.standard.ClassicAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2286,9 +2531,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.standard.StandardAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2308,9 +2559,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.standard.UAX29URLEmailAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2347,9 +2604,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.sv.SwedishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2409,9 +2672,49 @@
     ]
   },
   {
-    "name": "org.apache.lucene.analysis.th.ThaiAnalyzer",
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.te.TeluguNormalizationFilterFactory",
     "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.util.Map"
+        ],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.te.TeluguStemFilterFactory",
+    "allDeclaredConstructors": true,
+    "fields": [
+      {
+        "name": "NAME"
+      }
+    ]
+  },
+  {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
+    "name": "org.apache.lucene.analysis.th.ThaiAnalyzer",
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2431,7 +2734,7 @@
     ]
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.tokenattributes.CharTermAttribute",
     "allDeclaredConstructors": true
   },
@@ -2456,7 +2759,7 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.tokenattributes.OffsetAttribute",
     "allDeclaredConstructors": true
   },
@@ -2481,17 +2784,17 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.tokenattributes.PositionLengthAttribute",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.tokenattributes.TypeAttribute",
     "allDeclaredConstructors": true
   },
@@ -2513,9 +2816,15 @@
     ]
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.analysis.tr.TurkishAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2547,7 +2856,13 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "availableCharFilters"
+      }
+    ],
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.util.CharFilterFactory",
     "allDeclaredConstructors": true
   },
@@ -2569,12 +2884,24 @@
     ]
   },
   {
-    "allPublicMethods": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "availableTokenFilters"
+      }
+    ],
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.util.TokenFilterFactory",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "availableTokenizers"
+      }
+    ],
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.analysis.util.TokenizerFactory",
     "allDeclaredConstructors": true
   },
@@ -2671,26 +2998,39 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [
+          "java.text.Collator"
+        ],
+        "name": "<init>"
+      }
+    ],
     "name": "org.apache.lucene.collation.CollationKeyAnalyzer",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
+    "name": "org.apache.lucene.document.DateTools$Resolution",
+    "allDeclaredConstructors": true
+  },
+  {
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.document.Document",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
     "name": "org.apache.lucene.document.Field",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.document.FieldType",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "allDeclaredFields": true,
@@ -2713,20 +3053,12 @@
     "allDeclaredConstructors": true
   },
   {
-    "name": "org.apache.lucene.index.TermStates[]",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.apache.lucene.index.Term[]",
-    "allDeclaredConstructors": true
-  },
-  {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.index.Terms",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.HighlightsMatch",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2741,36 +3073,36 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.MatchingQueries",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.Monitor",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.MonitorConfiguration",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.MonitorQuery",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.MonitorQuerySerializer",
     "allDeclaredConstructors": true,
-    "allDeclaredMethods": true
+    "queryAllDeclaredMethods": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.ScoringHighlightsMatch",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2785,7 +3117,7 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.monitor.ScoringMatch",
     "allDeclaredConstructors": true,
     "fields": [
@@ -2795,52 +3127,96 @@
     ]
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.classic.ParseException",
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.classic.QueryParser",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "allPublicFields": true,
+    "name": "org.apache.lucene.queryparser.classic.QueryParser$Operator",
+    "allDeclaredConstructors": true
+  },
+  {
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "getDefaultOperator"
+      },
+      {
+        "parameterTypes": [],
+        "name": "getDeterminizeWorkLimit"
+      }
+    ],
+    "queryAllPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.classic.QueryParserBase",
+    "allDeclaredConstructors": true
+  },
+  {
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
+    "name": "org.apache.lucene.queryparser.flexible.standard.CommonQueryParserConfiguration",
+    "allDeclaredConstructors": true
+  },
+  {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "getFuzzyMinSim"
+      }
+    ],
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.flexible.standard.StandardQueryParser",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.simple.SimpleQueryParser",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.surround.parser.QueryParser",
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "getMaxBasicQueries"
+      }
+    ],
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.surround.query.BasicQueryFactory",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.queryparser.surround.query.SrndQuery",
     "allDeclaredConstructors": true
   },
   {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.search.AutomatonQuery",
+    "allDeclaredConstructors": true
+  },
+  {
+    "allPublicFields": true,
+    "queryAllPublicMethods": true,
+    "name": "org.apache.lucene.search.BooleanClause$Occur",
     "allDeclaredConstructors": true
   },
   {
@@ -2859,9 +3235,9 @@
     "allDeclaredConstructors": true
   },
   {
+    "queryAllPublicConstructors": true,
     "name": "org.apache.lucene.search.MatchAllDocsQuery",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "methods": [
@@ -2874,6 +3250,7 @@
     "allDeclaredConstructors": true
   },
   {
+    "allPublicFields": true,
     "allDeclaredFields": true,
     "name": "org.apache.lucene.search.MultiTermQuery",
     "allDeclaredConstructors": true
@@ -2904,12 +3281,12 @@
     "allDeclaredConstructors": true
   },
   {
-    "allPublicMethods": true,
+    "queryAllPublicConstructors": true,
     "allPublicFields": true,
     "allDeclaredFields": true,
+    "queryAllPublicMethods": true,
     "name": "org.apache.lucene.util.BytesRef",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
+    "allDeclaredConstructors": true
   },
   {
     "allDeclaredFields": true,
@@ -2957,6 +3334,25 @@
     "allDeclaredConstructors": true
   },
   {
+    "methods": [
+      {
+        "parameterTypes": [],
+        "name": "getAutoGenerateMultiTermSynonymsPhraseQuery"
+      },
+      {
+        "parameterTypes": [],
+        "name": "getEnableGraphQueries"
+      },
+      {
+        "parameterTypes": [],
+        "name": "getEnablePositionIncrements"
+      }
+    ],
+    "queryAllPublicMethods": true,
+    "name": "org.apache.lucene.util.QueryBuilder",
+    "allDeclaredConstructors": true
+  },
+  {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.util.SparseFixedBitSet",
     "allDeclaredConstructors": true
@@ -2969,10 +3365,6 @@
   {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.util.automaton.RunAutomaton",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.apache.lucene.util.fst.Builder$Arc[]",
     "allDeclaredConstructors": true
   },
   {
@@ -3013,10 +3405,6 @@
   {
     "allDeclaredFields": true,
     "name": "org.apache.lucene.util.packed.DirectMonotonicReader$Meta",
-    "allDeclaredConstructors": true
-  },
-  {
-    "name": "org.apache.lucene.util.packed.PackedInts$Reader[]",
     "allDeclaredConstructors": true
   },
   {
