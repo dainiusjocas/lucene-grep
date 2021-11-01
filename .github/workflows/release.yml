@@ -56,7 +56,7 @@ jobs:
         if: ${{ matrix.platform == 'linux' }}
         run: |
           bash script/setup-musl
-          echo "TOOLCHAIN_DIR=$(pwd)/.musl/TOOLCHAIN_DIR" >> $GITHUB_ENV
+          echo "TOOLCHAIN_DIR=$(pwd)/.musl/x86_64-linux-musl-native" >> $GITHUB_ENV
           echo "PATH=$PATH:${TOOLCHAIN_DIR}/bin" >> $GITHUB_ENV
 
 #      - name: Compile native image
