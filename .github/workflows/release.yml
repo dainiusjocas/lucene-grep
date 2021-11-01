@@ -149,6 +149,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           clojure -Spom
+          echo $env:RELEASE_VERSION > resources/LMGREP_VERSION
           clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
         shell: powershell
 
