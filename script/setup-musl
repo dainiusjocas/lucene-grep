@@ -1,33 +1,37 @@
 #!/usr/bin/env bash
 
+# Instructions from this page https://www.graalvm.org/reference-manual/native-image/StaticImages/#preparation
+
 set -euo pipefail
 
-MUSL_DIR=${HOME}/.musl
-
-MUSL_GCC_COMPILER=${MUSL_DIR}/bin/musl-gcc
+MUSL_DIR=$(pwd)/.musl
+MUSL_GCC_COMPILER=${MUSL_DIR}/x86_64-linux-musl-native/bin/x86_64-linux-gnu-gcc
 
 if [ -f "$MUSL_GCC_COMPILER" ]; then
     echo "MUSL is already setup at ${MUSL_DIR}"
     exit 0
 fi
 
-MUSL_VERSION=1.2.2
-ZLIB_VERSION=1.2.11
+mkdir "$MUSL_DIR" || true
 
-mkdir $MUSL_DIR || true
-cd $MUSL_DIR
-curl https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz -o musl-${MUSL_VERSION}.tar.gz \
-    && tar zxvf musl-${MUSL_VERSION}.tar.gz \
-    && cd musl-${MUSL_VERSION} \
-    && ./configure --disable-shared --prefix=${MUSL_DIR} \
-    && make \
-    && make install \
-    && curl https://zlib.net/zlib-${ZLIB_VERSION}.tar.gz -o zlib-${ZLIB_VERSION}.tar.gz \
-    && tar zxvf zlib-${ZLIB_VERSION}.tar.gz \
-    && cd zlib-${ZLIB_VERSION} \
-    && ./configure --static --prefix=${MUSL_DIR} \
-    && make \
-    && make install
+cd "$MUSL_DIR"
 
-cp $MUSL_GCC_COMPILER ${MUSL_DIR}/bin/x86_64-linux-musl-gcc
-export PATH=$PATH:${MUSL_DIR}/bin
+wget http://musl.cc/x86_64-linux-musl-native.tgz
+
+tar zxvf x86_64-linux-musl-native.tgz
+
+TOOLCHAIN_DIR=$(pwd)/x86_64-linux-musl-native
+
+CC=$TOOLCHAIN_DIR/bin/gcc
+
+wget https://zlib.net/zlib-1.2.11.tar.gz
+
+tar zxvf zlib-1.2.11.tar.gz
+
+cd zlib-1.2.11
+
+./configure --prefix="$TOOLCHAIN_DIR" --static
+make
+make install
+
+export PATH=$PATH:${TOOLCHAIN_DIR}/bin
