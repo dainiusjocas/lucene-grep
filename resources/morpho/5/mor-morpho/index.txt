@@ -1,0 +1,10 @@
+Voikko-Dictionary-Format: 5
+Language: fi-x-morpho
+Copyright: 2006-2020 Hannu Väisänen, Harri Pitkänen, Teemu Likonen and others
+License: GPL version 2 or later
+Description: suomi, erittäin laaja sanasto (mukana myös morfologisessa analyysissä tarvittava lisäinformaatio)
+SM-Version: 2.3
+SM-Patchinfo: Development snapshot
+Build-Config: GENLEX_OPTS=--extra-usage=it,science,nature,medicine,education,orgname --style=dialect,old,international,foreign,inappropriate --min-frequency=10
+Build-Date: Sat, 28 Nov 2020 21:34:01 +0000
+Morphology-Backend: finnishVfst
