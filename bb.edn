@@ -1,0 +1,13 @@
+{:paths          ["script"]
+ :deps           {}
+ :min-bb-version "0.4.0"
+ :tasks          {generate-reflection-config
+                  {:requires ([reflection :as r])
+                   :doc      "Generate config files for GraalVM native-image"
+                   :task     (do
+                               (println "Running the tests with a native image agent:")
+                               (shell "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:test")
+                               (println "Filtering Lucene classes with all their constructors:")
+                               (r/gen))}}
+ }
+
