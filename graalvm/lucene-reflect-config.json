@@ -1067,6 +1067,18 @@
     "allDeclaredConstructors" : true
   },
   {
+    "name" : "org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory",
+    "methods" : [
+      {
+        "name" : "<init>",
+        "parameterTypes" : [
+          "java.util.Map"
+        ]
+      }
+    ],
+    "allDeclaredConstructors" : true
+  },
+  {
     "name" : "org.apache.lucene.analysis.fr.FrenchAnalyzer",
     "queryAllPublicConstructors" : true,
     "methods" : [

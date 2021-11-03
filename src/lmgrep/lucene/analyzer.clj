@@ -23,7 +23,7 @@
            (org.apache.lucene.analysis.et EstonianAnalyzer EstonianSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.eu BasqueAnalyzer BasqueSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.fa PersianAnalyzer)
-           (org.apache.lucene.analysis.fi FinnishAnalyzer)
+           (org.apache.lucene.analysis.fi FinnishAnalyzer RaudikkoTokenFilterFactory)
            (org.apache.lucene.analysis.fr FrenchAnalyzer)
            (org.apache.lucene.analysis.ga IrishAnalyzer IrishSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.gl GalicianAnalyzer)
@@ -126,6 +126,7 @@
   (dissoc (assoc (reduce (fn [acc ^String token-filter-name]
                            (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
                          {} (TokenFilterFactory/availableTokenFilters))
+            (namify "raudikko") RaudikkoTokenFilterFactory
             (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
             (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
             (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory

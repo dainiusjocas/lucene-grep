@@ -225,6 +225,32 @@ echo "<p>foo bars baz</p>" | \
 ["BAR","BAR","BAZ"]
 ```
 
+```shell
+echo "kauppias foo kauppiaan" | \
+  ./lmgrep \
+  --only-analyze --graph \
+  --analysis='
+  {
+    "tokenizer": {"name": "standard"},
+    "token-filters": [
+      {"name": "raudikko"}
+    ]
+  }
+  ' | dot -Tpng | display
+  
+echo "kauppias foo kauppiaan" | \
+  java -jar target/lmgrep-uber.jar \
+  --only-analyze --graph \
+  --analysis='
+  {
+    "tokenizer": {"name": "standard"},
+    "token-filters": [
+      {"name": "raudikko"}
+    ]
+  }
+  ' | dot -Tpng | display
+```
+
 The action inside `lmgrep` is as follows:
 - char filters are applied in order:
   - `htmlStrip` is applied, which removes `<p>` and `</p>` from the string (i.e. `foo bars baz`)
