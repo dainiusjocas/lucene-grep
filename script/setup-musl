@@ -5,7 +5,7 @@
 set -euo pipefail
 
 MUSL_DIR=$(pwd)/.musl
-MUSL_GCC_COMPILER=${MUSL_DIR}/x86_64-linux-musl-native/bin/x86_64-linux-gnu-gcc
+MUSL_GCC_COMPILER=${MUSL_DIR}/x86_64-linux-musl-native/bin/x86_64-linux-musl-gcc
 
 if [ -f "$MUSL_GCC_COMPILER" ]; then
     echo "MUSL is already setup at ${MUSL_DIR}"
