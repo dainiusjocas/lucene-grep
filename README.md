@@ -546,6 +546,46 @@ echo "Dogs and CAt" | ./lmgrep --only-analyze --explain | jq
 ]
 ```
 
+To draw a token graph you can use the `--graph` flag, e.g.:
+```shell
+echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph
+# =>
+digraph tokens {
+  graph [ fontsize=30 labelloc="t" label="" splines=true overlap=false rankdir = "LR" ];
+  // A2 paper size
+  size = "34.4,16.5";
+  edge [ fontname="Helvetica" fontcolor="red" color="#606060" ]
+  node [ style="filled" fillcolor="#e8e8f0" shape="Mrecord" fontname="Helvetica" ]
+
+  0 [label="0"]
+  -1 [shape=point color=white]
+  -1 -> 0 []
+  0 -> 2 [ label="foobar / FooBar"]
+  0 -> 1 [ label="foo / Foo"]
+  1 [label="1"]
+  1 -> 2 [ label="bar / Bar"]
+  2 [label="2"]
+  2 -> 3 [ label="baz / Baz"]
+  -2 [shape=point color=white]
+  3 -> -2 []
+}
+```
+
+The `--graph` flag makes the text analysis output into a valid GraphViz program that can be fed to `dot` which cound draw a picture out of the text.
+
+If you have [GraphViz](https://graphviz.org/download/) installed on your machine, a one-liner to save the image of the text graph:
+```shell
+echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph | dot -Tpng -o token-graph.png
+```
+The output image looks should look like:
+<img src="docs/token-graph.png"
+alt="Token Graph" title="Token Graph" />
+
+If you also have ImageMagic installed you can preview the token graph with this one-liner:
+```shell
+echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph | dot -Tpng | display
+```
+
 ## Custom Builds
 
 ## Raudikko or Voikko stemming for Finnish Language
