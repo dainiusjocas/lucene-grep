@@ -24,7 +24,6 @@ args=( "-jar"
        "--initialize-at-build-time"
        "-H:+ReportExceptionStackTraces"
        "-H:IncludeResources=LMGREP_VERSION"
-       "-H:IncludeResources=morpho/.*"
        "-H:+AddAllCharsets"
        "-H:ReflectionConfigurationFiles=$(pwd)/graalvm/lucene-reflect-config.json" )
 
@@ -36,6 +35,12 @@ if [ "$LMGREP_STATIC" = "true" ]; then
     if [ "$LMGREP_MUSL" = "true" ]; then
         args+=("--libc=musl")
     fi
+fi
+
+LMGREP_FEATURE_RAUDIKKO=${LMGREP_FEATURE_RAUDIKKO:-}
+
+if [ "$LMGREP_FEATURE_RAUDIKKO" = "true" ]; then
+    args+=("-H:IncludeResources=morpho/.*")
 fi
 
 "$GRAALVM_HOME/bin/native-image" "${args[@]}"

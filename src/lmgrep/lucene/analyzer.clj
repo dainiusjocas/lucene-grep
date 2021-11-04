@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analyzer
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [lmgrep.features :as features])
   (:import (java.util HashMap Map ArrayList Locale)
            (java.text Collator)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
@@ -23,7 +24,7 @@
            (org.apache.lucene.analysis.et EstonianAnalyzer EstonianSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.eu BasqueAnalyzer BasqueSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.fa PersianAnalyzer)
-           (org.apache.lucene.analysis.fi FinnishAnalyzer RaudikkoTokenFilterFactory)
+           (org.apache.lucene.analysis.fi FinnishAnalyzer)
            (org.apache.lucene.analysis.fr FrenchAnalyzer)
            (org.apache.lucene.analysis.ga IrishAnalyzer IrishSnowballStemTokenFilterFactory)
            (org.apache.lucene.analysis.gl GalicianAnalyzer)
@@ -122,11 +123,10 @@
             (assoc acc (namify char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
-(def token-filter-name->class
+(def default-token-filters
   (dissoc (assoc (reduce (fn [acc ^String token-filter-name]
                            (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
                          {} (TokenFilterFactory/availableTokenFilters))
-            (namify "raudikko") RaudikkoTokenFilterFactory
             (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
             (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
             (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
@@ -139,8 +139,13 @@
             (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
             (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
             (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory)
-          "synonym"                                         ; because deprecated and requires a patch
+          "synonym"                                        ; because deprecated and requires a patch
           ))
+
+(def token-filter-name->class
+  (cond-> default-token-filters
+          features/raudikko? (assoc (namify "raudikko")
+                                    (import 'org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory))))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
