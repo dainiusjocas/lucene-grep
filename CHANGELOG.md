@@ -6,6 +6,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## New
 
+- [Raudikko](https://github.com/EvidentSolutions/raudikko) token filter for Finnish Language as an option
+
+## v2021.11.01
+
+## New
+
 - Flag to specify the input matching concurrency `--concurrency`
 - Flag `--[no-]preserve-order` that attempts to increase throughput while not preserving the order, applicable to `--only-analyze`
 - Flag `--reader-buffer-size` in bytes
@@ -21,8 +27,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Fixed/enhanced
 
-- Updated to Lucene 8.9.0
-- Updated to GraalVM 21.2.0
+- Updated to Lucene 8.10.1
+- Updated to GraalVM 21.3.0
 - Updated to quarkus-lucene 0.3 
 - Faster file system search with GLOB
 

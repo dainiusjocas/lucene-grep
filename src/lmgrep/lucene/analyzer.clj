@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analyzer
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [lmgrep.features :as features])
   (:import (java.util HashMap Map ArrayList Locale)
            (java.text Collator)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
@@ -122,7 +123,7 @@
             (assoc acc (namify char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
-(def token-filter-name->class
+(def default-token-filters
   (dissoc (assoc (reduce (fn [acc ^String token-filter-name]
                            (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
                          {} (TokenFilterFactory/availableTokenFilters))
@@ -138,8 +139,13 @@
             (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
             (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
             (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory)
-          "synonym"                                         ; because deprecated and requires a patch
+          "synonym"                                        ; because deprecated and requires a patch
           ))
+
+(def token-filter-name->class
+  (cond-> default-token-filters
+          features/raudikko? (assoc (namify "raudikko")
+                                    (import 'org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory))))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 

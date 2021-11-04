@@ -454,6 +454,7 @@ For the supported configuration values consult the [documentation](docs/query-pa
 
 Requirements: 
 - Clojure CLI
+- [Babashka](https://github.com/babashka/babashka)
 - Maven
 - GraalVM with the `native-image` tool installed and on `$PATH`
 - GNU Make
@@ -545,10 +546,17 @@ echo "Dogs and CAt" | ./lmgrep --only-analyze --explain | jq
 ]
 ```
 
+## Custom Builds
+
+## Raudikko or Voikko stemming for Finnish Language
+
+```shell
+(export LMGREP_FEATURE_RAUDIKKO=true && bb generate-reflection-config && make build)
+```
+
 ## Future work
 
 - [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)
-- [ ] Automate builds for [multiple platforms](https://github.com/dainiusjocas/lucene-grep/issues/9)
 
 ## License
 
