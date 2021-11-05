@@ -8,6 +8,11 @@
                                (println "Running the tests with a native image agent:")
                                (shell "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:test")
                                (println "Filtering Lucene classes with all their constructors:")
-                               (r/gen))}}
+                               (r/gen))}
+
+                  print-query-parsers-attributes-compatibility-table
+                  {:requires ([reflection :as r])
+                   :doc      "Print query parsers attributes compatibility table"
+                   :task     (shell "clojure -M -i script/query-parser-attributes-table.clj")}}
  }
 

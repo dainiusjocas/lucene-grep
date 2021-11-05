@@ -9,25 +9,26 @@ Currently, 5 [Lucene query parsers](https://javadoc.io/doc/org.apache.lucene/luc
 - surround: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
 
 These query parsers can be further configured with these parameters that were extracted from the Lucene source code.
-List of supported keys:
+Rows represent an attribute and in the columns are compatibility with a specific query parser.
 
-- allow-leading-wildcard: applies to [`classic`, `complex-phrase`, `standard`]
-- auto-generate-multi-term-synonyms-phrase-query: applies to [`classic`, `complex-phrase`, `standard`, `simple`]
-- auto-generate-phrase-queries: applies to [`classic`, `complex-phrase`]
-- date-resolution: applies to [`classic`, `complex-phrase`, `standard`]
-- default-operator: applies to [`simple`]
-- determinize-work-limit: applies to [`classic`, `complex-phrase`]
-- enable-graph-queries: applies to [`classic`, `complex-phrase`, `standard`, `simple`]
-- enable-position-increments: applies to [`classic`, `complex-phrase`, `standard`, `simple`]
-- flags: applies to [`simple`]
-- fuzzy-min-sim: applies to [`classic`, `complex-phrase`, `standard`]
-- fuzzy-prefix-length: applies to [`classic`, `complex-phrase`, `standard`]
-- in-order: applies to [`complex-phrase`]
-- locale: applies to [`classic`, `complex-phrase`, `standard`]
-- max-basic-queries: applies to [`surround`]
-- multi-term-rewrite-method: applies to [`classic`, `complex-phrase`, `standard`]
-- phrase-slop: applies to [`classic`, `complex-phrase`, `standard`]
-- split-on-whitespace: applies to [`classic`, `complex-phrase`]
-- time-zone: applies to [`classic`, `complex-phrase`, `standard`]
+|                                      :attribute | :classic | :complex-phrase | :simple | :standard | :surround |
+|-------------------------------------------------|----------|-----------------|---------|-----------|-----------|
+|                         :allow-leading-wildcard |     true |            true |   false |      true |     false |
+| :auto-generate-multi-term-synonyms-phrase-query |     true |            true |    true |     false |     false |
+|                   :auto-generate-phrase-queries |     true |            true |   false |     false |     false |
+|                                :date-resolution |     true |            true |   false |      true |     false |
+|                               :default-operator |    false |           false |    true |     false |     false |
+|                         :determinize-work-limit |     true |            true |   false |     false |     false |
+|                           :enable-graph-queries |     true |            true |    true |     false |     false |
+|                     :enable-position-increments |     true |            true |    true |      true |     false |
+|                     :enable-position-increments |     true |            true |    true |      true |     false |
+|                                  :fuzzy-min-sim |     true |            true |   false |      true |     false |
+|                            :fuzzy-prefix-length |     true |            true |   false |      true |     false |
+|                                       :in-order |    false |            true |   false |     false |     false |
+|                                         :locale |     true |            true |   false |      true |     false |
+|                      :multi-term-rewrite-method |     true |            true |   false |      true |     false |
+|                                    :phrase-slop |     true |            true |   false |      true |     false |
+|                            :split-on-whitespace |     true |            true |   false |     false |     false |
+|                                      :time-zone |     true |            true |   false |      true |     false |
 
 For further details consult the [Lucene docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html).
