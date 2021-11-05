@@ -1,6 +1,7 @@
 (require '[lmgrep.lucene.query-parser])
 (require '[clojure.pprint])
 (require '[clojure.string])
+
 ;; Create all five query parsers
 ;; iterate and collect pairs of an attribute and whether it is applicable
 ;; one line per attribute to which query parser it applies
@@ -27,3 +28,4 @@
                                      "+"
                                      "|"))))
 
+;; TODO: think if it is possible to update docs on every release
