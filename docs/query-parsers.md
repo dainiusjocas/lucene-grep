@@ -12,7 +12,7 @@ These query parsers can be further configured with these parameters that were ex
 Rows represent an attribute and in the columns are compatibility with a specific query parser.
 
 |                                      :attribute | :classic | :complex-phrase | :simple | :standard | :surround |
-|-------------------------------------------------+----------+-----------------+---------+-----------+-----------|
+|-------------------------------------------------|----------|-----------------|---------|-----------|-----------|
 |                         :allow-leading-wildcard |     true |            true |   false |      true |     false |
 | :auto-generate-multi-term-synonyms-phrase-query |     true |            true |    true |     false |     false |
 |                   :auto-generate-phrase-queries |     true |            true |   false |     false |     false |

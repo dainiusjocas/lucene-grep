@@ -1,5 +1,6 @@
 (require '[lmgrep.lucene.query-parser])
 (require '[clojure.pprint])
+(require '[clojure.string])
 ;; Create all five query parsers
 ;; iterate and collect pairs of an attribute and whether it is applicable
 ;; one line per attribute to which query parser it applies
@@ -22,4 +23,7 @@
                                     (assoc acc query-parser-kw (contains? (get attrs query-parser-kw) attr)))
                                   {:attribute attr} query-parsers))
                         all-attributes))]
-    (clojure.pprint/print-table header rows)))
+    (println (clojure.string/replace (with-out-str (clojure.pprint/print-table header rows))
+                                     "+"
+                                     "|"))))
+
