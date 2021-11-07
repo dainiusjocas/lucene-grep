@@ -203,6 +203,7 @@
               "patterntyping"           {"patternFile" "test/resources/pattern.txt"}
               "dictionarycompoundword"  {"dictionary" "test/resources/stops.txt"}
               "synonymgraph"            {"synonyms" "test/resources/mapping.txt"}
+              "synonym"                 {"synonyms" "test/resources/mapping.txt"}
               "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
               "hunspellstem"            {"dictionary" "test/resources/hunspell_dict.dic"
                                          "affix"      "test/resources/hunspell_dict.aff"}

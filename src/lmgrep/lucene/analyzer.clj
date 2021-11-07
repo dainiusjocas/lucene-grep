@@ -86,12 +86,10 @@
   [{:keys [analyzer] :as opts}]
   (try
     (or
-      (when-let [n (get analyzer :name)]
-        (when (nil? (get lucene.predefined/analyzers (namify (str/replace n "Analyzer" ""))))
-          (throw (Exception. (format "Analyzer '%s' is not available. Choose one of: %s"
-                                     (get analyzer :name)
-                                     (sort (keys lucene.predefined/analyzers))))))
-        (get lucene.predefined/analyzers (namify (str/replace n "Analyzer" ""))))
+      (when-let [analyzer-name (get analyzer :name)]
+        (get-component-or-exception lucene.predefined/analyzers
+                                    (namify (str/replace analyzer-name "Analyzer" ""))
+                                    "Analyzer"))
       (custom-analyzer opts))
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
