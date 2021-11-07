@@ -21,8 +21,8 @@
     (if (and (.exists config-file) (.isFile config-file))
       config-file
       (let [config-dir (get options :config-dir)]
-        (when (and config-dir) (.isDirectory (io/file config-dir))
-                               (io/file config-dir file-path))))))
+        (when (and config-dir (.isDirectory (io/file config-dir)))
+          (io/file config-dir file-path))))))
 
 (defn read-analysis-conf-from-file
   "Given a file returns a hashmap {analyzer_name custom_analyzer}"
