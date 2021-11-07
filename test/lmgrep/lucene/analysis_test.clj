@@ -125,7 +125,7 @@
 
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
-        analyzer-names (keys analysis/predefined-analyzers)]
+        analyzer-names (keys analysis/analyzers)]
     (is (seq analyzer-names))
     (doseq [an analyzer-names]
       (try
@@ -202,6 +202,7 @@
               "patterntyping"           {"patternFile" "test/resources/pattern.txt"}
               "dictionarycompoundword"  {"dictionary" "test/resources/stops.txt"}
               "synonymgraph"            {"synonyms" "test/resources/mapping.txt"}
+              "synonym"                 {"synonyms" "test/resources/mapping.txt"}
               "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
               "hunspellstem"            {"dictionary" "test/resources/hunspell_dict.dic"
                                          "affix"      "test/resources/hunspell_dict.aff"}

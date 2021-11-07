@@ -52,7 +52,8 @@
 
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf]
-  (let [analysis-conf (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
+  (let [analysis-conf (assoc (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
+                        :config-dir (get global-analysis-conf :config-dir))
         field-name (get-field-name analysis-conf)
         monitor-analyzer (get-string-analyzer analysis-conf)]
     (Dict.
@@ -79,7 +80,8 @@
   - construct analyzer;
   - construct Lucene MonitorQuery object."
   [questionnaire default-type options]
-  (let [global-analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)]
+  (let [global-analysis-conf (assoc (ac/prepare-analysis-configuration ac/default-text-analysis options)
+                               :config-dir (get options :config-dir))]
     (->> questionnaire
          indexed
          (r/map (fn [questionnaire-entry]

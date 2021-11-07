@@ -25,11 +25,11 @@
                        (get dq "query")
                        (get dq "metadata"))))))
 
-(def empty-analyzer (analyzer/create {}))
+(def default-analyzer (analyzer/create {}))
 
 (defn create [field-names-w-analyzers]
   (let [^MonitorConfiguration config (MonitorConfiguration.)
-        per-field-analyzers (PerFieldAnalyzerWrapper. empty-analyzer field-names-w-analyzers)]
+        per-field-analyzers (PerFieldAnalyzerWrapper. default-analyzer field-names-w-analyzers)]
     (.setIndexPath config nil monitor-query-serializer)
     (Monitor. per-field-analyzers config)))
 

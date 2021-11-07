@@ -7,6 +7,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## New
 
 - [Raudikko](https://github.com/EvidentSolutions/raudikko) token filter for Finnish Language as an option
+- Flag `--config-dir` to specify directory where text analysis resources are stored.
+- `synonym` token filter
+
+## Fixed/enhanced
+
+- Refactored custom TokenFilterFactories to act like services
 
 ## v2021.11.01
 

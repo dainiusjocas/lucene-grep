@@ -107,6 +107,7 @@
     :parse-fn #(Integer/parseInt %)]
    [nil "--[no-]preserve-order" "If the input order should be preserved."
     :default true]
+   [nil "--config-dir DIR" "A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir."]
    ["-h" "--help"]])
 
 (defn handle-args [args]
