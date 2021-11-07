@@ -3,6 +3,8 @@
             [lmgrep.features :as features]
             [lmgrep.lucene.predefined-analyzers :as lucene.predefined])
   (:import (java.util HashMap Map)
+           (java.io File)
+           (java.nio.file Path)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis.util TokenizerFactory TokenFilterFactory CharFilterFactory)
            (org.apache.lucene.analysis.en LovinsSnowballStemTokenFilterFactory)
@@ -67,17 +69,15 @@
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
-;(defn ^Analyzer get-analyzer
-;  ([analyzer-conf]
-;   (get-analyzer analyzer-conf lucene.predefined/analyzers))
-;  ([analyzer-conf default-analyzers]
-;   (get default-analyzers (get analyzer-conf :name))))
+(defn ^Path config-dir->path [config-dir]
+  (let [^String dir (or config-dir ".")]
+    (.toPath (File. dir))))
 
 (defn custom-analyzer
   ([opts]
    (custom-analyzer opts char-filter-name->class tokenizer-name->class token-filter-name->class))
-  ([{:keys [char-filters tokenizer token-filters]} char-filter-factories tokenizer-factories token-filter-factories]
-   (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder)]
+  ([{:keys [config-dir char-filters tokenizer token-filters]} char-filter-factories tokenizer-factories token-filter-factories]
+   (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
      (when (nil? (get tokenizer-factories (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME))))
        (throw (Exception. (format "Tokenizer '%s' is not available. Choose one of: %s"
                                   (get tokenizer :name)

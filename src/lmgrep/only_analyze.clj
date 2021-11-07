@@ -125,7 +125,8 @@
         print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
-        analysis-conf (ac/prepare-analysis-configuration ac/default-text-analysis options)
+        analysis-conf (assoc (ac/prepare-analysis-configuration ac/default-text-analysis options)
+                        :config-dir (get options :config-dir))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
                       text-analysis/text->token-strings)

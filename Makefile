@@ -42,11 +42,13 @@ test:
 	clojure -M:test
 
 .PHONY: test-binary
-test-binary:
+test-binary: build
 	sh binary-test.sh
 
+test-all: export LMGREP_FEATURE_RAUDIKKO = true
+
 .PHONY: test-all
-test-all: test build test-binary
+test-all: test test-binary
 
 .PHONY: lint
 lint:
