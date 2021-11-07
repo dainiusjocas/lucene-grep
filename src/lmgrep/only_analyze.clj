@@ -2,11 +2,11 @@
   (:require [clojure.core.async :as a]
             [clojure.java.io :as io]
             [jsonista.core :as json]
-            [lmgrep.lucene.analysis-conf :as ac]
-            [lmgrep.lucene.text-analysis :as text-analysis]
-            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.analysis :as analysis]
             [lmgrep.fs :as fs]
-            [lmgrep.analysis :as analysis])
+            [lmgrep.lucene.analysis-conf :as ac]
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)
            (java.util.concurrent ExecutorService Executors TimeUnit)))
