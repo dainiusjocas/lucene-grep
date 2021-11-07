@@ -108,6 +108,7 @@
    [nil "--[no-]preserve-order" "If the input order should be preserved."
     :default true]
    [nil "--config-dir DIR" "A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir."]
+   [nil "--analyzers-file FILE" "A file that contains definitions of text analyzers. Works in combinations with --config-dir flag."]
    ["-h" "--help"]])
 
 (defn handle-args [args]

@@ -22,14 +22,16 @@
       config-file
       (let [config-dir (get options :config-dir)]
         (when (and config-dir) (.isDirectory (io/file config-dir))
-          (io/file config-dir file-path))))))
+                               (io/file config-dir file-path))))))
 
 (defn read-analysis-conf-from-file
   "Given a file returns a hashmap {analyzer_name custom_analyzer}"
   [^String file-path options]
-  (let [^File input-file (config-file-path file-path options)]
-    (if (.isFile input-file)
-      (let [conf (with-open [is (io/input-stream input-file)]
-                   (json/read-value is json/keyword-keys-object-mapper))]
-        (create-analyzers conf options))
-      (throw (Exception. (format "Analysis configuration file '%s' doesn't exist." file-path))))))
+  (if file-path
+    (let [^File input-file (config-file-path file-path options)]
+      (if (.isFile input-file)
+        (let [conf (with-open [is (io/input-stream input-file)]
+                     (json/read-value is json/keyword-keys-object-mapper))]
+          (create-analyzers conf options))
+        (throw (Exception. (format "Analysis configuration file '%s' doesn't exist." file-path)))))
+    {}))

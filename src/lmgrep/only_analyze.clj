@@ -5,7 +5,8 @@
             [lmgrep.lucene.analysis-conf :as ac]
             [lmgrep.lucene.text-analysis :as text-analysis]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.fs :as fs])
+            [lmgrep.fs :as fs]
+            [lmgrep.analysis :as analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)
            (java.util.concurrent ExecutorService Executors TimeUnit)))
@@ -134,7 +135,10 @@
                            (into (fs/get-files files-pattern options)
                                  (fs/filter-files files))
                            [nil])
-        ^Analyzer analyzer (analyzer/create analysis-conf)
+        custom-analyzers (analysis/read-analysis-conf-from-file
+                           (get options :analyzers-file)
+                           options)
+        ^Analyzer analyzer (analyzer/create analysis-conf custom-analyzers)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))]
     (doseq [path files-to-analyze]
       (let [reader (if path
