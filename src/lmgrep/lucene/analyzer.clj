@@ -41,6 +41,12 @@
           features/raudikko? (assoc (namify "raudikko")
                                     (import 'org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory))))
 
+(def analyzers
+  (reduce (fn [acc [analyzer-name analyzer-class]]
+            (assoc acc (namify (str/replace analyzer-name "Analyzer" "")) analyzer-class))
+          {}
+          lucene.predefined/analyzers))
+
 (def DEFAULT_TOKENIZER_NAME "standard")
 
 (defn ^Path config-dir->path [config-dir]
@@ -87,7 +93,7 @@
   (try
     (or
       (when-let [analyzer-name (get analyzer :name)]
-        (get-component-or-exception lucene.predefined/analyzers
+        (get-component-or-exception analyzers
                                     (namify (str/replace analyzer-name "Analyzer" ""))
                                     "Analyzer"))
       (custom-analyzer opts))
