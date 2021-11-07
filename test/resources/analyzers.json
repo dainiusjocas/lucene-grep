@@ -1,0 +1,22 @@
+{
+  "analyzers": [
+    {
+      "name": "some-custom-analyzer",
+      "char-filters": [
+        {"name": "htmlStrip"},
+        {
+          "name": "patternReplace",
+          "args": {
+            "pattern": "foo",
+            "replacement": "bar"
+          }
+        }
+      ],
+      "tokenizer": {"name": "standard"},
+      "token-filters": [
+        {"name": "englishMinimalStem"},
+        {"name": "uppercase"}
+      ]
+    }
+  ]
+}
