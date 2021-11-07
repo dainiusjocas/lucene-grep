@@ -189,8 +189,9 @@ Supported options:
       --reader-buffer-size BUFFER_SIZE        Buffer size of the BufferedReader in bytes.
       --writer-buffer-size BUFFER_SIZE        Buffer size of the BufferedWriter in bytes.
       --[no-]preserve-order                   If the input order should be preserved.
+      --config-dir DIR                        A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir.
+      --analyzers-file FILE                   A file that contains definitions of text analyzers. Works in combinations with --config-dir flag.
   -h, --help
-
 ```
 
 NOTE: question marks in `zsh` shell must be escaped, e.g. `--case-sensitive\?=true` or within double quotes e.g. `"--case-sensitive?=true"` 

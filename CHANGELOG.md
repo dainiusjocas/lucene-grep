@@ -9,6 +9,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - [Raudikko](https://github.com/EvidentSolutions/raudikko) token filter for Finnish Language as an option
 - Flag `--config-dir` to specify directory where text analysis resources are stored.
 - `synonym` token filter
+- Flag `--analyzers-file` for custom analyzers definitions.
 
 ## Fixed/enhanced
 

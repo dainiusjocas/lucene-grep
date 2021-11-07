@@ -89,18 +89,21 @@
 
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
-  [{:keys [analyzer] :as opts}]
-  (try
-    (or
-      (when-let [analyzer-name (get analyzer :name)]
-        (get-component-or-exception analyzers
-                                    (namify (str/replace analyzer-name "Analyzer" ""))
-                                    "Analyzer"))
-      (custom-analyzer opts))
-    (catch Exception e
-      (when (System/getenv "DEBUG_MODE")
-        (.printStackTrace e))
-      (throw e))))
+  ([opts] (create opts {}))
+  ([{:keys [analyzer] :as opts} custom-analyzers]
+   (try
+     (let [analyzer-name (get analyzer :name)]
+       (or
+        (get custom-analyzers analyzer-name)
+        (when analyzer-name
+          (get-component-or-exception analyzers
+                                      (namify (str/replace analyzer-name "Analyzer" ""))
+                                      "Analyzer"))
+        (custom-analyzer opts)))
+     (catch Exception e
+       (when (System/getenv "DEBUG_MODE")
+         (.printStackTrace e))
+       (throw e)))))
 
 (comment
   (lmgrep.lucene.analyzer/create

@@ -63,8 +63,8 @@
 
 (defn setup
   "Setups the monitor with all the questionnaire entries."
-  [questionnaire default-type options]
-  (let [questionnaire-with-analyzers (dictionary/normalize questionnaire default-type options)
+  [questionnaire default-type options custom-analyzers]
+  (let [questionnaire-with-analyzers (dictionary/normalize questionnaire default-type options custom-analyzers)
         mappings-from-field-names-to-analyzers (field-name-analyzer-mappings questionnaire-with-analyzers)
         monitor (create mappings-from-field-names-to-analyzers)]
     (register-queries monitor (dictionary/get-monitor-queries questionnaire-with-analyzers))
