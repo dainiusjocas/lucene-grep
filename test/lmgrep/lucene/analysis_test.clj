@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [lmgrep.lucene.analyzer :as analysis]
             [lmgrep.lucene.text-analysis :as ta]
+            [lmgrep.lucene.predefined-analyzers :as lucene.predefined]
             [jsonista.core :as json]))
 
 (deftest predefined-analyzers
@@ -125,7 +126,7 @@
 
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
-        analyzer-names (keys analysis/predefined-analyzers)]
+        analyzer-names (keys lucene.predefined/analyzers)]
     (is (seq analyzer-names))
     (doseq [an analyzer-names]
       (try
