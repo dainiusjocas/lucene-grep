@@ -7,19 +7,7 @@
            (java.nio.file Path)
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis.util TokenizerFactory TokenFilterFactory CharFilterFactory)
-           (org.apache.lucene.analysis.en LovinsSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis Analyzer)
-           (org.apache.lucene.analysis.da DanishSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.et EstonianSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.eu BasqueSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.ga IrishSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.lt LithuanianSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.ro RomanianSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.tr TurkishSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.hy ArmenianSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.nl DutchSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.ca CatalanSnowballStemTokenFilterFactory)
-           (org.apache.lucene.analysis.nl KPSnowballStemTokenFilterFactory)))
+           (org.apache.lucene.analysis Analyzer)))
 
 ; https://lucene.apache.org/core/8_8_0/analyzers-common/constant-values.html#org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_WORD_PARTS
 
@@ -44,23 +32,9 @@
           {} (CharFilterFactory/availableCharFilters)))
 
 (def default-token-filters
-  (dissoc (assoc (reduce (fn [acc ^String token-filter-name]
-                           (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
-                         {} (TokenFilterFactory/availableTokenFilters))
-            (namify "lithuanianSnowballStem") LithuanianSnowballStemTokenFilterFactory
-            (namify "armenianSnowballStem") ArmenianSnowballStemTokenFilterFactory
-            (namify "basqueSnowballStem") BasqueSnowballStemTokenFilterFactory
-            (namify "catalanSnowballStem") CatalanSnowballStemTokenFilterFactory
-            (namify "danishSnowballStem") DanishSnowballStemTokenFilterFactory
-            (namify "dutchSnowballStem") DutchSnowballStemTokenFilterFactory
-            (namify "basqueSnowballStem") EstonianSnowballStemTokenFilterFactory
-            (namify "irishSnowballStem") IrishSnowballStemTokenFilterFactory
-            (namify "kpSnowballStem") KPSnowballStemTokenFilterFactory
-            (namify "turkishSnowballStem") TurkishSnowballStemTokenFilterFactory
-            (namify "romanianSnowballStem") RomanianSnowballStemTokenFilterFactory
-            (namify "lovinsSnowballStem") LovinsSnowballStemTokenFilterFactory)
-          "synonym"                                        ; because deprecated and requires a patch
-          ))
+  (reduce (fn [acc ^String token-filter-name]
+            (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
+          {} (TokenFilterFactory/availableTokenFilters)))
 
 (def token-filter-name->class
   (cond-> default-token-filters
@@ -73,39 +47,39 @@
   (let [^String dir (or config-dir ".")]
     (.toPath (File. dir))))
 
+(defn get-component-or-exception [factories name component-type]
+  (if-let [component (get factories (namify name))]
+    component
+    (throw
+      (Exception.
+        (format "%s '%s' is not available. Choose one of: %s"
+                component-type
+                name
+                (sort (keys factories)))))))
+
 (defn custom-analyzer
   ([opts]
    (custom-analyzer opts char-filter-name->class tokenizer-name->class token-filter-name->class))
-  ([{:keys [config-dir char-filters tokenizer token-filters]} char-filter-factories tokenizer-factories token-filter-factories]
-   (let [^CustomAnalyzer$Builder cab (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
-     (when (nil? (get tokenizer-factories (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME))))
-       (throw (Exception. (format "Tokenizer '%s' is not available. Choose one of: %s"
-                                  (get tokenizer :name)
-                                  (sort (keys tokenizer-factories))))))
-     (.withTokenizer cab
-                     ^Class
-                     (get tokenizer-factories (namify (get tokenizer :name DEFAULT_TOKENIZER_NAME)))
+  ([{:keys [config-dir char-filters tokenizer token-filters]}
+    char-filter-factories tokenizer-factories token-filter-factories]
+   (let [^CustomAnalyzer$Builder builder (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
+     (.withTokenizer builder
+                     ^Class (get-component-or-exception tokenizer-factories
+                                                        (get tokenizer :name DEFAULT_TOKENIZER_NAME)
+                                                        "Tokenizer")
                      ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
 
-     (doseq [char-filter char-filters]
-       (when (nil? (get char-filter-factories (namify (get char-filter :name))))
-         (throw (Exception. (format "Char filter '%s' is not available. Choose one of: %s"
-                                    (get char-filter :name)
-                                    (sort (keys char-filter-factories))))))
-       (.addCharFilter cab
-                       ^Class (get char-filter-factories (namify (get char-filter :name)))
-                       ^Map (HashMap. ^Map (stringify (get char-filter :args)))))
+     (doseq [{:keys [name args]} char-filters]
+       (.addCharFilter builder
+                       ^Class (get-component-or-exception char-filter-factories name "Char filter")
+                       ^Map (HashMap. ^Map (stringify args))))
 
-     (doseq [token-filter token-filters]
-       (when (nil? (get token-filter-factories (namify (get token-filter :name))))
-         (throw (Exception. (format "Token Filter '%s' is not available. Choose one of: %s"
-                                    (get token-filter :name)
-                                    (sort (keys token-filter-factories))))))
-       (.addTokenFilter cab
-                        ^Class (get token-filter-factories (namify (get token-filter :name)))
-                        ^Map (HashMap. ^Map (stringify (get token-filter :args)))))
+     (doseq [{:keys [name args]} token-filters]
+       (.addTokenFilter builder
+                        ^Class (get-component-or-exception token-filter-factories name "Token filter")
+                        ^Map (HashMap. ^Map (stringify args))))
 
-     (.build cab))))
+     (.build builder))))
 
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
