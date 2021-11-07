@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.11.08
+
 ## New
 
 - [Raudikko](https://github.com/EvidentSolutions/raudikko) token filter for Finnish Language as an option
