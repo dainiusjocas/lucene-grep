@@ -4,6 +4,16 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.11.09
+
+## New
+
+- Flag `--query-update-buffer-size` to control how many queries are indexed at once
+
+## Fixed
+
+- Global query parser settings are applied for queries in a file
+
 ## v2021.11.08
 
 ## New
