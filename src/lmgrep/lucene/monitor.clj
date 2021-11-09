@@ -27,10 +27,11 @@
 
 (def default-analyzer (analyzer/create {}))
 
-(defn create [field-names-w-analyzers]
+(defn create [field-names-w-analyzers options]
   (let [^MonitorConfiguration config (MonitorConfiguration.)
         per-field-analyzers (PerFieldAnalyzerWrapper. default-analyzer field-names-w-analyzers)]
     (.setIndexPath config nil monitor-query-serializer)
+    (.setQueryUpdateBufferSize config (int (get options :query-update-buffer-size 100000)))
     (Monitor. per-field-analyzers config)))
 
 (defn defer-to-one-by-one-registration [^Monitor monitor monitor-queries]
@@ -66,7 +67,7 @@
   [questionnaire default-type options custom-analyzers]
   (let [questionnaire-with-analyzers (dictionary/normalize questionnaire default-type options custom-analyzers)
         mappings-from-field-names-to-analyzers (field-name-analyzer-mappings questionnaire-with-analyzers)
-        monitor (create mappings-from-field-names-to-analyzers)]
+        monitor (create mappings-from-field-names-to-analyzers options)]
     (register-queries monitor (dictionary/get-monitor-queries questionnaire-with-analyzers))
     {:monitor     monitor
      :field-names (keys mappings-from-field-names-to-analyzers)}))

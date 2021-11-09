@@ -109,6 +109,7 @@
     :default true]
    [nil "--config-dir DIR" "A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir."]
    [nil "--analyzers-file FILE" "A file that contains definitions of text analyzers. Works in combinations with --config-dir flag."]
+   [nil "--query-update-buffer-size NUMBER" "Number of queries to be buffered in memory before being committed to the queryindex. Default 100000."]
    ["-h" "--help"]])
 
 (defn handle-args [args]
