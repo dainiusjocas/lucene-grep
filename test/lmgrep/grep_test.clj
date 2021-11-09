@@ -137,6 +137,35 @@
                           (with-out-str
                             (grep/grep queries nil nil options))))))))
 
+(deftest global-query-parser-setting
+  (testing "with classic query parser fails"
+    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+          queries []
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :queries-file "test/resources/problematic-queries.json"}]
+      (is (thrown? Exception
+                   (with-in-str text-from-stdin
+                                (str/trim
+                                  (with-out-str
+                                    (grep/grep queries nil nil options))))))))
+  (testing "with simple query parser it works"
+    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+          queries []
+          options {:split true
+                   :pre-tags ">"
+                   :post-tags "<"
+                   :template "{{highlighted-line}}"
+                   :query-parser "simple"
+                   :queries-file "test/resources/problematic-queries.json"}]
+      (is (= "The quick brown >fox< jumps over the lazy >dog<"
+                   (with-in-str text-from-stdin
+                                (str/trim
+                                  (with-out-str
+                                    (grep/grep queries nil nil options)))))))))
+
 (deftest grepping-multiple-queries-from-file-options
   (testing "options text analysis is injected into dictionary entry if not present"
     (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")

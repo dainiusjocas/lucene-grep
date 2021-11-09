@@ -85,7 +85,10 @@
     (->> questionnaire
          indexed
          (r/map (fn [questionnaire-entry]
-                  (prepare-query-entry questionnaire-entry default-type global-analysis-conf custom-analyzers)))
+                  (prepare-query-entry (assoc questionnaire-entry
+                                         :query-parser (get options :query-parser)
+                                         :query-parser-conf (get options :query-parser-conf))
+                                       default-type global-analysis-conf custom-analyzers)))
          (r/foldcat))))
 
 (defn get-monitor-queries
