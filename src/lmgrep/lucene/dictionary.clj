@@ -73,6 +73,16 @@
              (conj acc (update (nth entries 0) :id #(or % (str index)))))
       acc)))
 
+(defn handle-query-parser-settings [questionnaire-entry options]
+  (if (get questionnaire-entry :query-parser)
+    questionnaire-entry
+    (if (get questionnaire-entry :query-parser-conf)
+      (assoc questionnaire-entry
+       :query-parser (get options :query-parser))
+      (assoc questionnaire-entry
+        :query-parser (get options :query-parser)
+        :query-parser-conf (get options :query-parser-conf)))))
+
 (defn normalize
   "With global analysis configuration for each query:
   - add ID if missing;
@@ -85,7 +95,8 @@
     (->> questionnaire
          indexed
          (r/map (fn [questionnaire-entry]
-                  (prepare-query-entry questionnaire-entry default-type global-analysis-conf custom-analyzers)))
+                  (prepare-query-entry (handle-query-parser-settings questionnaire-entry options)
+                                       default-type global-analysis-conf custom-analyzers)))
          (r/foldcat))))
 
 (defn get-monitor-queries

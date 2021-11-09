@@ -1,0 +1,9 @@
+[
+  {
+    "query": "AND fox",
+    "meta": {"foo": "bar"}
+  },
+  {
+    "query": "dog AND"
+  }
+]
