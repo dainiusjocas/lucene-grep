@@ -34,7 +34,6 @@ RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.
 COPY deps.edn /usr/src/app/
 RUN clojure -P && clojure -P -M:uberjar
 COPY src/ /usr/src/app/src
-COPY docs/ /usr/src/app/docs
 COPY test/ /usr/src/app/test
 COPY graalvm/ /usr/src/app/graalvm
 COPY resources/ /usr/src/app/resources
