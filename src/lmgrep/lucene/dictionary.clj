@@ -61,24 +61,12 @@
       monitor-analyzer
       (query->monitor-query (ensure-type questionnaire-entry default-type) field-name monitor-analyzer))))
 
-(defn indexed
-  "Iterate over all entries and add sequence number as ID if ID is missing."
-  [questionnaire]
-  (loop [index 0
-         entries questionnaire
-         acc []]
-    (if entries
-      (recur (inc index)
-             (next entries)
-             (conj acc (update (nth entries 0) :id #(or % (str index)))))
-      acc)))
-
 (defn handle-query-parser-settings [questionnaire-entry options]
   (if (get questionnaire-entry :query-parser)
     questionnaire-entry
     (if (get questionnaire-entry :query-parser-conf)
       (assoc questionnaire-entry
-       :query-parser (get options :query-parser))
+        :query-parser (get options :query-parser))
       (assoc questionnaire-entry
         :query-parser (get options :query-parser)
         :query-parser-conf (get options :query-parser-conf)))))
@@ -93,7 +81,10 @@
   (let [global-analysis-conf (assoc (ac/prepare-analysis-configuration ac/default-text-analysis options)
                                :config-dir (get options :config-dir))]
     (->> questionnaire
-         indexed
+         (r/map (fn [questionnaire-entry]
+                  (if (get questionnaire-entry :id)
+                    questionnaire-entry
+                    (assoc questionnaire-entry :id (str (Math/abs ^int (.hashCode questionnaire-entry)))))))
          (r/map (fn [questionnaire-entry]
                   (prepare-query-entry (handle-query-parser-settings questionnaire-entry options)
                                        default-type global-analysis-conf custom-analyzers)))

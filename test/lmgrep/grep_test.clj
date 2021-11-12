@@ -40,7 +40,7 @@
     (is (= {:line-number 1
             :line        text-from-stdin
             :highlights  [{:type          "QUERY"
-                           :dict-entry-id "0"
+                           :dict-entry-id "1044772177"
                            :meta          {}
                            :begin-offset  16
                            :end-offset    19
@@ -56,7 +56,7 @@
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
         options {:format :json :with-details true :with-score true}]
-    (is (= {:highlights  [{:dict-entry-id "0"
+    (is (= {:highlights  [{:dict-entry-id "1044772177"
                            :meta          {}
                            :query         "fox"
                            :score         0.13076457
@@ -76,7 +76,7 @@
         query "fox"
         options {:format :json :with-details true :with-scored-highlights true}]
     (is (= {:highlights  [{:begin-offset  16
-                           :dict-entry-id "0"
+                           :dict-entry-id "1044772177"
                            :end-offset    19
                            :meta          {}
                            :query         "fox"
@@ -97,7 +97,7 @@
           query "fxo~2"
           options {:format :json :with-details true :with-scored-highlights true}]
       (is (= {:highlights  [{:begin-offset  16
-                             :dict-entry-id "0"
+                             :dict-entry-id "1081731735"
                              :end-offset    19
                              :meta          {}
                              :query         "fxo~2"
@@ -196,13 +196,13 @@
                    :with-details true
                    :queries-file "test/resources/queries.json"}]
       (is (= {:highlights  [{:begin-offset  16
-                             :dict-entry-id "0"
+                             :dict-entry-id "1372536417"
                              :end-offset    19
                              :meta          {:foo "bar"}
                              :query         "fox"
                              :type          "QUERY"}
                             {:begin-offset  40
-                             :dict-entry-id "1"
+                             :dict-entry-id "601069600"
                              :end-offset    43
                              :meta          {}
                              :query         "dog"
@@ -479,13 +479,13 @@
                  :with-details true
                  :queries-file "test/resources/queries-query-parsers.json"}]
     (is (= {:highlights  [{:begin-offset  0
-                           :dict-entry-id "1"
+                           :dict-entry-id "930149941"
                            :end-offset    4
                            :meta          {}
                            :query         "3N(joh*, peters*)"
                            :type          "QUERY"}
                           {:begin-offset  9
-                           :dict-entry-id "1"
+                           :dict-entry-id "930149941"
                            :end-offset    17
                            :meta          {}
                            :query         "3N(joh*, peters*)"
