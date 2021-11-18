@@ -13,17 +13,17 @@
 (def monitor-query-serializer
   (reify MonitorQuerySerializer
     (serialize [_ query]
-      (BytesRef.
-        (json/write-value-as-string
-          {"query-id" (.getId query)
-           "query"    (.getQueryString query)
-           "metadata" (.getMetadata query)})))
+      (BytesRef. ^bytes
+        (json/write-value-as-bytes
+          [(.getId query)
+           (.getQueryString query)
+           (.getMetadata query)])))
     (deserialize [_ binary-value]
       (let [dq (json/read-value (io/reader (.bytes ^BytesRef binary-value)))]
-        (MonitorQuery. (get dq "query-id")
+        (MonitorQuery. (.nth ^Indexed dq 0)
                        (MatchAllDocsQuery.)
-                       (get dq "query")
-                       (get dq "metadata"))))))
+                       (.nth ^Indexed dq 1)
+                       (.nth ^Indexed dq 2))))))
 
 (def default-analyzer (analyzer/create {}))
 
