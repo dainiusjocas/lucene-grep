@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### Fixed/enhanced
+
+- Update Lucene to 8.11.0
+
 ## v2021.11.09
 
 ## New
