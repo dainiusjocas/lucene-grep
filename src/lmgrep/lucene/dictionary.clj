@@ -8,7 +8,8 @@
   (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
-           (org.apache.lucene.analysis Analyzer)))
+           (org.apache.lucene.analysis Analyzer)
+           (clojure.lang PersistentArrayMap)))
 
 (defn prepare-metadata
   "Metadata must be a map String->String"
@@ -84,7 +85,7 @@
          (r/map (fn [questionnaire-entry]
                   (if (get questionnaire-entry :id)
                     questionnaire-entry
-                    (assoc questionnaire-entry :id (str (Math/abs ^int (.hashCode questionnaire-entry)))))))
+                    (assoc questionnaire-entry :id (str (Math/abs ^int (.hashCode ^PersistentArrayMap questionnaire-entry)))))))
          (r/map (fn [questionnaire-entry]
                   (prepare-query-entry (handle-query-parser-settings questionnaire-entry options)
                                        default-type global-analysis-conf custom-analyzers)))

@@ -34,13 +34,15 @@
            (org.apache.lucene.analysis.pt PortugueseAnalyzer)
            (org.apache.lucene.analysis.ro RomanianAnalyzer)
            (org.apache.lucene.analysis.ru RussianAnalyzer)
-           (org.apache.lucene.analysis.standard ClassicAnalyzer UAX29URLEmailAnalyzer StandardAnalyzer)
+           (org.apache.lucene.analysis.standard StandardAnalyzer)
            (org.apache.lucene.analysis.sv SwedishAnalyzer)
            (org.apache.lucene.analysis.th ThaiAnalyzer)
            (org.apache.lucene.analysis.tr TurkishAnalyzer)
            (org.apache.lucene.analysis.en EnglishAnalyzer)
            (org.apache.lucene.analysis.pl PolishAnalyzer)
-           (org.apache.lucene.collation CollationKeyAnalyzer)))
+           (org.apache.lucene.collation CollationKeyAnalyzer)
+           (org.apache.lucene.analysis.classic ClassicAnalyzer)
+           (org.apache.lucene.analysis.email UAX29URLEmailAnalyzer)))
 
 (def analyzers
   {"ArabicAnalyzer"            (ArabicAnalyzer.)
