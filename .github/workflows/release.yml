@@ -67,7 +67,7 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1029
+          tools-deps: 1.10.3.1040
 
       - name: Compile uberjar
         run: |
@@ -142,8 +142,8 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1029
-          cli: 1.10.3.1029
+          tools-deps: 1.10.3.1040
+          cli: 1.10.3.1040
 
       - name: Compile uberjar on windows
         if: ${{ matrix.os == 'windows-latest' }}
