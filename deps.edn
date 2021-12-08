@@ -1,17 +1,20 @@
 {:paths
  ["src" "resources"]
  :deps
- {org.clojure/clojure                        {:mvn/version "1.10.3"}
-  org.clojure/tools.cli                      {:mvn/version "1.0.206"}
-  org.clojure/tools.logging                  {:mvn/version "1.1.0"}
-  org.clojure/core.async                     {:mvn/version "1.4.627"}
-  org.apache.lucene/lucene-core              {:mvn/version "8.11.0"}
-  org.apache.lucene/lucene-monitor           {:mvn/version "8.11.0"}
-  org.apache.lucene/lucene-analyzers-stempel {:mvn/version "8.11.0"}
-  metosin/jsonista                           {:mvn/version "0.3.4"}
-  lt.jocas/lucene-monitor-helpers            {:mvn/version "0.1.7"}
-  babashka/fs                                {:mvn/version "0.1.1"}
-  io.quarkiverse.lucene/quarkus-lucene       {:mvn/version "0.3"}}
+ {org.clojure/clojure                       {:mvn/version "1.10.3"}
+  org.clojure/tools.cli                     {:mvn/version "1.0.206"}
+  org.clojure/tools.logging                 {:mvn/version "1.1.0"}
+  org.clojure/core.async                    {:mvn/version "1.4.627"}
+  org.apache.lucene/lucene-core             {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-monitor          {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-analysis-stempel {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-queries          {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-queryparser      {:mvn/version "9.0.0"}
+  metosin/jsonista                          {:mvn/version "0.3.4"}
+  lt.jocas/lucene-monitor-helpers           {:mvn/version "0.2.0"}
+  babashka/fs                               {:mvn/version "0.1.1"}
+  io.quarkiverse.lucene/quarkus-lucene      {:mvn/version "0.3"
+                                             :exclusions [org.apache.lucene/lucene-analyzers-common]}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
