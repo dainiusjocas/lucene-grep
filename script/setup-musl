@@ -16,7 +16,7 @@ mkdir "$MUSL_DIR" || true
 
 cd "$MUSL_DIR"
 
-wget http://musl.cc/x86_64-linux-musl-native.tgz
+wget https://github.com/dainiusjocas/dainiusjocas.github.io/releases/download/musl-graavm/x86_64-linux-musl-native.tgz
 
 tar zxvf x86_64-linux-musl-native.tgz
 
