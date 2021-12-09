@@ -4,9 +4,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2021.12.09
+
 ### Fixed/enhanced
 
-- Update Lucene to 8.11.0
+- Update Lucene to 9.0.0
+- Workaround for the Linux static image compilation
 
 ## v2021.11.09
 
