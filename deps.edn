@@ -3,7 +3,7 @@
  :deps
  {org.clojure/clojure                       {:mvn/version "1.10.3"}
   org.clojure/tools.cli                     {:mvn/version "1.0.206"}
-  org.clojure/tools.logging                 {:mvn/version "1.1.0"}
+  org.clojure/tools.logging                 {:mvn/version "1.2.1"}
   org.clojure/core.async                    {:mvn/version "1.5.644"}
   org.apache.lucene/lucene-core             {:mvn/version "9.0.0"}
   org.apache.lucene/lucene-monitor          {:mvn/version "9.0.0"}
@@ -18,7 +18,7 @@
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.12.1084"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.12.1090"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -26,7 +26,7 @@
   :test
   {:extra-paths ["test" "test/resources"]
    :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha     "dd6da11611eeb87f08780a30ac8ea6012d4c05ce"}}
+                                            :sha     "cc75980b43011773162b485f46f939dc5fba91e4"}}
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
