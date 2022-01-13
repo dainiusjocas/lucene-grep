@@ -1,7 +1,7 @@
 (ns lmgrep.cli
   (:require [clojure.tools.cli :as cli]
             [lmgrep.cli.parser :as parser]
-            [lmgrep.lucene.analysis-conf :as ac]))
+            [lmgrep.cli.analysis-conf :as ac]))
 
 (defn handle-args [args]
   (let [opts (cli/parse-opts args parser/cli-options)]

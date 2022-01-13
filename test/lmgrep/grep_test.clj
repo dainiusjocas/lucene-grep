@@ -171,7 +171,7 @@
     (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")
           queries []
           options {:split           true
-                   :case-sensitive? true
+                   :analysis {:token-filters []}
                    :pre-tags        ">"
                    :post-tags       "<"
                    :template        "{{highlighted-line}}"
@@ -189,11 +189,12 @@
 
 (deftest grepping-multiple-queries-from-file-with-meta
   (testing "options text analysis is injected into dictionary entry if not present"
-    (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")
+    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
           queries []
           options {:split        true
                    :format       :json
                    :with-details true
+                   :analysis {:token-filters [{:name "lowercase"}]}
                    :queries-file "test/resources/queries.json"}]
       (is (= {:highlights  [{:begin-offset  16
                              :dict-entry-id "1372536417"
@@ -207,7 +208,7 @@
                              :meta          {}
                              :query         "dog"
                              :type          "QUERY"}]
-              :line        "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"
+              :line        "The quick brown fox jumps over the lazy dog"
               :line-number 1}
              (json-decode
                (with-in-str text-from-stdin
@@ -390,7 +391,7 @@
                    :pre-tags ">"
                    :post-tags "<"
                    :template "{{highlighted-line}}"
-                   :stem? false
+                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">nike< and >adidas<"
              (with-in-str text-from-stdin
@@ -419,7 +420,7 @@
                    :pre-tags ">"
                    :post-tags "<"
                    :template "{{highlighted-line}}"
-                   :stem? false
+                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas< and >nike<"
              (with-in-str text-from-stdin
@@ -434,7 +435,7 @@
                    :pre-tags ">"
                    :post-tags "<"
                    :template "{{highlighted-line}}"
-                   :stem? false
+                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas< and >nikon<"
              (with-in-str text-from-stdin
@@ -447,7 +448,7 @@
                    :pre-tags ">"
                    :post-tags "<"
                    :template "{{highlighted-line}}"
-                   :stem? false
+                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adibas< and >nikon<"
              (with-in-str text-from-stdin
@@ -463,7 +464,8 @@
                    :post-tags "<"
                    :template "{{highlighted-line}}"
                    :stem? false
-                   :tokenizer :keyword
+                   :analysis {:tokenizer {:name "keyword"}
+                              :token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas foos<"
              (with-in-str text-from-stdin

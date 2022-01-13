@@ -1,6 +1,6 @@
 (ns lmgrep.lucene.dictionary-test
   (:require [clojure.test :refer [deftest is testing]]
-            [lmgrep.lucene.analysis-conf :as dict]))
+            [lmgrep.cli.analysis-conf :as dict]))
 
 (deftest merge-default-with-global
   (let [acm dict/default-text-analysis]
