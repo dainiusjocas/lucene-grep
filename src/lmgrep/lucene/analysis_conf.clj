@@ -54,7 +54,11 @@
       :tokenizer tokenizer
       :token-filters token-filters)))
 
-(defn prepare-analysis-configuration [default-text-analysis options]
+(defn prepare-analysis-configuration
+  "When analysis key is not provided then construct analysis config
+  by overriding default-text-analysis with provided analysis-flags if any.
+  Given the default text analysis config appl"
+  [default-text-analysis options]
   (if (empty? (get options :analysis))
     (let [analysis-flags (select-keys options analysis-keys)]
       (if (empty? analysis-flags)

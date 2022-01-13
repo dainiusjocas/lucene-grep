@@ -1,7 +1,8 @@
 (ns lmgrep.lucene-test
   (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.formatter :as formatter]
-            [lmgrep.lucene :as lucene]))
+            [lmgrep.lucene :as lucene]
+            [lmgrep.lucene.analysis-conf :as ac]))
 
 (deftest highlighting-test
   (testing "coloring the output"
@@ -23,14 +24,15 @@
   (testing "word delimiter"
     (let [text "foo text bar BestClass fooo name"
           query "best class"
-          dictionary [{:query                       query
-                       :id                          "0"
-                       :case-sensitive?             false
-                       :ascii-fold?                 true
-                       :stem?                       true
-                       :tokenizer                   :standard
-                       :stemmer                     :english
-                       :word-delimiter-graph-filter (+ 1 2 32 64)}]]
+          conf {:query                       query
+                :id                          "0"
+                :case-sensitive?             false
+                :ascii-fold?                 true
+                :stem?                       true
+                :tokenizer                   :standard
+                :stemmer                     :english
+                :word-delimiter-graph-filter (+ 1 2 32 64)}
+          dictionary [(assoc conf :analysis (ac/prepare-analysis-configuration ac/default-text-analysis conf))]]
       (is (= [{:begin-offset  13
                :dict-entry-id "0"
                :end-offset    17

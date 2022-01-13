@@ -3,7 +3,10 @@
             [lmgrep.cli :as cli]))
 
 (def default-options
-  {:analysis               {}
+  {:analysis               {:token-filters [{:name "lowercase"}
+                                            {:name "asciifolding"}
+                                            {:name "englishMinimalStem"}]
+                            :tokenizer     {:name "standard"}}
    :hyperlink              false
    :only-analyze           false
    :skip-binary-files      false

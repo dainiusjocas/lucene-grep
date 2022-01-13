@@ -53,8 +53,10 @@
 
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf custom-analyzers]
-  (let [analysis-conf (assoc (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
-                        :config-dir (get global-analysis-conf :config-dir))
+  (let [analysis-conf (if (empty? (get questionnaire-entry :analysis))
+                        global-analysis-conf
+                        (assoc (get questionnaire-entry :analysis)
+                          :config-dir (get global-analysis-conf :config-dir)))
         field-name (get-field-name analysis-conf)
         monitor-analyzer (get-string-analyzer analysis-conf custom-analyzers)]
     (Dict.
