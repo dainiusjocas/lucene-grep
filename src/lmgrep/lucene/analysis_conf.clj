@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analysis-conf
-  (:require [lmgrep.lucene.analysis-components :as ac]))
+  (:require [clojure.tools.logging :as log]
+            [lmgrep.lucene.analysis-components :as ac]))
 
 (def analysis-keys #{:case-sensitive?
                      :ascii-fold?
@@ -23,10 +24,17 @@
            (false? (get flags :stem?))
            (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name)))))
            (keyword? (keyword (get flags :stemmer)))
-           ((fn [tfs]
-              (conj (into [] (remove (fn [tf] (re-matches #".*[Ss]tem.*" (name (get tf :name))))
-                                     tfs))
-                    {:name (ac/stemmer (keyword (get flags :stemmer)))})))
+           ((fn [token-filters]
+              (conj (into [] (remove (fn [token-filter]
+                                       (re-matches #".*[Ss]tem.*" (name (get token-filter :name))))
+                                     token-filters))
+                    {:name (let [stemmer-kw (keyword (get flags :stemmer))]
+                             (get ac/stemmer
+                                  stemmer-kw
+                                  (do
+                                    (when stemmer-kw
+                                      (log/debugf "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw))
+                                    "englishMinimalStem")))})))
            (pos-int? (get flags :word-delimiter-graph-filter))
            (cons {:name "worddelimitergraph"
                   :args (ac/wdgf->token-filter-args
@@ -34,7 +42,12 @@
 
 (defn override-acm [acm flags]
   (let [tokenizer (or (when-let [tokenizer-kw (get flags :tokenizer)]
-                        (ac/tokenizer tokenizer-kw))
+                        (get ac/tokenizer
+                             tokenizer-kw
+                             (do
+                               (when tokenizer-kw
+                                 (log/debugf "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw))
+                               {:name "standard"})))
                       (:tokenizer acm))
         token-filters (override-token-filters (get acm :token-filters) flags)]
     (assoc acm
