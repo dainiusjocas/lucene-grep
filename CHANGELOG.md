@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## Fixed/enhanced
+
+- Update to Java 17
+
 ## v2021.12.09
 
 ### Fixed/enhanced
