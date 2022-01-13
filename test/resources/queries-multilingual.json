@@ -2,11 +2,19 @@
   {
     "id": "german_language",
     "query": "doggies",
-    "stemmer": "german"
+    "analysis": {
+      "analyzer": {
+        "name": "German"
+      }
+    }
   },
   {
     "id": "english_language",
     "query": "doggies",
-    "stemmer": "english"
+    "analysis": {
+      "analyzer": {
+        "name": "English"
+      }
+    }
   }
 ]
