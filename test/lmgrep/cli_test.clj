@@ -2,21 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.cli :as cli]))
 
-(def default-options
-  {:analysis               {:token-filters [{:name "lowercase"}
-                                            {:name "asciifolding"}
-                                            {:name "englishMinimalStem"}]
-                            :tokenizer     {:name "standard"}}
-   :hyperlink              false
-   :only-analyze           false
-   :skip-binary-files      false
-   :split                  true
-   :with-details           false
-   :with-empty-lines       false
-   :with-scored-highlights false
-   :concurrency            8
-   :hidden                 true
-   :preserve-order         true})
+(def default-options (:options (cli/handle-args [])))
 
 (deftest args-handling
   (testing "positional arguments"
