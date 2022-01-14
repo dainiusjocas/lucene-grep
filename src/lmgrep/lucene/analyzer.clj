@@ -1,7 +1,6 @@
 (ns lmgrep.lucene.analyzer
   (:require [clojure.string :as str]
-            [lmgrep.features :as features]
-            [lmgrep.lucene.predefined-analyzers :as lucene.predefined])
+            [lmgrep.features :as features])
   (:import (java.util HashMap Map)
            (java.io File)
            (java.nio.file Path)
@@ -37,12 +36,6 @@
   (cond-> default-token-filters
           features/raudikko? (assoc (namify "raudikko")
                                     (import 'org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory))))
-
-(def analyzers
-  (reduce (fn [acc [analyzer-name analyzer-class]]
-            (assoc acc (namify (str/replace analyzer-name "Analyzer" "")) analyzer-class))
-          {}
-          lucene.predefined/analyzers))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
@@ -84,19 +77,24 @@
 
      (.build builder))))
 
+(defn get-analyzer [analyzer-name custom-analyzers]
+  (if-let [custom-analyzer (get custom-analyzers (namify (str/replace analyzer-name "Analyzer" "")))]
+    custom-analyzer
+    (throw
+      (Exception.
+        (format "%s '%s' is not available. Choose one of: %s"
+                Analyzer
+                analyzer-name
+                (sort (keys custom-analyzers)))))))
+
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
   ([opts] (create opts {}))
   ([{:keys [analyzer] :as opts} custom-analyzers]
    (try
-     (let [analyzer-name (get analyzer :name)]
-       (or
-        (get custom-analyzers analyzer-name)
-        (when analyzer-name
-          (get-component-or-exception analyzers
-                                      (namify (str/replace analyzer-name "Analyzer" ""))
-                                      "Analyzer"))
-        (custom-analyzer opts)))
+     (if-let [analyzer-name (get analyzer :name)]
+       (get-analyzer analyzer-name custom-analyzers)
+       (custom-analyzer opts))
      (catch Exception e
        (when (System/getenv "DEBUG_MODE")
          (.printStackTrace e))

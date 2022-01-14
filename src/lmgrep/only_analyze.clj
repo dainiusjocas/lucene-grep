@@ -125,8 +125,7 @@
         print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
-        analysis-conf (assoc (get options :analysis)
-                        :config-dir (get options :config-dir))
+        analysis-conf (assoc (get options :analysis) :config-dir (get options :config-dir))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
                       text-analysis/text->token-strings)
@@ -134,9 +133,7 @@
                            (into (fs/get-files files-pattern options)
                                  (fs/filter-files files))
                            [nil])
-        custom-analyzers (analysis/read-analysis-conf-from-file
-                           (get options :analyzers-file)
-                           options)
+        custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         ^Analyzer analyzer (analyzer/create analysis-conf custom-analyzers)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))]
     (doseq [path files-to-analyze]

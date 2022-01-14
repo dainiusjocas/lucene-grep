@@ -98,9 +98,7 @@
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
         reader-buffer-size (get options :reader-buffer-size (* 2 1024 8192))
-        custom-analyzers (analysis/read-analysis-conf-from-file
-                           (get options :analyzers-file)
-                           options)
+        custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)]
     (if files-pattern
       (doseq [^String path (into (fs/get-files files-pattern options)
