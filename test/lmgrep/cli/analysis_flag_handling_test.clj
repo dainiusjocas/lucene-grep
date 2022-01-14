@@ -1,4 +1,4 @@
-(ns lmgrep.lucene.dictionary-test
+(ns lmgrep.cli.analysis-flag-handling-test
   (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.cli.analysis-conf :as dict]))
 
