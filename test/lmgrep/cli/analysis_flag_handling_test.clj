@@ -1,6 +1,6 @@
-(ns lmgrep.lucene.dictionary-test
+(ns lmgrep.cli.analysis-flag-handling-test
   (:require [clojure.test :refer [deftest is testing]]
-            [lmgrep.lucene.analysis-conf :as dict]))
+            [lmgrep.cli.analysis-conf :as dict]))
 
 (deftest merge-default-with-global
   (let [acm dict/default-text-analysis]
@@ -82,27 +82,27 @@
                (dict/override-acm acm flags)))))))
 
 (deftest merge-acl-with-flags
-  (let [acm {}]
+  (let [analysis-components-map {}]
     (testing ":stemmer :german is in token filters list"
       (let [flags {:stemmer :german}]
         (is (= {:token-filters [{:name "germanstem"}]
                 :tokenizer     nil}
-               (dict/prepare-analysis-configuration acm flags)))))
+               (dict/prepare-analysis-configuration analysis-components-map flags)))))
 
     (testing "tokenizer from flags ACM with over a flag"
       (let [flags {:analysis  {:tokenizer {:name "whitespace"}}
                    :tokenizer :standard}]
         (is (= {:tokenizer     {:name "whitespace"}}
-               (dict/prepare-analysis-configuration acm flags)))))
+               (dict/prepare-analysis-configuration analysis-components-map flags)))))
 
     (testing "tokenizer from flags ACM with over a flag"
       (let [flags {:analysis  {:token-filters [{:name "englishMinimalStem"}]}
                    :tokenizer :whitespace}]
         (is (= {:token-filters [{:name "englishMinimalStem"}]}
-               (dict/prepare-analysis-configuration acm flags)))))
+               (dict/prepare-analysis-configuration analysis-components-map flags)))))
 
     (testing ":stemmer :english is in the token filters list"
       (let [flags {:analysis {:token-filters [{:name "englishMinimalStem"}]}
                    :stemmer :german}]
         (is (= {:token-filters [{:name "englishMinimalStem"}]}
-               (dict/prepare-analysis-configuration acm flags)))))))
+               (dict/prepare-analysis-configuration analysis-components-map flags)))))))

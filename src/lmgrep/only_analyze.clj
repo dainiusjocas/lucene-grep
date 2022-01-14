@@ -4,7 +4,6 @@
             [jsonista.core :as json]
             [lmgrep.analysis :as analysis]
             [lmgrep.fs :as fs]
-            [lmgrep.lucene.analysis-conf :as ac]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
@@ -126,7 +125,7 @@
         print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
-        analysis-conf (assoc (ac/prepare-analysis-configuration ac/default-text-analysis options)
+        analysis-conf (assoc (get options :analysis)
                         :config-dir (get options :config-dir))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens

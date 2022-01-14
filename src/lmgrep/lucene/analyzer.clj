@@ -8,8 +8,6 @@
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis Analyzer TokenizerFactory CharFilterFactory TokenFilterFactory)))
 
-; https://lucene.apache.org/core/8_8_0/analyzers-common/constant-values.html#org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_WORD_PARTS
-
 (set! *warn-on-reflection* true)
 
 (defn namify

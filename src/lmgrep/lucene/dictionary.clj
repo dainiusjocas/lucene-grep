@@ -3,8 +3,7 @@
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.field-name :as field-name]
             [lmgrep.lucene.query :as q]
-            [lmgrep.lucene.query-parser :as query-parser]
-            [lmgrep.lucene.analysis-conf :as ac])
+            [lmgrep.lucene.query-parser :as query-parser])
   (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
@@ -53,8 +52,10 @@
 
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf custom-analyzers]
-  (let [analysis-conf (assoc (ac/prepare-analysis-configuration global-analysis-conf questionnaire-entry)
-                        :config-dir (get global-analysis-conf :config-dir))
+  (let [analysis-conf (if (empty? (get questionnaire-entry :analysis))
+                        global-analysis-conf
+                        (assoc (get questionnaire-entry :analysis)
+                          :config-dir (get global-analysis-conf :config-dir)))
         field-name (get-field-name analysis-conf)
         monitor-analyzer (get-string-analyzer analysis-conf custom-analyzers)]
     (Dict.
@@ -79,7 +80,7 @@
   - construct analyzer;
   - construct Lucene MonitorQuery object."
   [questionnaire default-type options custom-analyzers]
-  (let [global-analysis-conf (assoc (ac/prepare-analysis-configuration ac/default-text-analysis options)
+  (let [global-analysis-conf (assoc (get options :analysis)
                                :config-dir (get options :config-dir))]
     (->> questionnaire
          (r/map (fn [questionnaire-entry]
