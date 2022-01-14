@@ -222,6 +222,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- queries file entries no longer support these keys: 
+`[:case-sensitive? :ascii-fold? :stem? :tokenizer :stemmer :word-delimiter-graph-filter]`
+
 ## v2021.05.02
 
 - removed `synonym` token filter, because deprecated and required a patch.
