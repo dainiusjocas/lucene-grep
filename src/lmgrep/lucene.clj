@@ -15,9 +15,4 @@
 
 (comment
   ((highlighter [{:query "text"}] {}) "foo text bar")
-
-  ((highlighter [{:query "best class"
-                  :case-sensitive? false
-                  :word-delimiter-graph-filter (+ 1 2 32 64)}] {}) "foo text bar BestClass fooo name")
-
   ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true}))
