@@ -1,26 +1,30 @@
 (ns lmgrep.lucene.analysis-test
   (:require [clojure.test :refer [deftest testing is]]
             [clojure.string :as str]
+            [jsonista.core :as json]
             [lmgrep.lucene.analyzer :as analysis]
             [lmgrep.lucene.text-analysis :as ta]
-            [jsonista.core :as json]))
+            [lmgrep.predefined-analyzers :as predefined]))
+
+(defn with-analyzers [opts]
+  (analysis/create opts predefined/analyzers))
 
 (deftest predefined-analyzers
   (let [text "The brown foxes"
-        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+        analyzer (with-analyzers {:analyzer {:name "EnglishAnalyzer"}})]
     (is (= ["brown" "fox"] (ta/text->token-strings text analyzer))))
   (let [text "The brown foxes"
-        analyzer (analysis/create {:analyzer {:name "CollationKeyAnalyzer"}})]
+        analyzer (with-analyzers {:analyzer {:name "CollationKeyAnalyzer"}})]
     (is (= ["The brown foxes"] (ta/text->token-strings text analyzer)))))
 
 (deftest graph-from-token-stream
   (let [text "The brown foxes"
-        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+        analyzer (with-analyzers {:analyzer {:name "EnglishAnalyzer"}})]
     (is (string? (ta/text->graph text analyzer)))))
 
 (deftest detailed-analysis
   (let [text "The brown foxes"
-        analyzer (analysis/create {:analyzer {:name "EnglishAnalyzer"}})]
+        analyzer (with-analyzers {:analyzer {:name "EnglishAnalyzer"}})]
     (is (= [{:end_offset     9
              :position       0
              :positionLength 1
@@ -125,11 +129,11 @@
 
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
-        analyzer-names (keys analysis/analyzers)]
+        analyzer-names (keys predefined/analyzers)]
     (is (seq analyzer-names))
     (doseq [an analyzer-names]
       (try
-        (let [analyzer (analysis/create {:analyzer {:name an}})]
+        (let [analyzer (with-analyzers {:analyzer {:name an}})]
           (is (seq (ta/text->token-strings text analyzer)))
           (spit (format "test/resources/binary/analyzers/%s.json" an)
                 (json/write-value-as-string {:analyzer {:name an}})))

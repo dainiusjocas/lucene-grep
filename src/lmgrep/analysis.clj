@@ -1,7 +1,8 @@
 (ns lmgrep.analysis
   (:require [clojure.java.io :as io]
             [jsonista.core :as json]
-            [lmgrep.lucene.analyzer :as analyzer])
+            [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.predefined-analyzers :as predefined])
   (:import (java.io File)))
 
 (defn create-analyzers [conf options]
@@ -35,3 +36,7 @@
           (create-analyzers conf options))
         (throw (Exception. (format "Analysis configuration file '%s' doesn't exist." file-path)))))
     {}))
+
+(defn prepare-analyzers [^String file-path options]
+  (merge predefined/analyzers
+         (read-analysis-conf-from-file file-path options)))
