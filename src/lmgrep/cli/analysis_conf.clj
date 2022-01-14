@@ -52,7 +52,8 @@
    :whitespace {:name "whitespace" :args {:rule "java"}}})
 
 (defn wdgf->token-filter-args
-  "wdgf stands for Word Delimiter Graph Filter"
+  "wdgf stands for Word Delimiter Graph Filter
+  https://lucene.apache.org/core/8_8_0/analyzers-common/constant-values.html#org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_WORD_PARTS"
   [wdgf]
   (when (pos-int? wdgf)
     (cond-> {}
