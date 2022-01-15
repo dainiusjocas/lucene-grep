@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest testing is]]
             [clojure.string :as str]
             [jsonista.core :as json]
+            [lmgrep.features]
             [lmgrep.lucene.analyzer :as analysis]
             [lmgrep.lucene.text-analysis :as ta]
             [lmgrep.predefined-analyzers :as predefined]))
@@ -122,10 +123,11 @@
                                                            "splitOnCaseChange" 1}}]})]
     (is (= ["TestClass" "Test" "Class"] (ta/text->token-strings text analyzer)))))
 
-(deftest lithuanian-snowball-stemmer-token-filter-factory
-  (let [text "lietus lyja"
-        analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
-    (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer)))))
+(when lmgrep.features/snowball?
+ (deftest lithuanian-snowball-stemmer-token-filter-factory
+   (let [text "lietus lyja"
+         analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
+     (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer))))))
 
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
