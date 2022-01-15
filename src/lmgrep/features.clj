@@ -2,3 +2,4 @@
 
 ;; excluded by default
 (def raudikko? (= "true" (System/getenv "LMGREP_FEATURE_RAUDIKKO")))
+(def snowball? (= "true" (System/getenv "LMGREP_FEATURE_SNOWBALL")))
