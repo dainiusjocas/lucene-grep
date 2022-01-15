@@ -38,4 +38,7 @@
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot true}}
   :raudikko
-  {:extra-deps {lmgrep/raudikko {:local/root "./raudikko"}}}}}
+  {:extra-deps {lmgrep/raudikko {:local/root "./raudikko"}}}
+  :build
+  {:deps       {io.github.clojure/tools.build {:tag "v0.7.5" :sha "34727f7"}}
+   :ns-default build}}}

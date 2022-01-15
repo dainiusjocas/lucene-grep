@@ -4,7 +4,7 @@ pom.xml:
 
 .PHONY: deps-prep
 deps-prep:
-	clojure -Xdeps prep :force true
+	clojure -T:build prep-deps
 
 .PHONY: uberjar
 uberjar: deps-prep pom.xml
