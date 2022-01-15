@@ -32,4 +32,4 @@ jobs:
       - name: Unit Tests
         run: |
           clojure -T:build prep-deps
-          clojure -A:dev:raudikko:test
+          clojure -M:dev:raudikko:test
