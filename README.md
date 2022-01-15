@@ -601,6 +601,6 @@ echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --g
 
 ## License
 
-Copyright &copy; 2021 [Dainius Jocas](https://www.jocas.lt).
+Copyright &copy; 2022 [Dainius Jocas](https://www.jocas.lt).
 
 Distributed under The Apache License, Version 2.0.
