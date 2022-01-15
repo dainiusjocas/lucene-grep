@@ -591,6 +591,12 @@ echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --g
 
 ## Raudikko or Voikko stemming for Finnish Language
 
+NOTE: The project is reachitected in a way that Raudikko token filter definition is in the subdirectory.
+Also, it was put under the deps.edn alias.
+However clever this change is, the uberjar builder has a hard time.
+The solution now is to modify deps.edn file so that the raudikko dependency is put under top level :deps.
+Tools build also has a hard time building an uberjar.
+
 ```shell
 (export LMGREP_FEATURE_RAUDIKKO=true && bb generate-reflection-config && make build)
 ```
@@ -601,6 +607,6 @@ echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --g
 
 ## License
 
-Copyright &copy; 2021 [Dainius Jocas](https://www.jocas.lt).
+Copyright &copy; 2022 [Dainius Jocas](https://www.jocas.lt).
 
 Distributed under The Apache License, Version 2.0.

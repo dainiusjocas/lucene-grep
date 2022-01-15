@@ -1,6 +1,5 @@
 (ns lmgrep.lucene.analyzer
-  (:require [clojure.string :as str]
-            [lmgrep.features :as features])
+  (:require [clojure.string :as str])
   (:import (java.util HashMap Map)
            (java.io File)
            (java.nio.file Path)
@@ -27,15 +26,10 @@
             (assoc acc (namify char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
-(def default-token-filters
+(def token-filter-name->class
   (reduce (fn [acc ^String token-filter-name]
             (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
           {} (TokenFilterFactory/availableTokenFilters)))
-
-(def token-filter-name->class
-  (cond-> default-token-filters
-          features/raudikko? (assoc (namify "raudikko")
-                                    (import 'org.apache.lucene.analysis.fi.RaudikkoTokenFilterFactory))))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 

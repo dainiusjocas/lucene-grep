@@ -4,9 +4,13 @@
  :tasks          {generate-reflection-config
                   {:requires ([reflection :as r])
                    :doc      "Generate config files for GraalVM native-image"
-                   :task     (do
+                   :task     (let [profiles (cond-> '("test")
+                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_RAUDIKKO"))
+                                              (conj "raudikko"))]
                                (println "Running the tests with a native image agent:")
-                               (shell "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:test")
+                               (shell (str
+                                        "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
+                                        (clojure.string/join ":" profiles)))
                                (println "Filtering Lucene classes with all their constructors:")
                                (r/gen))}
 
