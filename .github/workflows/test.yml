@@ -30,4 +30,6 @@ jobs:
           tools-deps: 1.10.3.1058
 
       - name: Unit Tests
-        run: clojure -A:dev:test
+        run: |
+          clojure -Xdeps prep :force true
+          clojure -A:dev:test
