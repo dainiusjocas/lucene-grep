@@ -12,6 +12,7 @@
   org.apache.lucene/lucene-queryparser      {:mvn/version "9.0.0"}
   metosin/jsonista                          {:mvn/version "0.3.5"}
   lt.jocas/lucene-monitor-helpers           {:mvn/version "0.2.0"}
+  lmgrep/raudikko                           {:local/root "./raudikko"}
   babashka/fs                               {:mvn/version "0.1.2"}
   io.quarkiverse.lucene/quarkus-lucene      {:mvn/version "0.3"
                                              :exclusions  [org.apache.lucene/lucene-analyzers-common]}

@@ -1,0 +1,9 @@
+{:paths ["classes"]
+ :deps/prep-lib {:ensure "classes"
+                 :alias :build
+                 :fn compile-java}
+ :aliases
+ {:build
+  {:deps        {org.clojure/clojure           {:mvn/version "1.10.3"}
+                 io.github.clojure/tools.build {:tag "v0.7.5" :sha "34727f7"}}
+   :ns-default  build}}}

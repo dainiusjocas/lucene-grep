@@ -2,8 +2,12 @@
 pom.xml:
 	clojure -Spom
 
+.PHONY: deps-prep
+deps-prep:
+	clojure -Xdeps prep :force true
+
 .PHONY: uberjar
-uberjar: pom.xml
+uberjar: pom.xml deps-prep
 	echo "$$(git describe --tags --abbrev=0)-SNAPSHOT" > resources/LMGREP_VERSION
 	clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
 
