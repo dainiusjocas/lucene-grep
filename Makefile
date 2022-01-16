@@ -13,6 +13,7 @@ uberjar: deps-prep pom.xml
 
 .PHONY: build
 build: uberjar
+	bb generate-reflection-config
 	script/compile
 
 .PHONY: build-linux-static
