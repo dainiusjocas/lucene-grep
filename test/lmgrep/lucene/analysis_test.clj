@@ -1,7 +1,6 @@
 (ns lmgrep.lucene.analysis-test
   (:require [clojure.test :refer [deftest testing is]]
             [clojure.string :as str]
-            [lmgrep.features]
             [jsonista.core :as json]
             [lmgrep.features]
             [lmgrep.lucene.analyzer :as analysis]
