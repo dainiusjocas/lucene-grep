@@ -121,8 +121,8 @@
   - :reader-buffer-size in bytes
   - :writer-buffer-size in bytes"
   [files-pattern files options]
-  (let [reader-buffer-size (get options :reader-buffer-size (* 2 1024 8192))
-        print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
+  (let [reader-buffer-size (get options :reader-buffer-size 8192)
+        print-writer-buffer-size (get options :writer-buffer-size 8192)
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         analysis-conf (assoc (get options :analysis) :config-dir (get options :config-dir))

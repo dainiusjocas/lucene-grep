@@ -66,7 +66,7 @@
 (defn match-lines [highlighter-fn file-path lines options]
   (let [parallel-matcher (matcher-fn highlighter-fn file-path options)
         concurrency (get options :concurrency 8)
-        print-writer-buffer-size (get options :writer-buffer-size (* 8192 8192))
+        print-writer-buffer-size (get options :writer-buffer-size 8192)
         numbered-lines (map-indexed (fn [line-str line-number] (LineNrStr. line-str line-number)) lines)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
         with-empty-lines (:with-empty-lines options)]
@@ -97,7 +97,7 @@
 
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
-        reader-buffer-size (get options :reader-buffer-size (* 2 1024 8192))
+        reader-buffer-size (get options :reader-buffer-size 8192)
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)]
     (if files-pattern
