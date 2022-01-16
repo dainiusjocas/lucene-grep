@@ -303,7 +303,7 @@
                                    (grep/grep [query] nil nil options)))))))
 
     (testing "English analyzer should produce a match"
-      (let [options (assoc options :analysis {:analyzer {:name "english"}})]
+      (let [options (assoc options :analysis {:token-filters [{:name "englishminimalstem"}]})]
         (is (= "The quick brown fox >jumps< over the lazy dog\n"
                (with-in-str text-from-stdin
                             (with-out-str

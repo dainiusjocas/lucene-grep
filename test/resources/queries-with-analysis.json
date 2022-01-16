@@ -3,9 +3,7 @@
     "id": "0",
     "query": "dogs",
     "analysis": {
-      "analyzer": {
-        "name": "English"
-      }
+      "token-filters": [{"name": "englishminimalstem"}]
     }
   },
   {
