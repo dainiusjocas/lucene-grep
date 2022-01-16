@@ -1,21 +1,20 @@
 {:paths
  ["src" "resources"]
  :deps
- {org.clojure/clojure                       {:mvn/version "1.10.3"}
-  org.clojure/tools.cli                     {:mvn/version "1.0.206"}
-  org.clojure/tools.logging                 {:mvn/version "1.2.4"}
-  org.clojure/core.async                    {:mvn/version "1.5.648"}
-  org.apache.lucene/lucene-core             {:mvn/version "9.0.0"}
-  org.apache.lucene/lucene-monitor          {:mvn/version "9.0.0"}
-  org.apache.lucene/lucene-analysis-stempel {:mvn/version "9.0.0"}
-  org.apache.lucene/lucene-queries          {:mvn/version "9.0.0"}
-  org.apache.lucene/lucene-queryparser      {:mvn/version "9.0.0"}
-  metosin/jsonista                          {:mvn/version "0.3.5"}
-  lmgrep/lucene-monitor-helpers             {:local/root "./lucene-monitor-helpers"}
-  babashka/fs                               {:mvn/version "0.1.2"}
-  io.quarkiverse.lucene/quarkus-lucene      {:mvn/version "0.3"
-                                             :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc                    {:mvn/version "2.6.2.Final"}}
+ {org.clojure/clojure                  {:mvn/version "1.10.3"}
+  org.clojure/tools.cli                {:mvn/version "1.0.206"}
+  org.clojure/tools.logging            {:mvn/version "1.2.4"}
+  org.clojure/core.async               {:mvn/version "1.5.648"}
+  org.apache.lucene/lucene-core        {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-monitor     {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-queries     {:mvn/version "9.0.0"}
+  org.apache.lucene/lucene-queryparser {:mvn/version "9.0.0"}
+  metosin/jsonista                     {:mvn/version "0.3.5"}
+  lmgrep/lucene-monitor-helpers        {:local/root "./lucene-monitor-helpers"}
+  babashka/fs                          {:mvn/version "0.1.2"}
+  io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
+                                        :exclusions  [org.apache.lucene/lucene-analyzers-common]}
+  io.quarkus/quarkus-arc               {:mvn/version "2.6.2.Final"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
@@ -39,6 +38,8 @@
    :exec-args    {:aot true}}
   :raudikko
   {:extra-deps {lmgrep/raudikko {:local/root "./raudikko"}}}
+  :stempel
+  {:extra-deps {org.apache.lucene/lucene-analysis-stempel {:mvn/version "9.0.0"}}}
   :snowball-token-filters
   {:extra-deps {lmgrep/raudikko {:local/root "./snowball-token-filters"}}}
   :build

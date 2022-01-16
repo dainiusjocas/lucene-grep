@@ -39,7 +39,6 @@
            (org.apache.lucene.analysis.th ThaiAnalyzer)
            (org.apache.lucene.analysis.tr TurkishAnalyzer)
            (org.apache.lucene.analysis.en EnglishAnalyzer)
-           (org.apache.lucene.analysis.pl PolishAnalyzer)
            (org.apache.lucene.collation CollationKeyAnalyzer)
            (org.apache.lucene.analysis.classic ClassicAnalyzer)
            (org.apache.lucene.analysis.email UAX29URLEmailAnalyzer)))
@@ -83,8 +82,6 @@
    "thai"              (ThaiAnalyzer.)
    "turkish"           (TurkishAnalyzer.)
    "english"           (EnglishAnalyzer.)
-   ;; add 13 MB to the binary
-   "polish"            (PolishAnalyzer.)
    "standard"          (StandardAnalyzer.)
    "unicodewhitespace" (UnicodeWhitespaceAnalyzer.)
    "whitespace"        (WhitespaceAnalyzer.)
