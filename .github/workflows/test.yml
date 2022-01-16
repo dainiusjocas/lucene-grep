@@ -31,6 +31,7 @@ jobs:
 
       - name: Unit Tests
         run: |
+          echo "LMGREP_FEATURE_STEMPEL=true" >> $GITHUB_ENV
           echo "LMGREP_FEATURE_SNOWBALL=true" >> $GITHUB_ENV
           clojure -T:build prep-deps
           clojure -M:dev:raudikko:snowball-token-filters:test

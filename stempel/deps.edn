@@ -1,0 +1,3 @@
+{:paths         ["src"]
+ :deps          {org.apache.lucene/lucene-core             {:mvn/version "9.0.0"}
+                 org.apache.lucene/lucene-analysis-stempel {:mvn/version "9.0.0"}}}

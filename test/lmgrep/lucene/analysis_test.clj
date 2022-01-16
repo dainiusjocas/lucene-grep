@@ -129,6 +129,12 @@
          analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
      (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer))))))
 
+(when lmgrep.features/stempel?
+  (deftest stempel-token-filter-factory
+    (let [text "Dziękuję"
+          analyzer (analysis/create {:token-filters [{:name "stempelpolishstem"}]})]
+      (is (= ["Dziękować"] (ta/text->token-strings text analyzer))))))
+
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"
         analyzer-names (keys predefined/analyzers)]

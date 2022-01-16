@@ -6,7 +6,9 @@
                    :doc      "Generate config files for GraalVM native-image"
                    :task     (let [profiles (cond-> '("test")
                                               (Boolean/valueOf (System/getenv "LMGREP_FEATURE_RAUDIKKO"))
-                                              (conj "raudikko"))]
+                                              (conj "raudikko")
+                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_STEMPEL"))
+                                              (conj "stempel"))]
                                (println "Running the tests with a native image agent:")
                                (shell (str
                                         "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
