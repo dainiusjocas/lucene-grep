@@ -3,18 +3,14 @@
     "id": "german_language",
     "query": "doggies",
     "analysis": {
-      "analyzer": {
-        "name": "German"
-      }
+      "token-filters": [{"name": "germanstem"}]
     }
   },
   {
     "id": "english_language",
     "query": "doggies",
     "analysis": {
-      "analyzer": {
-        "name": "English"
-      }
+      "token-filters": [{"name": "englishminimalstem"}]
     }
   }
 ]

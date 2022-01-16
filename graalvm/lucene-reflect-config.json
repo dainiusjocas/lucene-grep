@@ -5,20 +5,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.CharArraySet",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [
-          "java.util.Collection",
-          "boolean"
-        ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.CharFilterFactory",
     "queryAllPublicMethods" : true,
     "methods" : [
@@ -63,17 +49,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.ar.ArabicAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.ar.ArabicNormalizationFilterFactory",
     "fields" : [
       {
@@ -108,17 +83,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.bg.BulgarianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.bg.BulgarianStemFilterFactory",
     "fields" : [
       {
@@ -131,17 +95,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.bn.BengaliAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -198,17 +151,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.br.BrazilianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.br.BrazilianStemFilterFactory",
     "fields" : [
       {
@@ -221,17 +163,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.ca.CatalanAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -266,17 +197,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.cjk.CJKAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -333,17 +253,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.ckb.SoraniAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.ckb.SoraniNormalizationFilterFactory",
     "fields" : [
       {
@@ -373,17 +282,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.classic.ClassicAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -525,17 +423,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.core.KeywordAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.core.KeywordTokenizerFactory",
     "fields" : [
       {
@@ -587,30 +474,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.core.SimpleAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.core.StopAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [
-          "org.apache.lucene.analysis.CharArraySet"
-        ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.core.StopFilterFactory",
     "fields" : [
       {
@@ -645,17 +508,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.core.UnicodeWhitespaceAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.core.UpperCaseFilterFactory",
     "fields" : [
       {
@@ -668,17 +520,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.core.WhitespaceAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -711,17 +552,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.cz.CzechAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.cz.CzechStemFilterFactory",
     "fields" : [
       {
@@ -734,28 +564,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.da.DanishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.de.GermanAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -829,17 +637,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.el.GreekAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.el.GreekLowerCaseFilterFactory",
     "fields" : [
       {
@@ -874,17 +671,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.email.UAX29URLEmailAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.email.UAX29URLEmailTokenizerFactory",
     "fields" : [
       {
@@ -897,17 +683,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.en.EnglishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -981,17 +756,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.es.SpanishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.es.SpanishLightStemFilterFactory",
     "fields" : [
       {
@@ -1021,39 +785,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.et.EstonianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.eu.BasqueAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.fa.PersianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -1093,17 +824,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.fi.FinnishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.fi.FinnishLightStemFilterFactory",
     "fields" : [
       {
@@ -1116,17 +836,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.fr.FrenchAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -1166,17 +875,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.ga.IrishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.ga.IrishLowerCaseFilterFactory",
     "fields" : [
       {
@@ -1189,17 +887,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.gl.GalicianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -1239,17 +926,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.hi.HindiAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.hi.HindiNormalizationFilterFactory",
     "fields" : [
       {
@@ -1279,17 +955,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.hu.HungarianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -1329,28 +994,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.hy.ArmenianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.id.IndonesianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.id.IndonesianStemFilterFactory",
     "fields" : [
       {
@@ -1385,17 +1028,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.it.ItalianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.it.ItalianLightStemFilterFactory",
     "fields" : [
       {
@@ -1408,28 +1040,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.lt.LithuanianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.lv.LatvianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -2011,28 +1621,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.nl.DutchAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.no.NorwegianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.no.NorwegianLightStemFilterFactory",
     "fields" : [
       {
@@ -2288,17 +1876,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.pt.PortugueseAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.pt.PortugueseLightStemFilterFactory",
     "fields" : [
       {
@@ -2362,28 +1939,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.ro.RomanianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.ru.RussianAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -2497,17 +2052,6 @@
         "parameterTypes" : [
           "java.util.Map"
         ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.analysis.sv.SwedishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
       }
     ],
     "allDeclaredConstructors" : true
@@ -2629,17 +2173,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.th.ThaiAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.th.ThaiTokenizerFactory",
     "fields" : [
       {
@@ -2739,17 +2272,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.analysis.tr.TurkishAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.analysis.tr.TurkishLowerCaseFilterFactory",
     "fields" : [
       {
@@ -2795,19 +2317,6 @@
         "name" : "<init>",
         "parameterTypes" : [
           "java.util.Map"
-        ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.apache.lucene.collation.CollationKeyAnalyzer",
-    "queryAllPublicConstructors" : true,
-    "methods" : [
-      {
-        "name" : "<init>",
-        "parameterTypes" : [
-          "java.text.Collator"
         ]
       }
     ],
@@ -3146,11 +2655,6 @@
     "allDeclaredConstructors" : true
   },
   {
-    "name" : "org.apache.lucene.util.SparseFixedBitSet",
-    "allDeclaredFields" : true,
-    "allDeclaredConstructors" : true
-  },
-  {
     "name" : "org.apache.lucene.util.automaton.CompiledAutomaton",
     "allDeclaredFields" : true,
     "allDeclaredConstructors" : true
@@ -3210,20 +2714,6 @@
     "methods" : [
       {
         "name" : "<init>",
-        "parameterTypes" : [ ]
-      }
-    ],
-    "allDeclaredConstructors" : true
-  },
-  {
-    "name" : "org.tartarus.snowball.ext.FinnishStemmer",
-    "methods" : [
-      {
-        "name" : "r_LONG",
-        "parameterTypes" : [ ]
-      },
-      {
-        "name" : "r_VI",
         "parameterTypes" : [ ]
       }
     ],

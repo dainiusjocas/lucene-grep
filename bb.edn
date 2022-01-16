@@ -8,7 +8,9 @@
                                               (Boolean/valueOf (System/getenv "LMGREP_FEATURE_RAUDIKKO"))
                                               (conj "raudikko")
                                               (Boolean/valueOf (System/getenv "LMGREP_FEATURE_STEMPEL"))
-                                              (conj "stempel"))]
+                                              (conj "stempel")
+                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_BUNDLED_ANALYZERS"))
+                                              (conj "bundled-analyzers"))]
                                (println "Running the tests with a native image agent:")
                                (shell (str
                                         "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
