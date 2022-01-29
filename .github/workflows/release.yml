@@ -54,7 +54,7 @@ jobs:
         uses: DeLaGuardo/setup-graalvm@master
         with:
           # GraalVM version, no pattern syntax available atm
-          graalvm: '21.3.0'
+          graalvm: '22.0.0.2'
           # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
           java: 'java17'
           # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
@@ -67,7 +67,7 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1058
+          tools-deps: 1.10.3.1069
 
       - name: Compile uberjar
         run: |
@@ -142,8 +142,8 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1058
-          cli: 1.10.3.1058
+          tools-deps: 1.10.3.1069
+          cli: 1.10.3.1069
 
       - name: Compile uberjar on windows
         if: ${{ matrix.os == 'windows-latest' }}
@@ -163,7 +163,7 @@ jobs:
       - uses: ayltai/setup-graalvm@v1
         with:
           java-version: 17
-          graalvm-version: 21.3.0
+          graalvm-version: 22.0.0.2
           native-image: true
 
       - name: Build native image

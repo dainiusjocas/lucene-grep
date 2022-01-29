@@ -27,7 +27,7 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1058
+          tools-deps: 1.10.3.1069
 
       - name: Unit Tests
         run: |
