@@ -14,7 +14,8 @@
   babashka/fs                          {:mvn/version "0.1.2"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
                                         :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc               {:mvn/version "2.6.2.Final"}}
+  io.quarkus/quarkus-arc               {:mvn/version "2.6.2.Final"}
+  com.github.clj-easy/graal-build-time {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
