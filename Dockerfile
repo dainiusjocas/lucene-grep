@@ -4,7 +4,7 @@ ENV GRAALVM_HOME=$JAVA_HOME
 
 ENV CLOJURE_VERSION=1.10.3.1069
 
-ENV LMGREP_FEATURE_RAUDIKKO=true
+ENV LMGREP_FEATURE_RAUDIKKO=false
 
 ARG LMGREP_STATIC
 ENV LMGREP_STATIC=$LMGREP_STATIC
@@ -32,12 +32,12 @@ RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.
     && rm linux-install-$CLOJURE_VERSION.sh
 
 COPY deps.edn /usr/src/app/
-COPY build.clj build.clj
-COPY lucene-monitor-helpers lucene-monitor-helpers
-COPY raudikko raudikko
-COPY stempel stempel
-COPY bundled-analyzers bundled-analyzers
-COPY snowball-token-filters snowball-token-filters
+COPY build.clj /usr/src/app/build.clj
+COPY lucene-monitor-helpers /usr/src/app/lucene-monitor-helpers
+COPY raudikko /usr/src/app/raudikko
+COPY stempel /usr/src/app/stempel
+COPY bundled-analyzers /usr/src/app/bundled-analyzers
+COPY snowball-token-filters /usr/src/app/snowball-token-filters
 
 RUN clojure -P && clojure -P -M:uberjar
 COPY src/ /usr/src/app/src

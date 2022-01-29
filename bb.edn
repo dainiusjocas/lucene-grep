@@ -11,7 +11,7 @@
                                               (conj "stempel")
                                               (Boolean/valueOf (System/getenv "LMGREP_FEATURE_BUNDLED_ANALYZERS"))
                                               (conj "bundled-analyzers"))]
-                               (println "Running the tests with a native image agent:")
+                               (println "Running the tests with a native image agent with profiles: " profiles)
                                (shell (str
                                         "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
                                         (clojure.string/join ":" profiles)))
