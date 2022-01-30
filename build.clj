@@ -6,8 +6,15 @@
 (defn prep-deps [& _]
   (println "Preparing transitive dependencies")
   ; TODO: Can it be made to work with multiple aliases in one pass
-  (c/prep (assoc (c/basis {:aliases [:raudikko]}) :force true))
-  (c/prep (assoc (c/basis {:aliases [:snowball-token-filters]}) :force true)))
+  (c/prep (assoc (c/basis {:project "deps.edn"
+                           :aliases [:raudikko
+                                     :stempel
+                                     :snowball-token-filters
+                                     :bundled-analyzers]})
+            :force true
+            :log :info))
+  (println "<<<<<>>>>>")
+  #_(c/prep (assoc (c/basis {:aliases [:snowball-token-filters]}) :force true)))
 
 (def class-dir "target/classes")
 

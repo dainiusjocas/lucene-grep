@@ -30,4 +30,4 @@
                 :src-dirs [java-src-dir]})
   (b/jar {:class-dir         class-dir
           :jar-file         "target/raudikko.jar"})
-  (println "DONE JARING RADUKKO LIB!"))
+  (println "DONE JARING RAUDIKKO LIB!"))
