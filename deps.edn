@@ -38,13 +38,13 @@
    :exec-fn      hf.depstar/uberjar
    :exec-args    {:aot true}}
   :raudikko
-  {:extra-deps {lmgrep/raudikko {:local/root "./raudikko"}}}
+  {:extra-deps {lmgrep/raudikko {:local/root "./raudikko/target/raudikko.jar"}}}
   :stempel
   {:extra-deps {lmgrep/stempel {:local/root "./stempel"}}}
   :bundled-analyzers
-  {:extra-deps {lmgrep/stempel {:local/root "./bundled-analyzers"}}}
+  {:extra-deps {lmgrep/bundled-analyzers {:local/root "./bundled-analyzers"}}}
   :snowball-token-filters
-  {:extra-deps {lmgrep/raudikko {:local/root "./snowball-token-filters"}}}
+  {:extra-deps {lmgrep/snowball-token-filters {:local/root "./snowball-token-filters"}}}
   :build
   {:deps       {io.github.clojure/tools.build {:tag "v0.7.5" :sha "34727f7"}}
    :ns-default build}}}
