@@ -8,7 +8,6 @@
                    :task     (let [profiles (e/profiles)]
 
                                (println "Running the tests with a native image agent with profiles: " profiles)
-                               (println ">>>>>" (clojure.string/join ":" profiles))
                                (shell (str
                                         "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
                                         (clojure.string/join ":" profiles)

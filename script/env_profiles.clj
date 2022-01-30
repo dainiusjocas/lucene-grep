@@ -1,15 +1,17 @@
-(ns script.env-profiles)
+(ns script.env-profiles
+  (:require [clojure.edn :as e]))
 
 (defn profiles
   "Checks the relevant environment variables and returns a list of alias keywords."
   []
-  (println "Collecting relevant profiles")
-  (cond-> []
-          (Boolean/valueOf (System/getenv "LMGREP_FEATURE_RAUDIKKO"))
-          (conj :raudikko)
-          (Boolean/valueOf (System/getenv "LMGREP_FEATURE_STEMPEL"))
-          (conj :stempel)
-          (Boolean/valueOf (System/getenv "LMGREP_FEATURE_BUNDLED_ANALYZERS"))
-          (conj :bundled-analyzers)
-          (Boolean/valueOf (System/getenv "LMGREP_FEATURE_SNOWBALL"))
-          (conj :snowball-token-filters)))
+  (let [env->alias (->> (:aliases (e/read-string (slurp "deps.edn")))
+                        (map (fn [[k v]] [k (:env v)]))
+                        (remove (fn [[_ v]] (nil? v)))
+                        (map (fn [[k v]] [v k]))
+                        (into {}))]
+    (reduce (fn [acc [env-var alias]]
+              (if (Boolean/valueOf (System/getenv env-var))
+                (conj acc alias)
+                acc))
+            []
+            env->alias)))
