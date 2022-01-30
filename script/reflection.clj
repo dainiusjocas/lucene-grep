@@ -1,4 +1,4 @@
-(ns reflection
+(ns script.reflection
   (:require [cheshire.core :as json]
             [clojure.java.io :as io]))
 

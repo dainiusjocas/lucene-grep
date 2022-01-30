@@ -33,13 +33,10 @@
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
    :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.01.15"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
-  :uberjar
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
-   :exec-fn      hf.depstar/uberjar
-   :exec-args    {:aot true}}
   :raudikko
   {:extra-deps {lmgrep/raudikko-jar {:local/root "./raudikko/target/raudikko.jar"}
-                lmgrep/raudikko-src {:local/root "./raudikko"}}}
+                lmgrep/raudikko-src {:local/root "./raudikko"}}
+   :env "LMGREP_FEATURE_RAUDIKKO"}
   :stempel
   {:extra-deps {lmgrep/stempel {:local/root "./stempel"}}}
   :bundled-analyzers
