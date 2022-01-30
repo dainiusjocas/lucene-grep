@@ -10,4 +10,6 @@
           (Boolean/valueOf (System/getenv "LMGREP_FEATURE_STEMPEL"))
           (conj :stempel)
           (Boolean/valueOf (System/getenv "LMGREP_FEATURE_BUNDLED_ANALYZERS"))
-          (conj :bundled-analyzers)))
+          (conj :bundled-analyzers)
+          (Boolean/valueOf (System/getenv "LMGREP_FEATURE_SNOWBALL"))
+          (conj :snowball-token-filters)))
