@@ -30,10 +30,11 @@ jobs:
           tools-deps: 1.10.3.1069
 
       - name: Unit Tests
+        env:
+          LMGREP_FEATURE_BUNDLED_ANALYZERS: true
+          LMGREP_FEATURE_STEMPEL: true
+          LMGREP_FEATURE_SNOWBALL: true
+          LMGREP_FEATURE_RAUDIKKO: true
         run: |
-          echo "LMGREP_FEATURE_BUNDLED_ANALYZERS=true" >> $GITHUB_ENV
-          echo "LMGREP_FEATURE_STEMPEL=true" >> $GITHUB_ENV
-          echo "LMGREP_FEATURE_SNOWBALL=true" >> $GITHUB_ENV
-          echo "LMGREP_FEATURE_RAUDIKKO=true" >> $GITHUB_ENV
           clojure -T:build prep-deps
           clojure -M:dev:raudikko:snowball-token-filters:stempel:bundled-analyzers:test
