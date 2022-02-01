@@ -18,6 +18,5 @@
                   print-query-parsers-attributes-compatibility-table
                   {:requires ([reflection :as r])
                    :doc      "Print query parsers attributes compatibility table"
-                   :task     (shell "clojure -M -i script/query-parser-attributes-table.clj")}}
- }
-
+                   :task     (shell "clojure -M -i script/query-parser-attributes-table.clj")}
+                  }}
