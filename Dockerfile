@@ -38,7 +38,7 @@ COPY bundled-analyzers /usr/src/app/bundled-analyzers
 COPY snowball-token-filters /usr/src/app/snowball-token-filters
 
 ARG LMGREP_FEATURE_RAUDIKKO
-ENV LMGREP_FEATURE_RAUDIKKO=${LMGREP_FEATURE_RAUDIKKO:-false}
+ENV LMGREP_FEATURE_RAUDIKKO=${LMGREP_FEATURE_RAUDIKKO:-true}
 
 ARG LMGREP_FEATURE_SNOWBALL
 ENV LMGREP_FEATURE_SNOWBALL=${LMGREP_FEATURE_SNOWBALL:-true}
@@ -49,7 +49,7 @@ ENV LMGREP_FEATURE_STEMPEL=${LMGREP_FEATURE_STEMPEL:-true}
 ARG LMGREP_FEATURE_BUNDLED_ANALYZERS
 ENV LMGREP_FEATURE_BUNDLED_ANALYZERS=${LMGREP_FEATURE_BUNDLED_ANALYZERS:-true}
 
-RUN clojure -P && clojure -P -M:uberjar
+RUN clojure -P -M:build
 COPY src/ /usr/src/app/src
 COPY test/ /usr/src/app/test
 COPY graalvm/ /usr/src/app/graalvm
@@ -61,4 +61,4 @@ RUN clojure -T:build prep-deps
 RUN bb generate-reflection-config
 RUN clojure -T:build uberjar
 
-# RUN ./script/compile
+RUN ./script/compile

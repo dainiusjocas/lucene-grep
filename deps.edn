@@ -34,20 +34,22 @@
    :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.01.15"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
-  {:extra-deps {lmgrep/raudikko-jar {:local/root "raudikko/target/raudikko.jar"}
+  {:extra-deps {lmgrep/raudikko-jar {:local/root "raudikko/target/raudikko.jar"
+                                     :deps/manifest :jar}
                 lmgrep/raudikko-src {:local/root "raudikko"}}
    :env "LMGREP_FEATURE_RAUDIKKO"}
   :snowball-token-filters
-  {:extra-deps {lmgrep/snowball-token-filters-src
-                {:local/root "snowball-token-filters"}
+  {:extra-deps {
+                lmgrep/snowball-token-filters-src {:local/root "snowball-token-filters"}
                 lmgrep/snowball-token-filters-jar
-                {:local/root "snowball-token-filters/target/snowball-token-filters.jar"}}
+                {:local/root "snowball-token-filters/target/snowball-token-filters.jar"
+                 :deps/manifest :jar}}
    :env "LMGREP_FEATURE_SNOWBALL"}
   :stempel
-  {:extra-deps {lmgrep/stempel {:local/root "./stempel"}}
+  {:extra-deps {lmgrep/stempel {:local/root "stempel"}}
    :env "LMGREP_FEATURE_STEMPEL"}
   :bundled-analyzers
-  {:extra-deps {lmgrep/bundled-analyzers {:local/root "./bundled-analyzers"}}
+  {:extra-deps {lmgrep/bundled-analyzers {:local/root "bundled-analyzers"}}
    :env "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
   {:deps       {io.github.clojure/tools.build {:tag "v0.7.5" :sha "34727f7"}}
