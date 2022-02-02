@@ -34,16 +34,16 @@
    :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.01.15"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
-  {:extra-deps {lmgrep/raudikko-jar {:local/root "raudikko/target/raudikko.jar"
-                                     :deps/manifest :jar}
-                lmgrep/raudikko-src {:local/root "raudikko"}}
+  {:extra-deps {lmgrep/raudikko-src {:local/root "raudikko"}
+                lmgrep/raudikko-jar {:local/root "raudikko/target/raudikko.jar"
+                                     :deps/manifest :deps}}
    :env "LMGREP_FEATURE_RAUDIKKO"}
   :snowball-token-filters
   {:extra-deps {
                 lmgrep/snowball-token-filters-src {:local/root "snowball-token-filters"}
                 lmgrep/snowball-token-filters-jar
                 {:local/root "snowball-token-filters/target/snowball-token-filters.jar"
-                 :deps/manifest :jar}}
+                 :deps/manifest :deps}}
    :env "LMGREP_FEATURE_SNOWBALL"}
   :stempel
   {:extra-deps {lmgrep/stempel {:local/root "stempel"}}
