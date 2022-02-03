@@ -1,7 +1,16 @@
 {:paths          ["."]
  :deps           {}
  :min-bb-version "0.4.0"
- :tasks          {generate-reflection-config
+ :tasks          {test
+                  {:requires ([script.env-profiles :as e])
+                   :doc      "Run tests with the required profiles"
+                   :task     (let [profiles (e/profiles)]
+                               (println "Running lmgrep tests with profiles: " profiles)
+                               (shell (str
+                                        "clojure -M:"
+                                        (clojure.string/join ":" profiles)
+                                        ":test")))}
+                  generate-reflection-config
                   {:requires ([script.reflection :as r]
                               [script.env-profiles :as e])
                    :doc      "Generate config files for GraalVM native-image"

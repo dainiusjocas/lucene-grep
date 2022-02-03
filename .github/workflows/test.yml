@@ -29,6 +29,11 @@ jobs:
         with:
           tools-deps: 1.10.3.1069
 
+      - name: Setup Babashka
+        uses: turtlequeue/setup-babashka@v1.3.0
+        with:
+          babashka-version: 0.7.4
+
       - name: Unit Tests
         env:
           LMGREP_FEATURE_BUNDLED_ANALYZERS: true
@@ -37,4 +42,4 @@ jobs:
           LMGREP_FEATURE_RAUDIKKO: true
         run: |
           clojure -T:build prep-deps
-          clojure -M:dev:raudikko:snowball-token-filters:stempel:bundled-analyzers:test
+          bb test
