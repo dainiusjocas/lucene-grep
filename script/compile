@@ -9,7 +9,7 @@ fi
 
 LMGREP_VERSION=$(cat resources/LMGREP_VERSION)
 
-LMGREP_JAR=${LMGREP_JAR:-"target/lmgrep-uber.jar"}
+LMGREP_JAR=${LMGREP_JAR:-"target/lmgrep.jar"}
 
 if [[ ! -f "$LMGREP_JAR" ]]
 then

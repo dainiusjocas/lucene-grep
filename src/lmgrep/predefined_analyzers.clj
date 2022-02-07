@@ -9,8 +9,8 @@
 
 (defn bundled-analyzers []
   (when lmgrep.features/bundled?
-    (require 'lmgrel.bundled)
-    @(resolve 'lmgrel.bundled/analyzers)))
+    (require 'lmgrep.bundled)
+    @(resolve 'lmgrep.bundled/analyzers)))
 
 (def analyzers
   (merge

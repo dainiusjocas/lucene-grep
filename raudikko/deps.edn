@@ -1,9 +1,9 @@
-{:paths         ["resources" "classes"]
+{:paths         ["target/raudikko.jar"]
  :deps          {org.apache.lucene/lucene-core {:mvn/version "9.0.0"}
                  fi.evident.raudikko/raudikko  {:mvn/version "0.1.1"}}
- :deps/prep-lib {:ensure "classes"
+ :deps/prep-lib {:ensure "target/raudikko.jar"
                  :alias  :build
-                 :fn     compile-java}
+                 :fn     jar}
  :aliases
  {:build
   {:deps       {org.clojure/clojure           {:mvn/version "1.10.3"}

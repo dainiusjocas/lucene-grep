@@ -1,26 +1,31 @@
-{:paths          ["script"]
+{:paths          ["."]
  :deps           {}
  :min-bb-version "0.4.0"
- :tasks          {generate-reflection-config
-                  {:requires ([reflection :as r])
+ :tasks          {test
+                  {:requires ([script.env-profiles :as e])
+                   :doc      "Run tests with the required profiles"
+                   :task     (let [profiles (e/profiles)]
+                               (println "Running lmgrep tests with profiles: " profiles)
+                               (shell (str
+                                        "clojure -M:"
+                                        (clojure.string/join ":" profiles)
+                                        ":test")))}
+                  generate-reflection-config
+                  {:requires ([script.reflection :as r]
+                              [script.env-profiles :as e])
                    :doc      "Generate config files for GraalVM native-image"
-                   :task     (let [profiles (cond-> '("test")
-                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_RAUDIKKO"))
-                                              (conj "raudikko")
-                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_STEMPEL"))
-                                              (conj "stempel")
-                                              (Boolean/valueOf (System/getenv "LMGREP_FEATURE_BUNDLED_ANALYZERS"))
-                                              (conj "bundled-analyzers"))]
+                   :task     (let [profiles (e/profiles)]
+
                                (println "Running the tests with a native image agent with profiles: " profiles)
                                (shell (str
                                         "clojure -J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
-                                        (clojure.string/join ":" profiles)))
+                                        (clojure.string/join ":" profiles)
+                                        ":test"))
                                (println "Filtering Lucene classes with all their constructors:")
                                (r/gen))}
 
                   print-query-parsers-attributes-compatibility-table
                   {:requires ([reflection :as r])
                    :doc      "Print query parsers attributes compatibility table"
-                   :task     (shell "clojure -M -i script/query-parser-attributes-table.clj")}}
- }
-
+                   :task     (shell "clojure -M -i script/query-parser-attributes-table.clj")}
+                  }}

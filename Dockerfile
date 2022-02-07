@@ -4,8 +4,6 @@ ENV GRAALVM_HOME=$JAVA_HOME
 
 ENV CLOJURE_VERSION=1.10.3.1069
 
-ENV LMGREP_FEATURE_RAUDIKKO=false
-
 ARG LMGREP_STATIC
 ENV LMGREP_STATIC=$LMGREP_STATIC
 
@@ -39,7 +37,19 @@ COPY stempel /usr/src/app/stempel
 COPY bundled-analyzers /usr/src/app/bundled-analyzers
 COPY snowball-token-filters /usr/src/app/snowball-token-filters
 
-RUN clojure -P && clojure -P -M:uberjar
+ARG LMGREP_FEATURE_RAUDIKKO
+ENV LMGREP_FEATURE_RAUDIKKO=${LMGREP_FEATURE_RAUDIKKO:-true}
+
+ARG LMGREP_FEATURE_SNOWBALL
+ENV LMGREP_FEATURE_SNOWBALL=${LMGREP_FEATURE_SNOWBALL:-true}
+
+ARG LMGREP_FEATURE_STEMPEL
+ENV LMGREP_FEATURE_STEMPEL=${LMGREP_FEATURE_STEMPEL:-true}
+
+ARG LMGREP_FEATURE_BUNDLED_ANALYZERS
+ENV LMGREP_FEATURE_BUNDLED_ANALYZERS=${LMGREP_FEATURE_BUNDLED_ANALYZERS:-true}
+
+RUN clojure -P -M:build
 COPY src/ /usr/src/app/src
 COPY test/ /usr/src/app/test
 COPY graalvm/ /usr/src/app/graalvm
@@ -49,6 +59,6 @@ COPY bb.edn /usr/src/app/
 RUN clojure -Spom
 RUN clojure -T:build prep-deps
 RUN bb generate-reflection-config
-RUN clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
+RUN clojure -T:build uberjar
 
 RUN ./script/compile
