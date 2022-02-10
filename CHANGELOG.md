@@ -4,9 +4,15 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2022.02.10
+
 ## Fixed/enhanced
 
+- Modular architecture
+- Build uberjar with [Clojure tools.build](https://clojure.org/guides/tools_build) 
+- Release with the official GraalVM Github Actions
 - Update to Java 17
+- Update to GraalVM 22
 
 ## v2021.12.09
 
