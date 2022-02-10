@@ -34,100 +34,100 @@ jobs:
             ```
           draft: true
 
-  compile-native-image-and-release-artifacts:
-    needs: create-gh-release
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
-        include:
-          - os: ubuntu-latest
-            platform: linux
-            gu-binary: gu
-            arch: 'amd64'
-          - os: macos-latest
-            platform: macos
-            gu-binary: gu
-            arch: 'amd64'
-
-    steps:
-      - uses: actions/checkout@master
-
-      - name: Set env with the release version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: Setup Graalvm
-        id: setup-graalvm
-        uses: DeLaGuardo/setup-graalvm@master
-        with:
-          # GraalVM version, no pattern syntax available atm
-          graalvm: '22.0.0.2'
-          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
-          java: 'java17'
-          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
-          arch: ${{ matrix.arch }}
-
-      - name: Install native-image component
-        run: |
-          ${{ matrix.gu-binary }} install native-image
-
-      - name: Install clojure tools-deps
-        uses: DeLaGuardo/setup-clojure@master
-        with:
-          tools-deps: 1.10.3.1075
-
-      - name: Setup Babashka
-        uses: turtlequeue/setup-babashka@v1.3.0
-        with:
-          babashka-version: 0.7.4
-
-      - name: Compile uberjar
-        run: |
-          echo $RELEASE_VERSION > resources/LMGREP_VERSION
-          clojure -T:build prep-deps
-          clojure -Spom
-          clojure -T:build uberjar
-          cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
-
-      - name: Upload uberjar to the release when on linux
-        if: ${{ matrix.platform == 'linux' }}
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          name: Release ${{ env.RELEASE_VERSION }}
-          draft: true
-          files: |
-            target/lmgrep-*-standalone.jar
-
-      - name: Compile native image
-        run: |
-          bb generate-reflection-config
-          LMGREP_STATIC=false bash script/compile
-          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
-
-      - name: Setup MUSL and add relevant env variables on linux
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-          bash script/setup-musl
-          echo "TOOLCHAIN_DIR=$(pwd)/.musl/x86_64-linux-musl-native" >> $GITHUB_ENV
-          echo "PATH=$PATH:${TOOLCHAIN_DIR}/bin" >> $GITHUB_ENV
-
-      - name: Compile static native-image on linux
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-          bb generate-reflection-config
-          PATH=$PATH:${TOOLCHAIN_DIR}/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
-          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
-
-      - name: Upload binaries to the release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          name: Release ${{ env.RELEASE_VERSION }}
-          draft: true
-          files: |
-            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
-            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}-static.zip
+#  compile-native-image-and-release-artifacts:
+#    needs: create-gh-release
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-latest, macos-latest ]
+#        include:
+#          - os: ubuntu-latest
+#            platform: linux
+#            gu-binary: gu
+#            arch: 'amd64'
+#          - os: macos-latest
+#            platform: macos
+#            gu-binary: gu
+#            arch: 'amd64'
+#
+#    steps:
+#      - uses: actions/checkout@master
+#
+#      - name: Set env with the release version
+#        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+#
+#      - name: Setup Graalvm
+#        id: setup-graalvm
+#        uses: DeLaGuardo/setup-graalvm@master
+#        with:
+#          # GraalVM version, no pattern syntax available atm
+#          graalvm: '22.0.0.2'
+#          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
+#          java: 'java17'
+#          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
+#          arch: ${{ matrix.arch }}
+#
+#      - name: Install native-image component
+#        run: |
+#          ${{ matrix.gu-binary }} install native-image
+#
+#      - name: Install clojure tools-deps
+#        uses: DeLaGuardo/setup-clojure@master
+#        with:
+#          tools-deps: 1.10.3.1075
+#
+#      - name: Setup Babashka
+#        uses: turtlequeue/setup-babashka@v1.3.0
+#        with:
+#          babashka-version: 0.7.4
+#
+#      - name: Compile uberjar
+#        run: |
+#          echo $RELEASE_VERSION > resources/LMGREP_VERSION
+#          clojure -T:build prep-deps
+#          clojure -Spom
+#          clojure -T:build uberjar
+#          cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
+#
+#      - name: Upload uberjar to the release when on linux
+#        if: ${{ matrix.platform == 'linux' }}
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ env.RELEASE_VERSION }}
+#          name: Release ${{ env.RELEASE_VERSION }}
+#          draft: true
+#          files: |
+#            target/lmgrep-*-standalone.jar
+#
+#      - name: Compile native image
+#        run: |
+#          bb generate-reflection-config
+#          LMGREP_STATIC=false bash script/compile
+#          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
+#
+#      - name: Setup MUSL and add relevant env variables on linux
+#        if: ${{ matrix.platform == 'linux' }}
+#        run: |
+#          bash script/setup-musl
+#          echo "TOOLCHAIN_DIR=$(pwd)/.musl/x86_64-linux-musl-native" >> $GITHUB_ENV
+#          echo "PATH=$PATH:${TOOLCHAIN_DIR}/bin" >> $GITHUB_ENV
+#
+#      - name: Compile static native-image on linux
+#        if: ${{ matrix.platform == 'linux' }}
+#        run: |
+#          bb generate-reflection-config
+#          PATH=$PATH:${TOOLCHAIN_DIR}/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
+#          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
+#
+#      - name: Upload binaries to the release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ env.RELEASE_VERSION }}
+#          name: Release ${{ env.RELEASE_VERSION }}
+#          draft: true
+#          files: |
+#            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
+#            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}-static.zip
 
   compile-windows-native-image:
     needs: create-gh-release
@@ -188,6 +188,7 @@ jobs:
 
       - name: Build native image
         run: |
+          clojure -T:build prep-deps
           bb generate-reflection-config
           native-image -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
         shell: powershell
