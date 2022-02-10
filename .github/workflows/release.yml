@@ -86,35 +86,79 @@ jobs:
             graalvm/lucene-reflect-config.json
             resources/LMGREP_VERSION
 
-  build-native-executables-and-upload-to-release:
+#  build-native-executables-and-upload-to-release:
+#    needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-latest, macos-latest, windows-latest ]
+#        include:
+#          - os: ubuntu-latest
+#            platform: linux
+#            gu-binary: gu
+#            arch: 'amd64'
+#          - os: macos-latest
+#            platform: macos
+#            gu-binary: gu
+#            arch: 'amd64'
+#          - os: windows-latest
+#            platform: windows
+#            gu-binary: gu.exe
+#            arch: 'amd64'
+#    steps:
+#      - name: Set env variable with the release version
+#        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+#
+#      - uses: actions/checkout@v2
+#      - uses: graalvm/setup-graalvm@v1
+#        with:
+#          version: '22.0.0.2'
+#          java-version: '17'
+#          components: 'native-image'
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: uberjar
+#
+#      - name: Build native-image on *nix
+#        run: |
+#          ./script/compile
+#          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
+#        if: runner.os != 'Windows'
+#
+#      - name: Build native-image on Windows and zip it
+#        run: |
+#          native-image.cmd -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
+#          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION)-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
+#        if: runner.os == 'Windows'
+#
+#      - name: Upload binaries to the release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ env.RELEASE_VERSION }}
+#          name: Release ${{ env.RELEASE_VERSION }}
+#          draft: true
+#          files: |
+#            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
+
+  build-native-image-with-musl:
     needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
+    name: native-image-musl on ubuntu-latest
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        include:
-          - os: ubuntu-latest
-            platform: linux
-            gu-binary: gu
-            arch: 'amd64'
-          - os: macos-latest
-            platform: macos
-            gu-binary: gu
-            arch: 'amd64'
-          - os: windows-latest
-            platform: windows
-            gu-binary: gu.exe
-            arch: 'amd64'
     steps:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
-      - uses: graalvm/setup-graalvm@v1
+      - name: Run setup-graalvm action
+        uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.0.0.2'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
@@ -122,26 +166,22 @@ jobs:
         with:
           name: uberjar
 
-      - name: Build native-image on *nix
+      - name: Build static HelloWorld image with Native Image and musl
+        env:
+          LMGREP_STATIC: true
+          LMGREP_MUSL: true
         run: |
           ./script/compile
-          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
-        if: runner.os != 'Windows'
+          zip lmgrep-${RELEASE_VERSION}-linux-amd64-static.zip lmgrep
 
-      - name: Build native-image on Windows and zip it
-        run: |
-          native-image.cmd -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
-          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION)-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
-        if: runner.os == 'Windows'
-
-      - name: Upload binaries to the release
+      - name: Upload binary to the release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
           name: Release ${{ env.RELEASE_VERSION }}
           draft: true
           files: |
-            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
+            lmgrep-*-linux-amd64-static.zip
 
 #  compile-native-image-and-release-artifacts:
 #    needs: create-gh-release
