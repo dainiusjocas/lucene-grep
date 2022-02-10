@@ -84,8 +84,8 @@ jobs:
       - name: Compile uberjar
         run: |
           echo $RELEASE_VERSION > resources/LMGREP_VERSION
-          clojure -Spom
           clojure -T:build prep-deps
+          clojure -Spom
           clojure -T:build uberjar
           cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
 
@@ -162,9 +162,9 @@ jobs:
       - name: Compile uberjar on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          clojure -Spom
           echo $env:RELEASE_VERSION > resources/LMGREP_VERSION
           clojure -T:build prep-deps
+          clojure -Spom
           clojure -T:build uberjar
         shell: powershell
 
