@@ -38,7 +38,7 @@ jobs:
     needs: create-gh-release
     runs-on: ubuntu-latest
     steps:
-      - name: Set env varibale with the release version
+      - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
@@ -85,6 +85,42 @@ jobs:
             target/lmgrep.jar
             graalvm/lucene-reflect-config.json
             resources/LMGREP_VERSION
+
+  build-native-executables-and-upload-to-release:
+    needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env variable with the release version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v2
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.0.0.2'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
+        uses: actions/download-artifact@v2
+        with:
+          name: uberjar
+
+      - name: Build native-image
+        run: |
+          ./script/compile
+          zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
+        if: runner.os != 'Windows'
+
+      - name: Upload binaries to the release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Release ${{ env.RELEASE_VERSION }}
+          draft: true
+          files: |
+            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
+            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}-static.zip
 
 #  compile-native-image-and-release-artifacts:
 #    needs: create-gh-release
