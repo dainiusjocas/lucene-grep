@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         include:
           - os: ubuntu-latest
             platform: linux
@@ -100,6 +100,10 @@ jobs:
           - os: macos-latest
             platform: macos
             gu-binary: gu
+            arch: 'amd64'
+          - os: windows-latest
+            platform: windows
+            gu-binary: gu.exe
             arch: 'amd64'
     steps:
       - name: Set env variable with the release version
@@ -118,11 +122,17 @@ jobs:
         with:
           name: uberjar
 
-      - name: Build native-image
+      - name: Build native-image on *nix
         run: |
           ./script/compile
           zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
         if: runner.os != 'Windows'
+
+      - name: Build native-image on Windows and zip it
+        run: |
+          native-image.cmd -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
+          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION)-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
+        if: runner.os == 'Windows'
 
       - name: Upload binaries to the release
         uses: softprops/action-gh-release@v1
@@ -132,7 +142,6 @@ jobs:
           draft: true
           files: |
             lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}.zip
-            lmgrep-*-${{ matrix.platform }}-${{ matrix.arch }}-static.zip
 
 #  compile-native-image-and-release-artifacts:
 #    needs: create-gh-release
