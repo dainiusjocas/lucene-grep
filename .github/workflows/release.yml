@@ -89,6 +89,18 @@ jobs:
   build-native-executables-and-upload-to-release:
     needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            gu-binary: gu
+            arch: 'amd64'
+          - os: macos-latest
+            platform: macos
+            gu-binary: gu
+            arch: 'amd64'
     steps:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -99,6 +111,7 @@ jobs:
           version: '22.0.0.2'
           java-version: '17'
           components: 'native-image'
+          native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
