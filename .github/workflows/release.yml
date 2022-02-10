@@ -64,7 +64,7 @@ jobs:
           clojure -T:build prep-deps
           clojure -Spom
           clojure -T:build uberjar
-          cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar`
+          cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
 
       - name: Upload uberjar to the release
         uses: softprops/action-gh-release@v1
