@@ -35,6 +35,7 @@ jobs:
           draft: true
 
   build-uberjar-upload-to-release-and-store-artifacts:
+    needs: create-gh-release
     runs-on: ubuntu-latest
     steps:
       - name: Set env varibale with the release version
@@ -45,7 +46,7 @@ jobs:
         with:
           version: '22.0.0.2'
           java-version: '17'
-          components: 'native-image'
+          components: ''
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install clojure tools-deps`
@@ -83,6 +84,7 @@ jobs:
           path: |
             target/lmgrep.jar
             graalvm/lucene-reflect-config.json
+            resources/LMGREP_VERSION
 
 #  compile-native-image-and-release-artifacts:
 #    needs: create-gh-release
