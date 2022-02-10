@@ -74,14 +74,19 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1069
+          tools-deps: 1.10.3.1075
+
+      - name: Setup Babashka
+        uses: turtlequeue/setup-babashka@v1.3.0
+        with:
+          babashka-version: 0.7.4
 
       - name: Compile uberjar
         run: |
           echo $RELEASE_VERSION > resources/LMGREP_VERSION
           clojure -Spom
-          clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
-          cp target/lmgrep-uber.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
+          clojure -T:build uberjar
+          cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
 
       - name: Upload uberjar to the release when on linux
         if: ${{ matrix.platform == 'linux' }}
@@ -95,6 +100,7 @@ jobs:
 
       - name: Compile native image
         run: |
+          bb generate-reflection-config
           LMGREP_STATIC=false bash script/compile
           zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep
 
@@ -108,6 +114,7 @@ jobs:
       - name: Compile static native-image on linux
         if: ${{ matrix.platform == 'linux' }}
         run: |
+          bb generate-reflection-config
           PATH=$PATH:${TOOLCHAIN_DIR}/bin LMGREP_STATIC=true LMGREP_MUSL=true bash script/compile
           zip lmgrep-${RELEASE_VERSION}-${{ matrix.platform }}-${{ matrix.arch }}-static.zip lmgrep
 
@@ -149,15 +156,14 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.10.3.1069
-          cli: 1.10.3.1069
+          tools-deps: 1.10.3.1075
 
       - name: Compile uberjar on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           clojure -Spom
           echo $env:RELEASE_VERSION > resources/LMGREP_VERSION
-          clojure -X:uberjar :jar target/lmgrep-uber.jar :main-class lmgrep.core
+          clojure -T:build uberjar
         shell: powershell
 
       - uses: ilammy/msvc-dev-cmd@v1.10.0
@@ -173,9 +179,15 @@ jobs:
           graalvm-version: 22.0.0.2
           native-image: true
 
+      - name: Setup Babashka
+        uses: turtlequeue/setup-babashka@v1.3.0
+        with:
+          babashka-version: 0.7.4
+
       - name: Build native image
         run: |
-          native-image -jar "target/lmgrep-uber.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
+          bb generate-reflection-config
+          native-image -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
         shell: powershell
 
       - name: Zip executable
