@@ -64,6 +64,7 @@ jobs:
           clojure -T:build prep-deps
           clojure -Spom
           clojure -T:build uberjar
+          bb generate-reflection-config
           cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
 
       - name: Upload uberjar to the release
@@ -81,6 +82,7 @@ jobs:
           name: uberjar
           path: |
             target/lmgrep.jar
+            graalvm/lucene-reflect-config.json
 
 #  compile-native-image-and-release-artifacts:
 #    needs: create-gh-release
