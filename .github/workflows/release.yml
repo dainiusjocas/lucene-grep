@@ -189,8 +189,8 @@ jobs:
       - name: Build native image
         run: |
           clojure -T:build prep-deps
-          bb generate-reflection-config
-          native-image -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
+#          bb generate-reflection-config
+#          native-image -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
         shell: powershell
 
       - name: Zip executable
