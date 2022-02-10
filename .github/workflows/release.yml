@@ -85,6 +85,7 @@ jobs:
         run: |
           echo $RELEASE_VERSION > resources/LMGREP_VERSION
           clojure -Spom
+          clojure -T:build prep-deps
           clojure -T:build uberjar
           cp target/lmgrep.jar target/lmgrep-${RELEASE_VERSION}-standalone.jar
 
@@ -163,6 +164,7 @@ jobs:
         run: |
           clojure -Spom
           echo $env:RELEASE_VERSION > resources/LMGREP_VERSION
+          clojure -T:build prep-deps
           clojure -T:build uberjar
         shell: powershell
 
