@@ -111,7 +111,6 @@ jobs:
           version: '22.0.0.2'
           java-version: '17'
           components: 'native-image'
-          native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
