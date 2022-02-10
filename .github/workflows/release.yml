@@ -5,6 +5,13 @@ on:
     tags:
       - 'v*'
 
+env:
+  LMGREP_FEATURE_SNOWBALL: true
+  LMGREP_FEATURE_BUNDLED_ANALYZERS: true
+  LMGREP_FEATURE_CHARSETS: true
+  LMGREP_FEATURE_STEMPEL: true
+  LMGREP_FEATURE_RAUDIKKO: false
+
 jobs:
   create-gh-release:
     runs-on: ubuntu-latest
