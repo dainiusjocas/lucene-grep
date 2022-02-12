@@ -14,27 +14,6 @@
 
 (set! *warn-on-reflection* true)
 
-(defn only-analyze-unordered
-  "Given a line-in-chan that contains strings to analyze, passes every string to the analyze-fn whose
-  output is a JSON-encoded string. The results of the analyze-fn are put on the line-out-chan."
-  [analyze-fn line-in-chan line-out-chan concurrency]
-  (let [not-done (atom concurrency)]
-    (dotimes [_ concurrency]
-      (a/thread
-        (if-let [^String line (a/<!! line-in-chan)]
-          (do
-            (try
-              (a/>!! line-out-chan (analyze-fn line))
-              (catch Throwable t
-                (when (System/getenv "DEBUG_MODE")
-                  (.printStackTrace t))
-                (a/close! line-out-chan)
-                (System/exit 1)))
-            (recur))
-          ; when all threads are done close the output channel, that marks the end of processing
-          (when (zero? (swap! not-done dec))
-            (a/close! line-out-chan)))))))
-
 (defn only-analyze-ordered
   "Parallel processing pipeline that preserved the input order."
   [analyze-fn line-in-chan line-out-chan concurrency]
