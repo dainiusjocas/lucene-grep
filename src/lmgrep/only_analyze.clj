@@ -8,7 +8,9 @@
             [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)
-           (java.util.concurrent ExecutorService Executors TimeUnit)))
+           (java.util.concurrent ExecutorService Executors TimeUnit
+                                 LinkedBlockingQueue ThreadPoolExecutor
+                                 ThreadPoolExecutor$CallerRunsPolicy)))
 
 (set! *warn-on-reflection* true)
 
@@ -70,12 +72,17 @@
 
 (defn unordered-analysis
   "Reads strings from the reader line by line, processes each line on an ExecutorService
-   thread pool then sends the lines to anather single thread ExecutorService for writing
+   thread pool then sends the lines to another single thread ExecutorService for writing
    the output lines to a writer.
    When the input is consumed the text analysis thread pool is gracefully shut down.
    Then the writer thread pool is gracefully shut down."
   [reader ^PrintWriter writer analysis-fn analyzer concurrency]
-  (let [^ExecutorService analyzer-pool (Executors/newFixedThreadPool concurrency)
+  (let [^ExecutorService analyzer-pool (ThreadPoolExecutor.
+                                         concurrency concurrency
+                                         0 TimeUnit/MILLISECONDS
+                                         (LinkedBlockingQueue. 1024)
+                                         (Executors/defaultThreadFactory)
+                                         (ThreadPoolExecutor$CallerRunsPolicy.))
         ^ExecutorService writer-pool (Executors/newSingleThreadExecutor)]
     (with-open [^BufferedReader rdr reader]
       (loop [^String line (.readLine rdr)]
