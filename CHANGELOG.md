@@ -7,7 +7,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## Fixed/enhanced
 
 - `--only-analyze` with `--no-preserve-order` prevent OOM
-- `--only-analyze` option `--queue-size` to specify the Java executor service queue size.
+- `--only-analyze` option `--queue-size` to specify the Java executor service queue size
+- Flag `--show-analysis-components` to print out a list of available text analysis components
 
 ## v2022.02.10
 

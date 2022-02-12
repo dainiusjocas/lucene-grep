@@ -1,9 +1,12 @@
 (ns lmgrep.core
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
+            [jsonista.core :as json]
             [lmgrep.cli :as cli]
+            [lmgrep.lucene.analyzer]
+            [lmgrep.grep :as grep]
             [lmgrep.only-analyze :as analyze]
-            [lmgrep.grep :as grep])
+            [lmgrep.predefined-analyzers])
   (:gen-class))
 
 (def version (str/trim (slurp (io/resource "LMGREP_VERSION"))))
@@ -19,6 +22,12 @@
        (empty? (:query options))
        (nil? (:queries-file options))))
 
+(def available-analysis-components
+  {:analyzers     (sort (keys lmgrep.predefined-analyzers/analyzers))
+   :char-filters  (sort (keys lmgrep.lucene.analyzer/char-filter-name->class))
+   :tokenizers    (sort (keys lmgrep.lucene.analyzer/tokenizer-name->class))
+   :token-filters (sort (keys lmgrep.lucene.analyzer/token-filter-name->class))})
+
 (defn -main [& args]
   (try
     (let [{:keys [options arguments errors summary]
@@ -27,6 +36,11 @@
         (println "Errors:" errors)
         (print-summary-msg summary)
         (System/exit 1))
+      (when (:show-analysis-components options)
+        (println
+          (json/write-value-as-string
+            available-analysis-components))
+        (System/exit 0))
       (if (:only-analyze options)
         (analyze/analyze-lines (first positional-arguments) (rest positional-arguments) options)
         (do

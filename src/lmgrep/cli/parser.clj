@@ -91,6 +91,8 @@
     :default false]
    [nil "--word-delimiter-graph-filter WDGF" "WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html"
     :parse-fn #(Integer/parseInt %)]
+   [nil "--show-analysis-components" "Just print-out the available analysis components in JSON."
+    :default false]
    [nil "--only-analyze" "When provided output will be analyzed text."
     :default false]
    [nil "--explain" "Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze API."]
