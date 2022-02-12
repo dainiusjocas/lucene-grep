@@ -87,8 +87,9 @@ jobs:
             resources/LMGREP_VERSION
 
   build-native-executables-and-upload-to-release:
+    name: Native image build on ${{ matrix.os }}
     needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
