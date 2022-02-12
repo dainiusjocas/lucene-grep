@@ -13,6 +13,18 @@
              (with-out-str
                (grep/grep [query] file nil options)))))))
 
+(deftest grepping-file-unordered
+  (let [file "test/resources/test.txt"
+        query "fox"
+        options {:preserve-order false
+                 :split          true
+                 :pre-tags       ">" :post-tags "<"
+                 :template       "{{highlighted-line}}"}]
+    (is (= "The quick brown >fox< jumps over the lazy dog"
+           (str/trim
+             (with-out-str
+               (grep/grep [query] file nil options)))))))
+
 (deftest grepping-stdin
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"

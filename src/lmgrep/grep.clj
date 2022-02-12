@@ -5,16 +5,14 @@
             [clojure.core.async.impl.protocols :as impl]
             [jsonista.core :as json]
             [lmgrep.fs :as fs]
-            [lmgrep.formatter :as formatter]
+            [lmgrep.matching :as matching]
             [lmgrep.lucene :as lucene]
-            [lmgrep.analysis :as analysis])
-  (:import (java.io BufferedReader File PrintWriter BufferedWriter FileReader)))
+            [lmgrep.analysis :as analysis]
+            [lmgrep.unordered :as unordered])
+  (:import (java.io BufferedReader File PrintWriter BufferedWriter FileReader)
+           (lmgrep.matching LineNrStr)))
 
 (set! *warn-on-reflection* true)
-
-(defn sum-score [highlights]
-  (when-let [scores (seq (remove nil? (map :score highlights)))]
-    (reduce + scores)))
 
 (defn seq-of-chan
   "Creates a lazy seq from a core.async channel."
@@ -41,30 +39,8 @@
      (seq-of-chan oc)))
   ([f coll] (map-pipeline f 16 coll)))
 
-(defrecord LineNrStr [nr str])
-
-(defn matcher-fn [highlighter-fn file-path options]
-  ;; This function can not return nil values
-  (let [highlight-opts (select-keys options [:with-score :with-scored-highlights])
-        with-details? (:with-details options)
-        format (:format options)
-        scored? (or (:with-score options) (:with-scored-highlights options))]
-    (fn [^LineNrStr line-nr-and-line-str]
-      (if-let [highlights (seq (highlighter-fn (.str line-nr-and-line-str) highlight-opts))]
-        (let [details (cond-> {:line-number (inc (.nr line-nr-and-line-str))
-                               :line        (.str line-nr-and-line-str)}
-                              file-path (assoc :file file-path)
-                              (true? scored?) (assoc :score (sum-score highlights))
-                              (true? with-details?) (assoc :highlights highlights))]
-          (case format
-            :edn (pr-str details)
-            :json (json/write-value-as-string details)
-            :string (formatter/string-output highlights details options)
-            (formatter/string-output highlights details options)))
-        ""))))
-
 (defn match-lines [highlighter-fn file-path lines options]
-  (let [parallel-matcher (matcher-fn highlighter-fn file-path options)
+  (let [parallel-matcher (matching/matcher-fn highlighter-fn file-path options)
         concurrency (get options :concurrency 8)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
         numbered-lines (map-indexed (fn [line-str line-number] (LineNrStr. line-str line-number)) lines)
@@ -97,19 +73,25 @@
 
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
+        preserve-order? (get options :preserve-order true)
         reader-buffer-size (get options :reader-buffer-size 8192)
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
-        highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)]
-    (if files-pattern
-      (doseq [^String path (into (fs/get-files files-pattern options)
-                                 (fs/filter-files files))]
+        highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)
+        file-paths-to-analyze (into (fs/get-files files-pattern options)
+                                    (fs/filter-files files))]
+    (if preserve-order?
+      (if files-pattern
+        (doseq [^String path file-paths-to-analyze]
+          (if (:split options)
+            (with-open [^BufferedReader rdr (BufferedReader. (FileReader. path) reader-buffer-size)]
+              (match-lines highlighter-fn path (line-seq rdr) options))
+            (match-lines highlighter-fn path [(slurp path)] options)))
         (if (:split options)
-          (with-open [^BufferedReader rdr (BufferedReader. (FileReader. path) reader-buffer-size)]
-            (match-lines highlighter-fn path (line-seq rdr) options))
-          (match-lines highlighter-fn path [(slurp path)] options)))
-      (if (:split options)
-        (match-lines highlighter-fn nil (line-seq (BufferedReader. *in* reader-buffer-size)) options)
-        (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options)))))
+          (match-lines highlighter-fn nil (line-seq (BufferedReader. *in* reader-buffer-size)) options)
+          (match-lines highlighter-fn nil [(str/trim (slurp *in*))] options)))
+      (unordered/grep file-paths-to-analyze
+                      highlighter-fn
+                      options))))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
