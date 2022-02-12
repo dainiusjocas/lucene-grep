@@ -4,6 +4,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## Fixed/enhanced
+
+- `--only-analyze` with `--no-preserve-order` prevent OOM
+- `--only-analyze` option `--queue-size` to specify the Java executor service queue size.
+
 ## v2022.02.10
 
 ## Fixed/enhanced

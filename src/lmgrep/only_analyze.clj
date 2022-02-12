@@ -8,30 +8,11 @@
             [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter)
            (org.apache.lucene.analysis Analyzer)
-           (java.util.concurrent ExecutorService Executors TimeUnit)))
+           (java.util.concurrent ExecutorService Executors TimeUnit
+                                 LinkedBlockingQueue ThreadPoolExecutor
+                                 ThreadPoolExecutor$CallerRunsPolicy)))
 
 (set! *warn-on-reflection* true)
-
-(defn only-analyze-unordered
-  "Given a line-in-chan that contains strings to analyze, passes every string to the analyze-fn whose
-  output is a JSON-encoded string. The results of the analyze-fn are put on the line-out-chan."
-  [analyze-fn line-in-chan line-out-chan concurrency]
-  (let [not-done (atom concurrency)]
-    (dotimes [_ concurrency]
-      (a/thread
-        (if-let [^String line (a/<!! line-in-chan)]
-          (do
-            (try
-              (a/>!! line-out-chan (analyze-fn line))
-              (catch Throwable t
-                (when (System/getenv "DEBUG_MODE")
-                  (.printStackTrace t))
-                (a/close! line-out-chan)
-                (System/exit 1)))
-            (recur))
-          ; when all threads are done close the output channel, that marks the end of processing
-          (when (zero? (swap! not-done dec))
-            (a/close! line-out-chan)))))))
 
 (defn only-analyze-ordered
   "Parallel processing pipeline that preserved the input order."
@@ -70,12 +51,17 @@
 
 (defn unordered-analysis
   "Reads strings from the reader line by line, processes each line on an ExecutorService
-   thread pool then sends the lines to anather single thread ExecutorService for writing
+   thread pool then sends the lines to another single thread ExecutorService for writing
    the output lines to a writer.
    When the input is consumed the text analysis thread pool is gracefully shut down.
    Then the writer thread pool is gracefully shut down."
-  [reader ^PrintWriter writer analysis-fn analyzer concurrency]
-  (let [^ExecutorService analyzer-pool (Executors/newFixedThreadPool concurrency)
+  [reader ^PrintWriter writer analysis-fn analyzer concurrency queue-size]
+  (let [^ExecutorService analyzer-pool (ThreadPoolExecutor.
+                                         concurrency concurrency
+                                         0 TimeUnit/MILLISECONDS
+                                         (LinkedBlockingQueue. ^Integer queue-size)
+                                         (Executors/defaultThreadFactory)
+                                         (ThreadPoolExecutor$CallerRunsPolicy.))
         ^ExecutorService writer-pool (Executors/newSingleThreadExecutor)]
     (with-open [^BufferedReader rdr reader]
       (loop [^String line (.readLine rdr)]
@@ -93,9 +79,9 @@
       (.awaitTermination writer-pool 60 TimeUnit/SECONDS)
       (.flush writer))))
 
-(defn ordered-analysis [reader writer analysis-fn analyzer concurrency]
-  (let [line-in-chan (a/chan 1024)
-        line-out-chan (a/chan 1024)
+(defn ordered-analysis [reader writer analysis-fn analyzer concurrency queue-size]
+  (let [line-in-chan (a/chan queue-size)
+        line-out-chan (a/chan queue-size)
         analyze-fn (fn [line] (json/write-value-as-string (analysis-fn line analyzer)))]
     (only-analyze-ordered analyze-fn line-in-chan line-out-chan concurrency)
     (read-input-lines-to-channel reader line-in-chan)
@@ -123,6 +109,7 @@
   [files-pattern files options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
+        queue-size (get options :queue-size 1024)
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         analysis-conf (assoc (get options :analysis) :config-dir (get options :config-dir))
@@ -143,8 +130,8 @@
         (if (get options :graph)
           (analyze-to-graph reader writer analyzer)
           (if preserve-order?
-            (ordered-analysis reader writer analysis-fn analyzer concurrency)
-            (unordered-analysis reader writer analysis-fn analyzer concurrency)))))))
+            (ordered-analysis reader writer analysis-fn analyzer concurrency queue-size)
+            (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))))
 
 (comment
   (lmgrep.only-analyze/analyze-lines
