@@ -5,7 +5,8 @@
 
 (defn prepare-analysis [options]
   (if (empty? (get-in options [:options :analysis]))
-    (assoc-in options [:options :analysis] (ac/prepare-analysis-configuration ac/default-text-analysis options))
+    (assoc-in options [:options :analysis]
+              (ac/prepare-analysis-configuration ac/default-text-analysis options))
     options))
 
 (defn remove-text-analysis-flags [options]
@@ -18,4 +19,8 @@
       (update-in [:options] remove-text-analysis-flags)))
 
 (comment
-  (lmgrep.cli/handle-args ["--tokenizer=standard" "--stem?=false" "--stemmer=english" "--case-sensitive?=true"]))
+  (lmgrep.cli/handle-args ["--tokenizer=standard"
+                           "--stem?=false"
+                           "--stemmer=english"
+                           "--case-sensitive?=true"])
+  (lmgrep.cli/handle-args ["--concurrency=1"]))

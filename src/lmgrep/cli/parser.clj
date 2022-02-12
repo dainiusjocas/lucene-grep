@@ -102,7 +102,12 @@
     :parse-fn read-json]
    [nil "--concurrency CONCURRENCY" "How many concurrent threads to use for processing."
     :parse-fn #(Integer/parseInt %)
+    :validate [(fn [value] (< 0 value)) "Must be > 0"]
     :default 8]
+   [nil "--queue-size SIZE" "Number of lines read before being processed"
+    :parse-fn #(Integer/parseInt %)
+    :validate [(fn [value] (< 0 value)) "Must be > 0"]
+    :default 1024]
    [nil "--reader-buffer-size BUFFER_SIZE" "Buffer size of the BufferedReader in bytes."
     :parse-fn #(Integer/parseInt %)]
    [nil "--writer-buffer-size BUFFER_SIZE" "Buffer size of the BufferedWriter in bytes."

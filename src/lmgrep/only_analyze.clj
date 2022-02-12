@@ -55,11 +55,11 @@
    the output lines to a writer.
    When the input is consumed the text analysis thread pool is gracefully shut down.
    Then the writer thread pool is gracefully shut down."
-  [reader ^PrintWriter writer analysis-fn analyzer concurrency]
+  [reader ^PrintWriter writer analysis-fn analyzer concurrency queue-size]
   (let [^ExecutorService analyzer-pool (ThreadPoolExecutor.
                                          concurrency concurrency
                                          0 TimeUnit/MILLISECONDS
-                                         (LinkedBlockingQueue. 1024)
+                                         (LinkedBlockingQueue. ^Integer queue-size)
                                          (Executors/defaultThreadFactory)
                                          (ThreadPoolExecutor$CallerRunsPolicy.))
         ^ExecutorService writer-pool (Executors/newSingleThreadExecutor)]
@@ -79,9 +79,9 @@
       (.awaitTermination writer-pool 60 TimeUnit/SECONDS)
       (.flush writer))))
 
-(defn ordered-analysis [reader writer analysis-fn analyzer concurrency]
-  (let [line-in-chan (a/chan 1024)
-        line-out-chan (a/chan 1024)
+(defn ordered-analysis [reader writer analysis-fn analyzer concurrency queue-size]
+  (let [line-in-chan (a/chan queue-size)
+        line-out-chan (a/chan queue-size)
         analyze-fn (fn [line] (json/write-value-as-string (analysis-fn line analyzer)))]
     (only-analyze-ordered analyze-fn line-in-chan line-out-chan concurrency)
     (read-input-lines-to-channel reader line-in-chan)
@@ -109,6 +109,7 @@
   [files-pattern files options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
+        queue-size (get options :queue-size 1024)
         preserve-order? (get options :preserve-order true)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         analysis-conf (assoc (get options :analysis) :config-dir (get options :config-dir))
@@ -129,8 +130,8 @@
         (if (get options :graph)
           (analyze-to-graph reader writer analyzer)
           (if preserve-order?
-            (ordered-analysis reader writer analysis-fn analyzer concurrency)
-            (unordered-analysis reader writer analysis-fn analyzer concurrency)))))))
+            (ordered-analysis reader writer analysis-fn analyzer concurrency queue-size)
+            (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))))
 
 (comment
   (lmgrep.only-analyze/analyze-lines
