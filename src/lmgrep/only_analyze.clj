@@ -1,6 +1,5 @@
 (ns lmgrep.only-analyze
   (:require [clojure.core.async :as a]
-            [clojure.java.io :as io]
             [jsonista.core :as json]
             [lmgrep.analysis :as analysis]
             [lmgrep.fs :as fs]
@@ -79,6 +78,16 @@
       (.awaitTermination writer-pool 60 TimeUnit/SECONDS)
       (.flush writer))))
 
+(defn unordered [files-to-analyze writer analyzer analysis-fn options]
+  (let [reader-buffer-size (get options :reader-buffer-size 8192)
+        queue-size (get options :queue-size 1024)
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
+    (doseq [^String path files-to-analyze]
+      (let [reader (if path
+                     (BufferedReader. (FileReader. path) reader-buffer-size)
+                     (BufferedReader. *in* reader-buffer-size))]
+        (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
+
 (defn ordered-analysis [reader writer analysis-fn analyzer concurrency queue-size]
   (let [line-in-chan (a/chan queue-size)
         line-out-chan (a/chan queue-size)
@@ -95,16 +104,6 @@
         (do
           (.println writer (text-analysis/text->graph line analyzer))
           (recur (.readLine rdr)))))))
-
-(defn unordered [files-to-analyze writer analyzer analysis-fn options]
-  (let [reader-buffer-size (get options :reader-buffer-size 8192)
-        queue-size (get options :queue-size 1024)
-        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
-    (doseq [^String path files-to-analyze]
-      (let [reader (if path
-                     (BufferedReader. (FileReader. path) reader-buffer-size)
-                     (BufferedReader. *in* reader-buffer-size))]
-        (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
 
 (defn ordered [files-to-analyze writer analyzer analysis-fn options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
