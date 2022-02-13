@@ -12,41 +12,6 @@
 
 (set! *warn-on-reflection* true)
 
-(defn only-analyze-ordered
-  "Parallel processing pipeline that preserved the input order."
-  [analyze-fn line-in-chan line-out-chan concurrency]
-  (a/pipeline concurrency
-              line-out-chan
-              (map analyze-fn)
-              line-in-chan
-              true
-              (fn [^Throwable t]
-                (when (System/getenv "DEBUG_MODE")
-                  (.printStackTrace t))
-                (a/close! line-out-chan)
-                (System/exit 1))))
-
-(defn read-input-lines-to-channel
-  "Starts a thread that reads strings from an input reader and puts them to a channel."
-  [^BufferedReader input-reader channel]
-  (a/go
-    (with-open [^BufferedReader rdr input-reader]
-      (loop [^String line (.readLine rdr)]
-        (if (nil? line)
-          (a/close! channel)
-          (do
-            (a/>! channel line)
-            (recur (.readLine rdr))))))))
-
-(defn write-output-from-channel
-  "Write data from a channel to the PrintWriter. Intended to be run on the main thread."
-  [^PrintWriter writer channel]
-  (loop [^String line (a/<!! channel)]
-    (when-not (nil? line)
-      (.println writer line)
-      (recur (a/<!! channel))))
-  (.flush writer))
-
 (defn unordered-analysis
   "Reads strings from the reader line by line, processes each line on an ExecutorService
    thread pool then sends the lines to another single thread ExecutorService for writing
@@ -82,14 +47,6 @@
     (c/shutdown-thread-pool-executors analyzer-thread-pool-executor writer-thread-pool-executor)
     (.flush writer)))
 
-(defn ordered-analysis [reader writer analysis-fn analyzer concurrency queue-size]
-  (let [line-in-chan (a/chan queue-size)
-        line-out-chan (a/chan queue-size)
-        analyze-fn (fn [line] (json/write-value-as-string (analysis-fn line analyzer)))]
-    (only-analyze-ordered analyze-fn line-in-chan line-out-chan concurrency)
-    (read-input-lines-to-channel reader line-in-chan)
-    (write-output-from-channel writer line-out-chan)))
-
 (defn analyze-to-graph [input-reader ^PrintWriter writer analyzer]
   (with-open [^BufferedReader rdr input-reader]
     (loop [^String line (.readLine rdr)]
@@ -99,15 +56,35 @@
           (.println writer (text-analysis/text->graph line analyzer))
           (recur (.readLine rdr)))))))
 
-(defn ordered [files-to-analyze writer analyzer analysis-fn options]
+(defn ordered-analysis
+  [reader ^PrintWriter writer analysis-fn analyzer
+   ^ExecutorService analyzer-thread-pool-executor
+   ^ExecutorService writer-thread-pool-executor]
+  (with-open [^BufferedReader rdr reader]
+    (loop [^String line (.readLine rdr)]
+      (when-not (nil? line)
+        (let [f (.submit analyzer-thread-pool-executor
+                         ^Callable (fn []
+                                     (json/write-value-as-string
+                                       (analysis-fn line analyzer))))]
+          (.execute writer-thread-pool-executor
+                    ^Runnable (fn [] (.println writer (.get f)))))
+        (recur (.readLine rdr))))))
+
+(defn ordered [files-to-analyze ^PrintWriter writer analyzer analysis-fn options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
         queue-size (get options :queue-size 1024)
-        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
+        ^ExecutorService analyzer-thread-pool-executor (c/thread-pool-executor concurrency queue-size)
+        ^ExecutorService writer-thread-pool-executor (c/single-thread-executor)]
     (doseq [^String path files-to-analyze]
       (let [reader (if path
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))]
-        (ordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
+        (ordered-analysis reader writer analysis-fn analyzer
+                          analyzer-thread-pool-executor writer-thread-pool-executor)))
+    (c/shutdown-thread-pool-executors analyzer-thread-pool-executor writer-thread-pool-executor)
+    (.flush writer)))
 
 (defn graph [files-to-analyze writer analyzer options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)]
