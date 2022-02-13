@@ -5,10 +5,12 @@
            (java.util.concurrent ExecutorService)
            (lmgrep.matching LineNrStr)))
 
+(set! *warn-on-reflection* true)
+
 (defn consume-reader
   "Given a Reader iterates over lines and sends them to the
   matcher-thread-pool-executor for further handling."
-  [reader matcher-fn matcher-thread-pool-executor]
+  [reader matcher-fn ^ExecutorService matcher-thread-pool-executor]
   (with-open [^BufferedReader rdr reader]
     (loop [^String line (.readLine rdr)
            line-nr 0]
@@ -17,7 +19,7 @@
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn create-unordered-matcher-fn
-  [matcher-fn writer-thread-pool-executor writer with-empty-lines]
+  [matcher-fn ^ExecutorService writer-thread-pool-executor ^PrintWriter writer with-empty-lines]
   (fn [line-nr line]
     (fn []
       (let [^String out-str (matcher-fn (LineNrStr. line-nr line))]

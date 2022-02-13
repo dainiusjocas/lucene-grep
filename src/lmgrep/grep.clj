@@ -37,7 +37,7 @@
         file-paths-to-analyze (into (fs/get-files files-pattern options)
                                     (fs/filter-files files))]
     (if preserve-order?
-      (ordered/grep files-pattern file-paths-to-analyze highlighter-fn options)
+      (ordered/grep file-paths-to-analyze highlighter-fn options)
       (unordered/grep file-paths-to-analyze highlighter-fn options))))
 
 (comment
