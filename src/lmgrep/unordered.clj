@@ -1,7 +1,8 @@
 (ns lmgrep.unordered
   (:require [lmgrep.matching :as matching])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
-           (java.util.concurrent ThreadPoolExecutor TimeUnit Executors LinkedBlockingQueue ThreadPoolExecutor$CallerRunsPolicy ExecutorService)
+           (java.util.concurrent ThreadPoolExecutor TimeUnit Executors LinkedBlockingQueue
+                                 ThreadPoolExecutor$CallerRunsPolicy ExecutorService)
            (lmgrep.matching LineNrStr)))
 
 (defn shutdown-thread-pool-executors [& executors]
@@ -20,24 +21,25 @@
 (defn consume-reader
   "Given a Reader iterates over lines and sends them to the
   matcher-thread-pool-executor for further handling."
-  [reader ^PrintWriter writer
-   matcher-fn
-   matcher-thread-pool-executor writer-thread-pool-executor
-   with-empty-lines]
+  [reader matcher-fn matcher-thread-pool-executor]
   (with-open [^BufferedReader rdr reader]
     (loop [^String line (.readLine rdr)
            line-nr 0]
       (when-not (nil? line)
-        (.execute matcher-thread-pool-executor
-                  ^Runnable (fn []
-                              (let [^String out-str (matcher-fn (LineNrStr. line-nr line))]
-                                (if (.equals "" out-str)
-                                  (when with-empty-lines
-                                    (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (.println writer out-str))))
-                                  (.execute writer-thread-pool-executor
-                                            ^Runnable (fn [] (.println writer out-str)))))))
+        (.execute matcher-thread-pool-executor ^Runnable (matcher-fn line-nr line))
         (recur (.readLine rdr) (inc line-nr))))))
+
+(defn create-unordered-matcher-fn
+  [matcher-fn writer-thread-pool-executor writer with-empty-lines]
+  (fn [line-nr line]
+    (fn []
+      (let [^String out-str (matcher-fn (LineNrStr. line-nr line))]
+        (if (.equals "" out-str)
+          (when with-empty-lines
+            (.execute writer-thread-pool-executor
+                      ^Runnable (fn [] (.println writer out-str))))
+          (.execute writer-thread-pool-executor
+                    ^Runnable (fn [] (.println writer out-str))))))))
 
 (defn grep [file-paths-to-analyze highlighter-fn options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
@@ -54,10 +56,11 @@
       (let [reader (if path
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))
-            matcher-fn (matching/matcher-fn highlighter-fn path options)]
-        (consume-reader reader writer
-                        matcher-fn
-                        matcher-thread-pool-executor writer-thread-pool-executor
-                        with-empty-lines)))
+            matcher-fn (matching/matcher-fn highlighter-fn path options)
+            unordered-matcher-fn (create-unordered-matcher-fn matcher-fn
+                                                              writer-thread-pool-executor
+                                                              writer
+                                                              with-empty-lines)]
+        (consume-reader reader unordered-matcher-fn matcher-thread-pool-executor)))
     (shutdown-thread-pool-executors matcher-thread-pool-executor writer-thread-pool-executor)
     (.flush writer)))
