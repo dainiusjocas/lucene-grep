@@ -6,7 +6,7 @@
 
 (set! *warn-on-reflection* true)
 
-(defn consume-reader
+(defn unordered-consume-reader
   "Given a Reader iterates over lines and sends them to the
   matcher-thread-pool-executor for further handling."
   [reader matcher-fn
@@ -29,12 +29,36 @@
                                             ^Runnable (fn [] (.println writer out-str)))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
+(defn ordered-consume-reader
+  "Given a Reader iterates over lines and sends them to the
+  matcher-thread-pool-executor for further handling."
+  [reader matcher-fn
+   ^ExecutorService matcher-thread-pool-executor
+   ^ExecutorService writer-thread-pool-executor
+   ^PrintWriter writer
+   with-empty-lines]
+  (with-open [^BufferedReader rdr reader]
+    (loop [^String line (.readLine rdr)
+           line-nr 1]
+      (when-not (nil? line)
+        (let [f (.submit matcher-thread-pool-executor
+                         ^Callable (fn [] (matcher-fn line-nr line)))]
+          (.execute writer-thread-pool-executor
+                    ^Runnable (fn [] (let [out-str (.get f)]
+                                       (if (.equals "" out-str)
+                                         (when with-empty-lines
+                                           (.println writer out-str))
+                                         (.println writer out-str))))))
+        (recur (.readLine rdr) (inc line-nr))))))
+
 (defn grep [file-paths-to-analyze highlighter-fn options]
-  (let [reader-buffer-size (get options :reader-buffer-size 8192)
+  (let [preserve-order? (get options :preserve-order true)
+        reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
         concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         queue-size (get options :queue-size 1024)
         with-empty-lines (get options :with-empty-lines)
+        consume-fn (if preserve-order? ordered-consume-reader unordered-consume-reader)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
         ^ExecutorService matcher-thread-pool-executor (c/thread-pool-executor concurrency queue-size)
         ^ExecutorService writer-thread-pool-executor (c/single-thread-executor)]
@@ -45,11 +69,11 @@
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))
             matcher-fn (matching/matcher-fn highlighter-fn path options)]
-        (consume-reader reader
-                        matcher-fn
-                        matcher-thread-pool-executor
-                        writer-thread-pool-executor
-                        writer
-                        with-empty-lines)))
+        (consume-fn reader
+                    matcher-fn
+                    matcher-thread-pool-executor
+                    writer-thread-pool-executor
+                    writer
+                    with-empty-lines)))
     (c/shutdown-thread-pool-executors matcher-thread-pool-executor writer-thread-pool-executor)
     (.flush writer)))
