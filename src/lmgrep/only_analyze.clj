@@ -6,7 +6,7 @@
             [lmgrep.fs :as fs]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.text-analysis :as text-analysis])
-  (:import (java.io BufferedReader PrintWriter BufferedWriter)
+  (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (org.apache.lucene.analysis Analyzer)
            (java.util.concurrent ExecutorService Executors TimeUnit
                                  LinkedBlockingQueue ThreadPoolExecutor
@@ -96,6 +96,34 @@
           (.println writer (text-analysis/text->graph line analyzer))
           (recur (.readLine rdr)))))))
 
+(defn unordered [files-to-analyze writer analyzer analysis-fn options]
+  (let [reader-buffer-size (get options :reader-buffer-size 8192)
+        queue-size (get options :queue-size 1024)
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
+    (doseq [^String path files-to-analyze]
+      (let [reader (if path
+                     (BufferedReader. (FileReader. path) reader-buffer-size)
+                     (BufferedReader. *in* reader-buffer-size))]
+        (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
+
+(defn ordered [files-to-analyze writer analyzer analysis-fn options]
+  (let [reader-buffer-size (get options :reader-buffer-size 8192)
+        queue-size (get options :queue-size 1024)
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
+    (doseq [^String path files-to-analyze]
+      (let [reader (if path
+                     (BufferedReader. (FileReader. path) reader-buffer-size)
+                     (BufferedReader. *in* reader-buffer-size))]
+        (ordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
+
+(defn graph [files-to-analyze writer analyzer options]
+  (let [reader-buffer-size (get options :reader-buffer-size 8192)]
+    (doseq [^String path files-to-analyze]
+      (let [reader (if path
+                     (BufferedReader. (FileReader. path) reader-buffer-size)
+                     (BufferedReader. *in* reader-buffer-size))]
+        (analyze-to-graph reader writer analyzer)))))
+
 (defn analyze-lines
   "Sequence of strings into sequence of text token sequences.
   Output format is valid JSON except when :graph true is provided.
@@ -110,11 +138,8 @@
   - :reader-buffer-size in bytes.
   - :writer-buffer-size in bytes."
   [files-pattern files options]
-  (let [reader-buffer-size (get options :reader-buffer-size 8192)
-        print-writer-buffer-size (get options :writer-buffer-size 8192)
-        queue-size (get options :queue-size 1024)
+  (let [print-writer-buffer-size (get options :writer-buffer-size 8192)
         preserve-order? (get options :preserve-order true)
-        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
         analysis-conf (assoc (get options :analysis) :config-dir (get options :config-dir))
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens
@@ -126,15 +151,11 @@
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         ^Analyzer analyzer (analyzer/create analysis-conf custom-analyzers)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))]
-    (doseq [path files-to-analyze]
-      (let [reader (if path
-                     (io/reader path)
-                     (BufferedReader. *in* reader-buffer-size))]
-        (if (get options :graph)
-          (analyze-to-graph reader writer analyzer)
-          (if preserve-order?
-            (ordered-analysis reader writer analysis-fn analyzer concurrency queue-size)
-            (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))))
+    (if (get options :graph)
+      (graph files-to-analyze writer analyzer options)
+      (if preserve-order?
+        (ordered files-to-analyze writer analyzer analysis-fn options)
+        (unordered files-to-analyze writer analyzer analysis-fn options)))))
 
 (comment
   (lmgrep.only-analyze/analyze-lines
