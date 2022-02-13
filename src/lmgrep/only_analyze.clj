@@ -97,15 +97,18 @@
           (recur (.readLine rdr)))))))
 
 (defn analyze-lines
-  "Sequence of strings into sequence of text token sequences. Output format is JSON.
+  "Sequence of strings into sequence of text token sequences.
+  Output format is valid JSON except when :graph true is provided.
   If given file path reads file otherwise stdin.
 
   Options:
   - :concurrency how many threads to use for text analysis.
+  - :queue-size how lines to store in memory before processing them.
   - :explain should the token have the positional and other information.
+  - :graph output would be a valid GraphViz.
   - :preserve-order should the output preserve the order of the input.
-  - :reader-buffer-size in bytes
-  - :writer-buffer-size in bytes"
+  - :reader-buffer-size in bytes.
+  - :writer-buffer-size in bytes."
   [files-pattern files options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
@@ -142,4 +145,9 @@
   (lmgrep.only-analyze/analyze-lines
     "test/resources/test.txt"
     nil
-    {:preserve-order false}))
+    {:preserve-order false})
+
+  (lmgrep.only-analyze/analyze-lines
+    "test/resources/test.txt"
+    nil
+    {:graph true}))
