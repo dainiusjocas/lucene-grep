@@ -13,6 +13,51 @@
              (with-out-str
                (grep/grep [query] file nil options)))))))
 
+(deftest grepping-file-unordered
+  (let [file "test/resources/test.txt"
+        query "fox"
+        options {:preserve-order false
+                 :split          true
+                 :pre-tags       ">" :post-tags "<"
+                 :template       "{{highlighted-line}}"}]
+    (is (= "The quick brown >fox< jumps over the lazy dog"
+           (str/trim
+             (with-out-str
+               (grep/grep [query] file nil options)))))))
+
+(deftest grepping-stdin-unordered
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "fox"
+        options {:preserve-order false
+                 :split true
+                 :pre-tags ">" :post-tags "<"
+                 :template "{{highlighted-line}}"}]
+    (is (= "The quick brown >fox< jumps over the lazy dog"
+           (with-in-str text-from-stdin
+                        (str/trim
+                          (with-out-str
+                            (grep/grep [query] nil nil options))))))))
+
+(deftest grepping-ordered-vs-unordered
+  (let [file "README.md"
+        query "test"
+        options {:split          true
+                 :pre-tags       ">" :post-tags "<"
+                 :template       "{{line-number}}"}
+        ordered-options (assoc options :preserve-order true)
+        ordered-matched-lines (str/split-lines
+                                (str/trim
+                                  (with-out-str
+                                    (grep/grep [query] file nil ordered-options))))
+        unordered-options (assoc options :preserve-order false)
+        unordered-matched-lines (str/split-lines
+                                  (str/trim
+                                    (with-out-str
+                                      (grep/grep [query] file nil unordered-options))))]
+    (is (= (set ordered-matched-lines) (set unordered-matched-lines)))
+    (when (= ordered-matched-lines unordered-matched-lines)
+      (println "Usually order is different."))))
+
 (deftest grepping-stdin
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
@@ -22,7 +67,6 @@
                         (str/trim
                           (with-out-str
                             (grep/grep [query] nil nil options))))))))
-
 
 (deftest should-output-no-lines
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog\nfoo"

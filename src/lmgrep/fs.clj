@@ -125,19 +125,21 @@
          results)))))
 
 (defn get-files [^String glob options]
-  (let [^String root-folder (infer-root-folder glob)
-        glob-pattern (if (= "." root-folder)
-                       glob
-                       (str/replace glob (re-pattern (format "%s/?" root-folder)) ""))]
-    (mapv str (fs-glob root-folder
-                       glob-pattern
-                       (merge {:hidden            true
-                               :follow-links      false
-                               :max-depth         Integer/MAX_VALUE
-                               :handle-error      true
-                               :only-files        true
-                               :skip-binary-files false}
-                              options)))))
+  (if (nil? glob)
+    []
+    (let [^String root-folder (infer-root-folder glob)
+          glob-pattern (if (= "." root-folder)
+                         glob
+                         (str/replace glob (re-pattern (format "%s/?" root-folder)) ""))]
+      (mapv str (fs-glob root-folder
+                         glob-pattern
+                         (merge {:hidden            true
+                                 :follow-links      false
+                                 :max-depth         Integer/MAX_VALUE
+                                 :handle-error      true
+                                 :only-files        true
+                                 :skip-binary-files false}
+                                options))))))
 
 (comment
   (lmgrep.fs/get-files "*.md" {})
