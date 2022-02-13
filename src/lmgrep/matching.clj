@@ -11,9 +11,9 @@
 (defn matcher-fn [highlighter-fn file-path options]
   ;; This function can not return nil values
   (let [highlight-opts (select-keys options [:with-score :with-scored-highlights])
-        with-details? (:with-details options)
-        format (:format options)
-        scored? (or (:with-score options) (:with-scored-highlights options))]
+        with-details? (get options :with-details)
+        format (get options :format)
+        scored? (or (get options :with-score) (get options :with-scored-highlights))]
     (fn [^LineNrStr line-nr-and-line-str]
       (if-let [highlights (seq (highlighter-fn (.str line-nr-and-line-str) highlight-opts))]
         (let [details (cond-> {:line-number (inc (.nr line-nr-and-line-str))
