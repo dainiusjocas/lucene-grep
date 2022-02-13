@@ -1,11 +1,10 @@
 (ns lmgrep.only-analyze
-  (:require [clojure.core.async :as a]
-            [jsonista.core :as json]
+  (:require [jsonista.core :as json]
             [lmgrep.analysis :as analysis]
+            [lmgrep.concurrent :as c]
             [lmgrep.fs :as fs]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.text-analysis :as text-analysis]
-            [lmgrep.concurrent :as c])
+            [lmgrep.lucene.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (org.apache.lucene.analysis Analyzer)
            (java.util.concurrent ExecutorService)))
