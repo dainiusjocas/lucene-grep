@@ -16,7 +16,7 @@
    with-empty-lines]
   (with-open [^BufferedReader rdr reader]
     (loop [^String line (.readLine rdr)
-           line-nr 0]
+           line-nr 1]
       (when-not (nil? line)
         (let [f (.submit matcher-thread-pool-executor
                          ^Callable (fn [] (matcher-fn line-nr line)))]

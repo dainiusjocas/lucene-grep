@@ -12,7 +12,7 @@
   [reader matcher-fn ^ExecutorService matcher-thread-pool-executor]
   (with-open [^BufferedReader rdr reader]
     (loop [^String line (.readLine rdr)
-           line-nr 0]
+           line-nr 1]
       (when-not (nil? line)
         (.execute matcher-thread-pool-executor ^Runnable (matcher-fn line-nr line))
         (recur (.readLine rdr) (inc line-nr))))))

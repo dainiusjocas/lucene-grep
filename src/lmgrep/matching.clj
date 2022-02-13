@@ -14,7 +14,7 @@
         scored? (or (get options :with-score) (get options :with-scored-highlights))]
     (fn [line-nr line]
       (if-let [highlights (seq (highlighter-fn line highlight-opts))]
-        (let [details (cond-> {:line-number (inc line-nr)
+        (let [details (cond-> {:line-number line-nr
                                :line        line}
                               file-path (assoc :file file-path)
                               (true? scored?) (assoc :score (sum-score highlights))
