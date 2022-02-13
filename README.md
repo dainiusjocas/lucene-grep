@@ -157,40 +157,43 @@ NOTE: when the Lucene queries are specified as a positional argument or with `-q
 ```shell
 Usage: lmgrep [OPTIONS] LUCENE_QUERY [FILES]
 Supported options:
-  -q, --query QUERY                           Lucene query string(s). If specified then all the positional arguments are interpreted as files.
-      --query-parser QUERY_PARSER             Which query parser to use, one of: [classic complex-phrase simple standard surround]
-      --queries-file QUERIES_FILE             A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
-      --tokenizer TOKENIZER                   Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
-      --case-sensitive? CASE_SENSITIVE        If text should be case sensitive
-      --ascii-fold? ASCII_FOLDED              If text should be ascii folded
-      --stem? STEMMED                         If text should be stemmed
-      --stemmer STEMMER                       Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
-      --with-score                            If the matching score should be computed
-      --format FORMAT                         How the output should be formatted, one of: [edn json string]
-      --template TEMPLATE                     The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
-      --pre-tags PRE_TAGS                     A string that the highlighted text is wrapped in, use in conjunction with --post-tags
-      --post-tags POST_TAGS                   A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
-      --excludes EXCLUDES                     A GLOB that filters out files that were matched with a GLOB
-      --skip-binary-files                     If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
-      --[no-]hidden                           Search in hidden files. Default: true.
-      --max-depth N                           In case of a recursive GLOB, how deep to search for input files.
-      --with-empty-lines                      When provided on the input that does not match write an empty line to STDOUT.
-      --with-scored-highlights                ALPHA: Instructs to highlight with scoring.
-      --[no-]split                            If a file (or STDIN) should be split by newline.
-      --hyperlink                             If a file should be printed as hyperlinks.
-      --with-details                          For JSON and EDN output adds raw highlights list.
-      --word-delimiter-graph-filter WDGF      WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
-      --only-analyze                          When provided output will be analyzed text.
-      --explain                               Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze API.
-      --graph                                 Modifies --only-analyze. Output is a string that can be fed to the `dot` program.
-      --analysis ANALYSIS                 {}  The analysis chain configuration
-      --query-parser-conf CONF                The configuration for the query parser.
-      --concurrency CONCURRENCY           8   How many concurrent threads to use for processing.
-      --reader-buffer-size BUFFER_SIZE        Buffer size of the BufferedReader in bytes.
-      --writer-buffer-size BUFFER_SIZE        Buffer size of the BufferedWriter in bytes.
-      --[no-]preserve-order                   If the input order should be preserved.
-      --config-dir DIR                        A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir.
-      --analyzers-file FILE                   A file that contains definitions of text analyzers. Works in combinations with --config-dir flag.
+  -q, --query QUERY                             Lucene query string(s). If specified then all the positional arguments are interpreted as files.
+      --query-parser QUERY_PARSER               Which query parser to use, one of: [classic complex-phrase simple standard surround]
+      --queries-file QUERIES_FILE               A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files.
+      --tokenizer TOKENIZER                     Tokenizer to use, one of: [keyword letter standard unicode-whitespace whitespace]
+      --case-sensitive? CASE_SENSITIVE          If text should be case sensitive
+      --ascii-fold? ASCII_FOLDED                If text should be ascii folded
+      --stem? STEMMED                           If text should be stemmed
+      --stemmer STEMMER                         Which stemmer to use for token stemming, one of: [arabic armenian basque catalan danish dutch english estonian finnish french german german2 hungarian irish italian kp lithuanian lovins norwegian porter portuguese romanian russian spanish swedish turkish]
+      --with-score                              If the matching score should be computed
+      --format FORMAT                           How the output should be formatted, one of: [edn json string]
+      --template TEMPLATE                       The template for the output string, e.g.: file={{file}} line-number={{line-number}} line={{line}}
+      --pre-tags PRE_TAGS                       A string that the highlighted text is wrapped in, use in conjunction with --post-tags
+      --post-tags POST_TAGS                     A string that the highlighted text is wrapped in, use in conjunction with --pre-tags
+      --excludes EXCLUDES                       A GLOB that filters out files that were matched with a GLOB
+      --skip-binary-files                       If a file that is detected to be binary should be skipped. Available for Linux and MacOS only.
+      --[no-]hidden                             Search in hidden files. Default: true.
+      --max-depth N                             In case of a recursive GLOB, how deep to search for input files.
+      --with-empty-lines                        When provided on the input that does not match write an empty line to STDOUT.
+      --with-scored-highlights                  ALPHA: Instructs to highlight with scoring.
+      --[no-]split                              If a file (or STDIN) should be split by newline.
+      --hyperlink                               If a file should be printed as hyperlinks.
+      --with-details                            For JSON and EDN output adds raw highlights list.
+      --word-delimiter-graph-filter WDGF        WordDelimiterGraphFilter configurationFlags as per https://lucene.apache.org/core/7_4_0/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.html
+      --show-analysis-components                Just print-out the available analysis components in JSON.
+      --only-analyze                            When provided output will be analyzed text.
+      --explain                                 Modifies --only-analyze. Output is detailed token info, similar to Elasticsearch Analyze API.
+      --graph                                   Modifies --only-analyze. Output is a string that can be fed to the `dot` program.
+      --analysis ANALYSIS                 {}    The analysis chain configuration
+      --query-parser-conf CONF                  The configuration for the query parser.
+      --concurrency CONCURRENCY           8     How many concurrent threads to use for processing.
+      --queue-size SIZE                   1024  Number of lines read before being processed
+      --reader-buffer-size BUFFER_SIZE          Buffer size of the BufferedReader in bytes.
+      --writer-buffer-size BUFFER_SIZE          Buffer size of the BufferedWriter in bytes.
+      --[no-]preserve-order                     If the input order should be preserved.
+      --config-dir DIR                          A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir.
+      --analyzers-file FILE                     A file that contains definitions of text analyzers. Works in combinations with --config-dir flag.
+      --query-update-buffer-size NUMBER         Number of queries to be buffered in memory before being committed to the queryindex. Default 100000.
   -h, --help
 ```
 
