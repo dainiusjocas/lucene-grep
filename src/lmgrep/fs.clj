@@ -125,8 +125,7 @@
          results)))))
 
 (defn get-files [^String glob options]
-  (if (nil? glob)
-    []
+  (when glob
     (let [^String root-folder (infer-root-folder glob)
           glob-pattern (if (= "." root-folder)
                          glob
