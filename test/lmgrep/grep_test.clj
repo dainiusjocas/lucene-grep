@@ -25,6 +25,19 @@
              (with-out-str
                (grep/grep [query] file nil options)))))))
 
+(deftest grepping-stdin-unordered
+  (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+        query "fox"
+        options {:preserve-order false
+                 :split true
+                 :pre-tags ">" :post-tags "<"
+                 :template "{{highlighted-line}}"}]
+    (is (= "The quick brown >fox< jumps over the lazy dog"
+           (with-in-str text-from-stdin
+                        (str/trim
+                          (with-out-str
+                            (grep/grep [query] nil nil options))))))))
+
 (deftest grepping-ordered-vs-unordered
   (let [file "README.md"
         query "test"
@@ -54,7 +67,6 @@
                         (str/trim
                           (with-out-str
                             (grep/grep [query] nil nil options))))))))
-
 
 (deftest should-output-no-lines
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog\nfoo"

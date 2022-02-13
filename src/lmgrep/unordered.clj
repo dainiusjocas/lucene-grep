@@ -49,19 +49,14 @@
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
         ^ExecutorService matcher-thread-pool-executor (thread-pool-executor concurrency queue-size)
         ^ExecutorService writer-thread-pool-executor (Executors/newSingleThreadExecutor)]
-    (if (empty? file-paths-to-analyze)
-      (let [reader (BufferedReader. *in* reader-buffer-size)
-            matcher-fn (matching/matcher-fn highlighter-fn nil options)]
+    (doseq [^String path (if (empty? file-paths-to-analyze)
+                           [nil]                            ;; STDIN is an input
+                           file-paths-to-analyze)]
+      (let [reader (if path (io/reader path) (BufferedReader. *in* reader-buffer-size))
+            matcher-fn (matching/matcher-fn highlighter-fn path options)]
         (consume-reader reader writer
                         matcher-fn
                         matcher-thread-pool-executor writer-thread-pool-executor
-                        with-empty-lines))
-      (doseq [^String path file-paths-to-analyze]
-        (let [reader (io/reader path)
-              matcher-fn (matching/matcher-fn highlighter-fn path options)]
-          (consume-reader reader writer
-                          matcher-fn
-                          matcher-thread-pool-executor writer-thread-pool-executor
-                          with-empty-lines))))
+                        with-empty-lines)))
     (shutdown-thread-pool-executors matcher-thread-pool-executor writer-thread-pool-executor)
     (.flush writer)))
