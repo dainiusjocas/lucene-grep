@@ -572,7 +572,7 @@ digraph tokens {
 }
 ```
 
-The `--graph` flag makes the text analysis output into a valid GraphViz program that can be fed to `dot` which cound draw a picture out of the text.
+The `--graph` flag makes the text analysis output into a valid GraphViz program that can be fed to `dot` which draws a picture out of the text, magic.
 
 If you have [GraphViz](https://graphviz.org/download/) installed on your machine, a one-liner to save the image of the text graph:
 ```shell
@@ -582,9 +582,14 @@ The output image looks should look like:
 <img src="docs/token-graph.png"
 alt="Token Graph" title="Token Graph" />
 
-If you also have ImageMagic installed you can preview the token graph with this one-liner:
+If you also have ImageMagic installed you can preview the token graph with this one-liner on Ubuntu:
 ```shell
 echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph | dot -Tpng | display
+```
+
+Or MacOS:
+```shell
+echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph | dot -Tpng | open -a Preview.app -f
 ```
 
 ## Custom Builds
