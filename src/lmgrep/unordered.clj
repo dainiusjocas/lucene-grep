@@ -2,7 +2,7 @@
   (:require [lmgrep.concurrent :as c]
             [lmgrep.matching :as matching])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
-           (java.util.concurrent Executors ExecutorService)
+           (java.util.concurrent ExecutorService)
            (lmgrep.matching LineNrStr)))
 
 (defn consume-reader
@@ -36,7 +36,7 @@
         with-empty-lines (get options :with-empty-lines)
         ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
         ^ExecutorService matcher-thread-pool-executor (c/thread-pool-executor concurrency queue-size)
-        ^ExecutorService writer-thread-pool-executor (Executors/newSingleThreadExecutor)]
+        ^ExecutorService writer-thread-pool-executor (c/single-thread-executor)]
     (doseq [^String path (if (empty? file-paths-to-analyze)
                            [nil]                            ;; STDIN is an input
                            file-paths-to-analyze)]

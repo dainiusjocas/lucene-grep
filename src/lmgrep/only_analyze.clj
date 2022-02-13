@@ -4,12 +4,11 @@
             [lmgrep.analysis :as analysis]
             [lmgrep.fs :as fs]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.text-analysis :as text-analysis])
+            [lmgrep.lucene.text-analysis :as text-analysis]
+            [lmgrep.concurrent :as c])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (org.apache.lucene.analysis Analyzer)
-           (java.util.concurrent ExecutorService Executors TimeUnit
-                                 LinkedBlockingQueue ThreadPoolExecutor
-                                 ThreadPoolExecutor$CallerRunsPolicy)))
+           (java.util.concurrent ExecutorService)))
 
 (set! *warn-on-reflection* true)
 
@@ -54,39 +53,34 @@
    the output lines to a writer.
    When the input is consumed the text analysis thread pool is gracefully shut down.
    Then the writer thread pool is gracefully shut down."
-  [reader ^PrintWriter writer analysis-fn analyzer concurrency queue-size]
-  (let [^ExecutorService analyzer-pool (ThreadPoolExecutor.
-                                         concurrency concurrency
-                                         0 TimeUnit/MILLISECONDS
-                                         (LinkedBlockingQueue. ^Integer queue-size)
-                                         (Executors/defaultThreadFactory)
-                                         (ThreadPoolExecutor$CallerRunsPolicy.))
-        ^ExecutorService writer-pool (Executors/newSingleThreadExecutor)]
-    (with-open [^BufferedReader rdr reader]
-      (loop [^String line (.readLine rdr)]
-        (when-not (nil? line)
-          (.execute analyzer-pool
-                    ^Runnable (fn []
-                                (let [out-str (json/write-value-as-string
-                                                (analysis-fn line analyzer))]
-                                  (.execute writer-pool
-                                            ^Runnable (fn [] (.println writer out-str))))))
-          (recur (.readLine rdr))))
-      (.shutdown analyzer-pool)
-      (.awaitTermination analyzer-pool 60 TimeUnit/SECONDS)
-      (.shutdown writer-pool)
-      (.awaitTermination writer-pool 60 TimeUnit/SECONDS)
-      (.flush writer))))
+  [reader ^PrintWriter writer analysis-fn analyzer
+   ^ExecutorService analyzer-thread-pool-executor
+   ^ExecutorService writer-thread-pool-executor]
+  (with-open [^BufferedReader rdr reader]
+    (loop [^String line (.readLine rdr)]
+      (when-not (nil? line)
+        (.execute analyzer-thread-pool-executor
+                  ^Runnable (fn []
+                              (let [out-str (json/write-value-as-string
+                                              (analysis-fn line analyzer))]
+                                (.execute writer-thread-pool-executor
+                                          ^Runnable (fn [] (.println writer out-str))))))
+        (recur (.readLine rdr))))))
 
-(defn unordered [files-to-analyze writer analyzer analysis-fn options]
+(defn unordered [files-to-analyze ^PrintWriter writer analyzer analysis-fn options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
         queue-size (get options :queue-size 1024)
-        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))]
+        concurrency (get options :concurrency (.availableProcessors (Runtime/getRuntime)))
+        ^ExecutorService analyzer-thread-pool-executor (c/thread-pool-executor concurrency queue-size)
+        ^ExecutorService writer-thread-pool-executor (c/single-thread-executor)]
     (doseq [^String path files-to-analyze]
       (let [reader (if path
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))]
-        (unordered-analysis reader writer analysis-fn analyzer concurrency queue-size)))))
+        (unordered-analysis reader writer analysis-fn analyzer
+                            analyzer-thread-pool-executor writer-thread-pool-executor)))
+    (c/shutdown-thread-pool-executors analyzer-thread-pool-executor writer-thread-pool-executor)
+    (.flush writer)))
 
 (defn ordered-analysis [reader writer analysis-fn analyzer concurrency queue-size]
   (let [line-in-chan (a/chan queue-size)

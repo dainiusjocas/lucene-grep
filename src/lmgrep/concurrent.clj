@@ -8,6 +8,9 @@
     (.shutdown executor)
     (.awaitTermination executor 60 TimeUnit/SECONDS)))
 
+(defn single-thread-executor []
+  (Executors/newSingleThreadExecutor))
+
 (defn thread-pool-executor [^Integer concurrency ^Integer queue-size]
   (ThreadPoolExecutor.
     concurrency concurrency
