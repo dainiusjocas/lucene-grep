@@ -9,25 +9,25 @@
 (defn consume-reader
   "Given a Reader iterates over lines and sends them to the
   matcher-thread-pool-executor for further handling."
-  [reader matcher-fn ^ExecutorService matcher-thread-pool-executor]
+  [reader matcher-fn
+   ^ExecutorService matcher-thread-pool-executor
+   ^ExecutorService writer-thread-pool-executor
+   ^PrintWriter writer
+   with-empty-lines]
   (with-open [^BufferedReader rdr reader]
     (loop [^String line (.readLine rdr)
            line-nr 1]
       (when-not (nil? line)
-        (.execute matcher-thread-pool-executor ^Runnable (matcher-fn line-nr line))
+        (.execute matcher-thread-pool-executor
+                  ^Runnable (fn []
+                              (let [^String out-str (matcher-fn line-nr line)]
+                                (if (.equals "" out-str)
+                                  (when with-empty-lines
+                                    (.execute writer-thread-pool-executor
+                                              ^Runnable (fn [] (.println writer out-str))))
+                                  (.execute writer-thread-pool-executor
+                                            ^Runnable (fn [] (.println writer out-str)))))))
         (recur (.readLine rdr) (inc line-nr))))))
-
-(defn create-unordered-matcher-fn
-  [matcher-fn ^ExecutorService writer-thread-pool-executor ^PrintWriter writer with-empty-lines]
-  (fn [line-nr line]
-    (fn []
-      (let [^String out-str (matcher-fn line-nr line)]
-        (if (.equals "" out-str)
-          (when with-empty-lines
-            (.execute writer-thread-pool-executor
-                      ^Runnable (fn [] (.println writer out-str))))
-          (.execute writer-thread-pool-executor
-                    ^Runnable (fn [] (.println writer out-str))))))))
 
 (defn grep [file-paths-to-analyze highlighter-fn options]
   (let [reader-buffer-size (get options :reader-buffer-size 8192)
@@ -44,11 +44,12 @@
       (let [reader (if path
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))
-            matcher-fn (matching/matcher-fn highlighter-fn path options)
-            unordered-matcher-fn (create-unordered-matcher-fn matcher-fn
-                                                              writer-thread-pool-executor
-                                                              writer
-                                                              with-empty-lines)]
-        (consume-reader reader unordered-matcher-fn matcher-thread-pool-executor)))
+            matcher-fn (matching/matcher-fn highlighter-fn path options)]
+        (consume-reader reader
+                        matcher-fn
+                        matcher-thread-pool-executor
+                        writer-thread-pool-executor
+                        writer
+                        with-empty-lines)))
     (c/shutdown-thread-pool-executors matcher-thread-pool-executor writer-thread-pool-executor)
     (.flush writer)))
