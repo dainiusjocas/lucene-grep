@@ -2,7 +2,6 @@
   (:require [lmgrep.matching :as matching]
             [lmgrep.concurrent :as c])
   (:import (java.io BufferedReader FileReader BufferedWriter PrintWriter)
-           (lmgrep.matching LineNrStr)
            (java.util.concurrent ExecutorService)))
 
 (set! *warn-on-reflection* true)
@@ -20,7 +19,7 @@
            line-nr 0]
       (when-not (nil? line)
         (let [f (.submit matcher-thread-pool-executor
-                         ^Callable (fn [] (matcher-fn (LineNrStr. line-nr line))))]
+                         ^Callable (fn [] (matcher-fn line-nr line)))]
           (.execute writer-thread-pool-executor
                     ^Runnable (fn [] (let [out-str (.get f)]
                                        (if (.equals "" out-str)

@@ -2,8 +2,7 @@
   (:require [lmgrep.concurrent :as c]
             [lmgrep.matching :as matching])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
-           (java.util.concurrent ExecutorService)
-           (lmgrep.matching LineNrStr)))
+           (java.util.concurrent ExecutorService)))
 
 (set! *warn-on-reflection* true)
 
@@ -22,7 +21,7 @@
   [matcher-fn ^ExecutorService writer-thread-pool-executor ^PrintWriter writer with-empty-lines]
   (fn [line-nr line]
     (fn []
-      (let [^String out-str (matcher-fn (LineNrStr. line-nr line))]
+      (let [^String out-str (matcher-fn line-nr line)]
         (if (.equals "" out-str)
           (when with-empty-lines
             (.execute writer-thread-pool-executor
