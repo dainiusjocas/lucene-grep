@@ -44,7 +44,7 @@ build-linux-static-musl-with-docker:
 
 .PHONY: test
 test:
-	clojure -M:test
+	bb test
 
 .PHONY: test-binary
 test-binary: build

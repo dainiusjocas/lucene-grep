@@ -66,12 +66,12 @@
     (with-open [^BufferedReader rdr reader]
       (loop [^String line (.readLine rdr)]
         (when-not (nil? line)
-          (.submit analyzer-pool
-                   ^Runnable (fn []
-                               (let [out-str (json/write-value-as-string
-                                               (analysis-fn line analyzer))]
-                                 (.submit writer-pool
-                                          ^Runnable (fn [] (.println writer out-str))))))
+          (.execute analyzer-pool
+                    ^Runnable (fn []
+                                (let [out-str (json/write-value-as-string
+                                                (analysis-fn line analyzer))]
+                                  (.execute writer-pool
+                                            ^Runnable (fn [] (.println writer out-str))))))
           (recur (.readLine rdr))))
       (.shutdown analyzer-pool)
       (.awaitTermination analyzer-pool 60 TimeUnit/SECONDS)
