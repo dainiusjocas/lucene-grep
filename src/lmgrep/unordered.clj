@@ -1,7 +1,6 @@
 (ns lmgrep.unordered
-  (:require [clojure.java.io :as io]
-            [lmgrep.matching :as matching])
-  (:import (java.io BufferedReader PrintWriter BufferedWriter)
+  (:require [lmgrep.matching :as matching])
+  (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (java.util.concurrent ThreadPoolExecutor TimeUnit Executors LinkedBlockingQueue ThreadPoolExecutor$CallerRunsPolicy ExecutorService)
            (lmgrep.matching LineNrStr)))
 
@@ -52,7 +51,9 @@
     (doseq [^String path (if (empty? file-paths-to-analyze)
                            [nil]                            ;; STDIN is an input
                            file-paths-to-analyze)]
-      (let [reader (if path (io/reader path) (BufferedReader. *in* reader-buffer-size))
+      (let [reader (if path
+                     (BufferedReader. (FileReader. path) reader-buffer-size)
+                     (BufferedReader. *in* reader-buffer-size))
             matcher-fn (matching/matcher-fn highlighter-fn path options)]
         (consume-reader reader writer
                         matcher-fn
