@@ -63,7 +63,7 @@
                     ^Runnable (fn [] (.println writer (.get f)))))
         (recur (.readLine rdr))))))
 
-(defn execute-analysis [files-to-analyze writer analyzer options]
+(defn execute-analysis [files-to-analyze ^PrintWriter writer analyzer options]
   (let [preserve-order? (get options :preserve-order true)
         analysis-fn (if (get options :explain)
                       text-analysis/text->tokens

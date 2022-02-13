@@ -4,7 +4,6 @@
             [lmgrep.fs :as fs]
             [lmgrep.lucene :as lucene]
             [lmgrep.analysis :as analysis]
-            [lmgrep.ordered :as ordered]
             [lmgrep.unordered :as unordered])
   (:import (java.io File)))
 
@@ -31,14 +30,11 @@
 
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
-        preserve-order? (get options :preserve-order true)
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)
         file-paths-to-analyze (into (fs/get-files files-pattern options)
                                     (fs/filter-files files))]
-    (if preserve-order?
-      (ordered/grep files-pattern file-paths-to-analyze highlighter-fn options)
-      (unordered/grep file-paths-to-analyze highlighter-fn options))))
+    (unordered/grep file-paths-to-analyze highlighter-fn options)))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
