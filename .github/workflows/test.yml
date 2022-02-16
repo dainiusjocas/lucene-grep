@@ -16,7 +16,7 @@ jobs:
       - name: Check tags usage
         shell: powershell
         run: |
-          echo ">>>>> $ {{ env:RELEASE_VERSION }}"
+          echo ">>>>> ${{ env:RELEASE_VERSION }}"
 
   unit-test:
 
