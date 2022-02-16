@@ -15,8 +15,10 @@ jobs:
 
       - name: Check tags usage
         shell: powershell
+        env:
+          FOO: "XXXXX"
         run: |
-          echo ">>>>> $env:RELEASE_VERSION"
+          echo ">>>>> $env:FOO"
 
   unit-test:
 
