@@ -14,8 +14,8 @@ jobs:
         shell: powershell
         env:
           FOO: "XXXXX"
+          RELEASE_VERSION: ${{ runner.os }}
         run: |
-          echo "RELEASE_VERSION=QQQQQ" >> $env:GITHUB_ENV
           echo ">>>>>> $env:FOO >>>>>> $env:RELEASE_VERSION <<<<"
 
 #  unit-test:
