@@ -6,6 +6,13 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Fixed/enhanced
 
+- Fixed Windows release file name construction in Github Actions
+- Remove clojure.tools.logging
+
+## v2022.02.14
+
+## Fixed/enhanced
+
 - ~3x throughput improvements for matching!
 - `--only-analyze` with `--no-preserve-order` prevent OOM
 - `--only-analyze` option `--queue-size` to specify the Java executor service queue size
