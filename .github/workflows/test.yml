@@ -14,7 +14,7 @@ jobs:
         shell: powershell
         env:
           FOO: "XXXXX"
-          RELEASE_VERSION: ${{ env:GITHUB_REF_NAME }}
+          RELEASE_VERSION: ${{ env.GITHUB_REF_NAME }}
         run: |
           echo ">>>>>> $env:FOO<" > test-$env:RELEASE_VERSION-$env:FOO.txt
           dir
