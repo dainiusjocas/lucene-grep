@@ -14,7 +14,7 @@ jobs:
         shell: powershell
         env:
           FOO: "XXXXX"
-          RELEASE_VERSION: ${{ runner.os }}
+          RELEASE_VERSION: ${{ ${GITHUB_REF#refs/*/} }}
         run: |
           echo ">>>>>> $env:FOO >>>>>> $env:RELEASE_VERSION <<<<"
 
