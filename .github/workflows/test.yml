@@ -2,11 +2,8 @@ name: Tests
 
 on:
   push:
-    tags:
-      - 't*'
 
 jobs:
-
   unit-test:
 
     runs-on: ubuntu-latest
