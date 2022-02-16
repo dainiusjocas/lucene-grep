@@ -15,7 +15,7 @@ jobs:
         env:
           FOO: "XXXXX"
         run: |
-          echo "RELEASE_VERSION=${env:GITHUB_REF#refs/*/}" >> $env:GITHUB_ENV
+          echo "RELEASE_VERSION=QQQQQ" >> $env:GITHUB_ENV
           echo ">>>>>> $env:FOO >>>>>> $env:RELEASE_VERSION <<<<"
 
 #  unit-test:
