@@ -15,8 +15,6 @@ jobs:
 
       - name: Check tags usage
         shell: powershell
-        env:
-          RELEASE_VERSION: ${{ GITHUB_REF#refs/*/ }}
         run: |
           echo ">>>>> $ {{ env:RELEASE_VERSION }}"
 
