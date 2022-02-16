@@ -15,7 +15,7 @@ jobs:
 
       - name: Check tags usage
         run: |
-          copy NUL test-$($env:RELEASE_VERSION).txt
+          echo "test" > test-$($env:RELEASE_VERSION).txt
           dir
           echo ">>>>>>>>>>>>>"
 
