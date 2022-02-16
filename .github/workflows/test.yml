@@ -7,54 +7,42 @@ on:
 
 jobs:
 
-  test-tags-ogn-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Check tags usage
-        shell: powershell
-        env:
-          FOO: "XXXXX"
-          RELEASE_VERSION: ${{ env.GITHUB_REF_NAME }}
-        run: |
-          echo ">>>>>> $env:FOO<" > test-$env:RELEASE_VERSION-$env:FOO.txt
-          dir
+  unit-test:
 
-#  unit-test:
-#
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Cache maven deps
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.m2/repository
-#          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
-#          restore-keys: |
-#            ${{ runner.os }}-maven-
-#      - name: Prepare java
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'zulu'
-#          java-version: 17
-#
-#      - name: Install clojure tools-deps
-#        uses: DeLaGuardo/setup-clojure@master
-#        with:
-#          tools-deps: 1.10.3.1069
-#
-#      - name: Setup Babashka
-#        uses: turtlequeue/setup-babashka@v1.3.0
-#        with:
-#          babashka-version: 0.7.4
-#
-#      - name: Unit Tests
-#        env:
-#          LMGREP_FEATURE_BUNDLED_ANALYZERS: true
-#          LMGREP_FEATURE_STEMPEL: true
-#          LMGREP_FEATURE_SNOWBALL: true
-#          LMGREP_FEATURE_RAUDIKKO: true
-#        run: |
-#          clojure -T:build prep-deps
-#          bb test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache maven deps
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Prepare java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Install clojure tools-deps
+        uses: DeLaGuardo/setup-clojure@master
+        with:
+          tools-deps: 1.10.3.1069
+
+      - name: Setup Babashka
+        uses: turtlequeue/setup-babashka@v1.3.0
+        with:
+          babashka-version: 0.7.4
+
+      - name: Unit Tests
+        env:
+          LMGREP_FEATURE_BUNDLED_ANALYZERS: true
+          LMGREP_FEATURE_STEMPEL: true
+          LMGREP_FEATURE_SNOWBALL: true
+          LMGREP_FEATURE_RAUDIKKO: true
+        run: |
+          clojure -T:build prep-deps
+          bb test
