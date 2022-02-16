@@ -132,7 +132,7 @@ jobs:
       - name: Build native-image on Windows and zip it
         run: |
           native-image.cmd -jar "target/lmgrep.jar" -H:+AddAllCharsets -H:IncludeResources=LMGREP_VERSION -H:Name=lmgrep -H:+ReportExceptionStackTraces --initialize-at-build-time --verbose --no-fallback -H:ReflectionConfigurationFiles=graalvm/lucene-reflect-config.json -J-Xmx8g
-          tar.exe -a -c -f lmgrep-$($env:RELEASE_VERSION)-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
+          tar.exe -a -c -f lmgrep-$env:GITHUB_REF_NAME-${{ matrix.platform }}-${{ matrix.arch }}.zip lmgrep.exe
         if: runner.os == 'Windows'
 
       - name: Upload binaries to the release
