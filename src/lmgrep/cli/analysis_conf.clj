@@ -1,5 +1,4 @@
-(ns lmgrep.cli.analysis-conf
-  (:require [clojure.tools.logging :as log]))
+(ns lmgrep.cli.analysis-conf)
 
 (def analysis-keys #{:case-sensitive?
                      :ascii-fold?
@@ -68,7 +67,6 @@
             (not (zero? (bit-and wdgf 256))) (assoc "stemEnglishPossessive" 1)
             (not (zero? (bit-and wdgf 512))) (assoc "ignoreKeywords" 1))))
 
-
 (defn override-token-filters [token-filters flags]
   (cond->> token-filters
            (true? (get flags :case-sensitive?))
@@ -87,7 +85,8 @@
                                   stemmer-kw
                                   (do
                                     (when stemmer-kw
-                                      (log/debugf "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw))
+                                      (.println System/err
+                                                (format "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw)))
                                     "englishMinimalStem")))})))
            (pos-int? (get flags :word-delimiter-graph-filter))
            (cons {:name "worddelimitergraph"
@@ -100,7 +99,8 @@
                              tokenizer-kw
                              (do
                                (when tokenizer-kw
-                                 (log/debugf "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw))
+                                 (.println System/err
+                                           (format "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw)))
                                {:name "standard"})))
                       (:tokenizer acm))
         token-filters (override-token-filters (get acm :token-filters) flags)]
