@@ -16,7 +16,7 @@ jobs:
           FOO: "XXXXX"
           RELEASE_VERSION: ${{ env.GITHUB_ACTOR }}
         run: |
-          echo ">>>>>> $env:FOO<" > test-$env:GITHUB_REF_NAME-$env:FOO.txt
+          echo ">>>>>> $env:FOO<" > test-$($env:GITHUB_REF_NAME)-$env:FOO.txt
           dir
 
 #  unit-test:
