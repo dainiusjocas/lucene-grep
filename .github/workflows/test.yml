@@ -17,7 +17,7 @@ jobs:
         run: |
           copy NUL test-$($env:RELEASE_VERSION).txt
           dir
-          echo ">>>>>>>>>>>>>>"
+          echo ">>>>>>>>>>>>>"
 
   unit-test:
 
