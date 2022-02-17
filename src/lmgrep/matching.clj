@@ -13,7 +13,7 @@
         format (get options :format)
         scored? (or (get options :with-score) (get options :with-scored-highlights))]
     (fn [line-nr line]
-      (if-let [highlights (seq (highlighter-fn line highlight-opts))]
+      (when-let [highlights (seq (highlighter-fn line highlight-opts))]
         (let [details (cond-> {:line-number line-nr
                                :line        line}
                               file-path (assoc :file file-path)
@@ -23,5 +23,4 @@
             :edn (pr-str details)
             :json (json/write-value-as-string details)
             :string (formatter/string-output highlights details options)
-            (formatter/string-output highlights details options)))
-        ""))))
+            (formatter/string-output highlights details options)))))))

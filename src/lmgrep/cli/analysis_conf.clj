@@ -81,13 +81,12 @@
                                        (re-matches #".*[Ss]tem.*" (name (get token-filter :name))))
                                      token-filters))
                     {:name (let [stemmer-kw (keyword (get flags :stemmer))]
-                             (get stemmer
-                                  stemmer-kw
-                                  (do
-                                    (when stemmer-kw
-                                      (.println System/err
-                                                (format "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw)))
-                                    "englishMinimalStem")))})))
+                             (or (get stemmer stemmer-kw)
+                                 (do
+                                   (when stemmer-kw
+                                     (.println System/err
+                                               (format "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw)))
+                                   "englishMinimalStem")))})))
            (pos-int? (get flags :word-delimiter-graph-filter))
            (cons {:name "worddelimitergraph"
                   :args (wdgf->token-filter-args
@@ -95,14 +94,13 @@
 
 (defn override-acm [acm flags]
   (let [tokenizer (or (when-let [tokenizer-kw (get flags :tokenizer)]
-                        (get tokenizer
-                             tokenizer-kw
-                             (do
-                               (when tokenizer-kw
-                                 (.println System/err
-                                           (format "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw)))
-                               {:name "standard"})))
-                      (:tokenizer acm))
+                        (or (get tokenizer tokenizer-kw)
+                            (do
+                              (when tokenizer-kw
+                                (.println System/err
+                                          (format "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw)))
+                              {:name "standard"})))
+                      (get acm :tokenizer))
         token-filters (override-token-filters (get acm :token-filters) flags)]
     (assoc acm
       :tokenizer tokenizer
