@@ -28,7 +28,6 @@ args=( "-jar"
 
 LMGREP_STATIC=${LMGREP_STATIC:-}
 LMGREP_MUSL=${LMGREP_MUSL:-}
-LMGREP_FEATURE_CHARSETS=${LMGREP_FEATURE_CHARSETS:-}
 
 if [ "$LMGREP_STATIC" = "true" ]; then
     args+=("--static")
@@ -43,9 +42,13 @@ if [ "$LMGREP_FEATURE_RAUDIKKO" = "true" ]; then
     args+=("-H:IncludeResources=morpho/.*")
 fi
 
+LMGREP_FEATURE_CHARSETS=${LMGREP_FEATURE_CHARSETS:-}
+
 if [ "$LMGREP_FEATURE_CHARSETS" = "true" ]; then
   args+=("-H:+AddAllCharsets")
 fi
+
+LMGREP_FEATURE_EPSILON_GC=${LMGREP_FEATURE_EPSILON_GC:-}
 
 if [ "$LMGREP_FEATURE_EPSILON_GC" = "true" ]; then
   args+=("--gc=epsilon")

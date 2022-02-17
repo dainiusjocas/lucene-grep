@@ -1,10 +1,7 @@
 (ns lmgrep.lucene.analyzer
-  (:require [clojure.string :as str])
-  (:import (java.util HashMap Map)
-           (java.io File)
-           (java.nio.file Path)
-           (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
-           (org.apache.lucene.analysis Analyzer TokenizerFactory CharFilterFactory TokenFilterFactory)))
+  (:require [clojure.string :as str]
+            [lmgrep.lucene.custom-analyzer :as ca])
+  (:import (org.apache.lucene.analysis Analyzer)))
 
 (set! *warn-on-reflection* true)
 
@@ -13,73 +10,26 @@
   [component-name]
   (str/lower-case component-name))
 
-(defn stringify [m]
-  (reduce (fn [acc [k v]] (assoc acc (name k) (str v))) {} m))
+(def token-filter-name->class
+  (reduce-kv (fn [m k v] (assoc m (namify k) v))
+             {} ca/token-filter-name->class))
 
 (def tokenizer-name->class
-  (reduce (fn [acc ^String tokenizer-name]
-            (assoc acc (namify tokenizer-name) (TokenizerFactory/lookupClass tokenizer-name)))
-          {} (TokenizerFactory/availableTokenizers)))
+  (reduce-kv (fn [m k v] (assoc m (namify k) v))
+             {} ca/tokenizer-name->class))
 
 (def char-filter-name->class
-  (reduce (fn [acc ^String char-filter-name]
-            (assoc acc (namify char-filter-name) (CharFilterFactory/lookupClass char-filter-name)))
-          {} (CharFilterFactory/availableCharFilters)))
-
-(def token-filter-name->class
-  (reduce (fn [acc ^String token-filter-name]
-            (assoc acc (namify token-filter-name) (TokenFilterFactory/lookupClass token-filter-name)))
-          {} (TokenFilterFactory/availableTokenFilters)))
-
-(def DEFAULT_TOKENIZER_NAME "standard")
-
-(defn ^Path config-dir->path [config-dir]
-  (let [^String dir (or config-dir ".")]
-    (.toPath (File. dir))))
-
-(defn get-component-or-exception [factories name component-type]
-  (if-let [component (get factories (namify name))]
-    component
-    (throw
-      (Exception.
-        (format "%s '%s' is not available. Choose one of: %s"
-                component-type
-                name
-                (sort (keys factories)))))))
-
-(defn custom-analyzer
-  ([opts]
-   (custom-analyzer opts char-filter-name->class tokenizer-name->class token-filter-name->class))
-  ([{:keys [config-dir char-filters tokenizer token-filters]}
-    char-filter-factories tokenizer-factories token-filter-factories]
-   (let [^CustomAnalyzer$Builder builder (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
-     (.withTokenizer builder
-                     ^Class (get-component-or-exception tokenizer-factories
-                                                        (get tokenizer :name DEFAULT_TOKENIZER_NAME)
-                                                        "Tokenizer")
-                     ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
-
-     (doseq [{:keys [name args]} char-filters]
-       (.addCharFilter builder
-                       ^Class (get-component-or-exception char-filter-factories name "Char filter")
-                       ^Map (HashMap. ^Map (stringify args))))
-
-     (doseq [{:keys [name args]} token-filters]
-       (.addTokenFilter builder
-                        ^Class (get-component-or-exception token-filter-factories name "Token filter")
-                        ^Map (HashMap. ^Map (stringify args))))
-
-     (.build builder))))
+  (reduce-kv (fn [m k v] (assoc m (namify k) v))
+             {} ca/char-filter-name->class))
 
 (defn get-analyzer [analyzer-name custom-analyzers]
-  (if-let [custom-analyzer (get custom-analyzers (namify (str/replace analyzer-name "Analyzer" "")))]
-    custom-analyzer
-    (throw
-      (Exception.
-        (format "%s '%s' is not available. Choose one of: %s"
-                Analyzer
-                analyzer-name
-                (sort (keys custom-analyzers)))))))
+  (or (get custom-analyzers (namify (str/replace analyzer-name "Analyzer" "")))
+      (throw
+        (Exception.
+          (format "%s '%s' is not available. Choose one of: %s"
+                  Analyzer
+                  analyzer-name
+                  (sort (keys custom-analyzers)))))))
 
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
@@ -88,24 +38,11 @@
    (try
      (if-let [analyzer-name (get analyzer :name)]
        (get-analyzer analyzer-name custom-analyzers)
-       (custom-analyzer opts))
+       (ca/create (assoc opts :namify-fn namify)
+                  char-filter-name->class
+                  tokenizer-name->class
+                  token-filter-name->class))
      (catch Exception e
        (when (System/getenv "DEBUG_MODE")
          (.printStackTrace e))
        (throw e)))))
-
-(comment
-  (lmgrep.lucene.analyzer/create
-    {:tokenizer {:name "standard"
-                 :args {:maxTokenLength 4}}
-     :char-filters [{:name "patternReplace"
-                     :args {:pattern "joc"
-                            :replacement "foo"}}]
-     :token-filters [{:name "uppercase"}
-                     {:name "reverseString"}]})
-
-  (lmgrep.lucene.analyzer/create
-    {:tokenizer {:name "standard"}
-     :char-filters [{:name "patternReplace"
-                     :args {:pattern "foo"
-                            :replacement "bar"}}]}))

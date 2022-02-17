@@ -8,7 +8,7 @@
 (defn create-analyzers [conf options]
   (reduce (fn [acc definition]
             (assoc acc (get definition :name)
-                       (analyzer/custom-analyzer
+                       (analyzer/create
                          (assoc (select-keys definition [:char-filters :tokenizer :token-filters])
                            :config-dir (get options :config-dir)))))
           {} (get conf :analyzers)))
