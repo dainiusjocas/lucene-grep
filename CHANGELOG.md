@@ -4,9 +4,13 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- `LMGREP_FEATURE_EPSILON_GC`: use [Epsilon GC](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/) in the binary.
+
+## v2022.02.17
+
 ## Fixed/enhanced
 
-- Fixed Windows release file name construction in Github Actions
+- Fixed the Windows release file name construction in Github Actions
 - Remove clojure.tools.logging
 
 ## v2022.02.14

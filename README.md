@@ -609,6 +609,10 @@ Tools build also has a hard time building an uberjar.
 (export LMGREP_FEATURE_RAUDIKKO=true && bb generate-reflection-config && make build)
 ```
 
+## Environment variables
+
+Check the [docs](docs/env-vars.md).
+
 ## Future work
 
 - [ ] Optimize matching by [processing lines in batches](https://github.com/dainiusjocas/lucene-grep/issues/3)

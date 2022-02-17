@@ -14,7 +14,7 @@
 
 `LMGREP_STATIC`: `true` instructs GraalVM native-image tool to build a [statically linked](https://www.graalvm.org/22.0/reference-manual/native-image/StaticImages/) binary, only for Linux. 
 `LMGREP_MUSL`: instructs GraalVM native-image to statically link against [musl-libc](https://musl.libc.org/), only for Linux.
-
+`LMGREP_FEATURE_EPSILON_GC`: use [Epsilon GC](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/) in the binary.
 
 ## Runtime
 
