@@ -21,12 +21,12 @@
         (.execute matcher-thread-pool-executor
                   ^Runnable (fn []
                               (let [^String out-str (matcher-fn line-nr line)]
-                                (if (.equals "" out-str)
+                                (if out-str
+                                  (.execute writer-thread-pool-executor
+                                            ^Runnable (fn [] (.println writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (.println writer out-str))))
-                                  (.execute writer-thread-pool-executor
-                                            ^Runnable (fn [] (.println writer out-str)))))))
+                                              ^Runnable (fn [] (.println writer out-str))))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn ordered-consume-reader
@@ -45,10 +45,10 @@
                          ^Callable (fn [] (matcher-fn line-nr line)))]
           (.execute writer-thread-pool-executor
                     ^Runnable (fn [] (let [out-str (.get f)]
-                                       (if (.equals "" out-str)
+                                       (if out-str
+                                         (.println writer out-str)
                                          (when with-empty-lines
-                                           (.println writer out-str))
-                                         (.println writer out-str))))))
+                                           (.println writer "")))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn grep [file-paths-to-analyze highlighter-fn options]
