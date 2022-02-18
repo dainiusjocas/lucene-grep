@@ -43,7 +43,7 @@
             available-analysis-components))
         (System/exit 0))
       (when (get options :streamed)
-        (streamed/start options)
+        (streamed/grep options)
         (System/exit 0))
       (if (:only-analyze options)
         (analyze/analyze-lines (first positional-arguments) (rest positional-arguments) options)

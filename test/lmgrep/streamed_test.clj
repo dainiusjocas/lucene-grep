@@ -5,7 +5,19 @@
             [lmgrep.streamed :as streamed]))
 
 (deftest streamed-processing
-  (testing "Fuzzy match behaviour"
+  (testing "Fuzzy match behaviour ordered"
+    (let [text-from-stdin "{\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
+          options {:preserve-order true
+                   :split          true
+                   :pre-tags       ">" :post-tags "<"
+                   :template       "{{highlighted-line}}"}]
+      (is (= "I am selling >nikee<"
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (streamed/grep options))))))))
+
+  (testing "Fuzzy match behaviour without preserving the order"
     (let [text-from-stdin "{\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
           options {:preserve-order false
                    :split          true
@@ -15,11 +27,11 @@
              (with-in-str text-from-stdin
                           (str/trim
                             (with-out-str
-                              (streamed/start options))))))))
+                              (streamed/grep options))))))))
 
   (testing "Fuzzy match behaviour with score"
     (let [text-from-stdin "{\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
-          options {:preserve-order false
+          options {:preserve-order true
                    :split          true
                    :pre-tags       ">" :post-tags "<"
                    :with-score     true
@@ -38,11 +50,11 @@
                (with-in-str text-from-stdin
                             (str/trim
                               (with-out-str
-                                (streamed/start options)))))))))
+                                (streamed/grep options)))))))))
 
   (testing "Fuzzy match behaviour with scored-highlights"
     (let [text-from-stdin "{\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
-          options {:preserve-order         false
+          options {:preserve-order         true
                    :split                  true
                    :pre-tags               ">" :post-tags "<"
                    :with-scored-highlights true
@@ -63,11 +75,11 @@
                (with-in-str text-from-stdin
                             (str/trim
                               (with-out-str
-                                (streamed/start options)))))))))
+                                (streamed/grep options)))))))))
 
   (testing "query parser params are working, AND at the start should throw an exception"
     (let [text-from-stdin "{\"query\": \"AND nike~\", \"text\": \"I am selling nikee\"}"
-          options {:preserve-order false
+          options {:preserve-order true
                    :query-parser   "simple"
                    :split          true
                    :pre-tags       ">" :post-tags "<"
@@ -76,4 +88,4 @@
              (with-in-str text-from-stdin
                           (str/trim
                             (with-out-str
-                              (streamed/start options)))))))))
+                              (streamed/grep options)))))))))
