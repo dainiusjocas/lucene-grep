@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Streamed matching with a flag `--streamed`
+
+## v2022.02.18
+
 - Fixed flushing behaviour when consuming from STDIN in the ruby-percolator example.
 - `LMGREP_FEATURE_EPSILON_GC`: use [Epsilon GC](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/) in the binary.
 
