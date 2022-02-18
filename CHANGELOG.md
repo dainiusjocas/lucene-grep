@@ -4,13 +4,13 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Fixed flushing behaviour when consuming from STDIN in the ruby-percolator example.
 - `LMGREP_FEATURE_EPSILON_GC`: use [Epsilon GC](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/) in the binary.
 
 ## v2022.02.17
 
 ## Fixed/enhanced
 
-- Fixed flushing behaviour when consuming from STDIN in the ruby-percolator example
 - Fixed the Windows release file name construction in Github Actions
 - Remove clojure.tools.logging
 
