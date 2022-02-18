@@ -59,7 +59,8 @@
         queue-size (get options :queue-size 1024)
         with-empty-lines (get options :with-empty-lines)
         consume-fn (if preserve-order? ordered-consume-reader unordered-consume-reader)
-        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size)
+                                          ^Boolean (empty? file-paths-to-analyze))
         ^ExecutorService matcher-thread-pool-executor (c/thread-pool-executor concurrency queue-size)
         ^ExecutorService writer-thread-pool-executor (c/single-thread-executor)]
     (doseq [^String path (if (empty? file-paths-to-analyze)
