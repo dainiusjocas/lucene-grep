@@ -107,7 +107,8 @@
                            [nil])
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         ^Analyzer analyzer (analyzer/create analysis-conf custom-analyzers)
-        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))]
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size)
+                                          ^Boolean (empty? files-pattern))]
     (if (get options :graph)
       (graph files-to-analyze writer analyzer options)
       (execute-analysis files-to-analyze writer analyzer options))))
