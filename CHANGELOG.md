@@ -10,6 +10,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Fixed/enhanced
 
+- Fixed flushing behaviour when consuming from STDIN in the ruby-percolator example
 - Fixed the Windows release file name construction in Github Actions
 - Remove clojure.tools.logging
 
