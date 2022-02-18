@@ -6,13 +6,14 @@
   (:import (java.io BufferedReader BufferedWriter PrintWriter)))
 
 (defn start
-  "Listens on STDIN where every line should include both query and the text."
+  "Listens on STDIN where every line should include JSON with both: query and the text.
+  Example input: {\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
   [options]
   (let [custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
-        ^PrintWriter reader (BufferedReader. *in* reader-buffer-size)
-        writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size))
+        ^BufferedReader reader (BufferedReader. *in* reader-buffer-size)
+        ^PrintWriter writer (PrintWriter. (BufferedWriter. *out* print-writer-buffer-size) true)
         with-empty-lines (get options :with-empty-lines)]
     (with-open [^BufferedReader rdr reader]
       (loop [^String line (.readLine rdr)

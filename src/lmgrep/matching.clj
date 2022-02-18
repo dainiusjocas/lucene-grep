@@ -7,7 +7,6 @@
     (reduce + scores)))
 
 (defn matcher-fn [highlighter-fn file-path options]
-  ;; This function can not return nil values
   (let [highlight-opts (select-keys options [:with-score :with-scored-highlights])
         with-details? (get options :with-details)
         format (get options :format)
