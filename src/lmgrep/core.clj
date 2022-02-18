@@ -3,10 +3,11 @@
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.cli :as cli]
-            [lmgrep.lucene.analyzer]
+            [lmgrep.lucene.analyzer :as analyzers]
             [lmgrep.grep :as grep]
             [lmgrep.only-analyze :as analyze]
-            [lmgrep.predefined-analyzers])
+            [lmgrep.predefined-analyzers :as predefined]
+            [lmgrep.streamed :as streamed])
   (:gen-class))
 
 (def version (str/trim (slurp (io/resource "LMGREP_VERSION"))))
@@ -23,10 +24,10 @@
        (nil? (:queries-file options))))
 
 (def available-analysis-components
-  {:analyzers     (sort (keys lmgrep.predefined-analyzers/analyzers))
-   :char-filters  (sort (keys lmgrep.lucene.analyzer/char-filter-name->class))
-   :tokenizers    (sort (keys lmgrep.lucene.analyzer/tokenizer-name->class))
-   :token-filters (sort (keys lmgrep.lucene.analyzer/token-filter-name->class))})
+  {:analyzers     (sort (keys predefined/analyzers))
+   :char-filters  (sort (keys analyzers/char-filter-name->class))
+   :tokenizers    (sort (keys analyzers/tokenizer-name->class))
+   :token-filters (sort (keys analyzers/token-filter-name->class))})
 
 (defn -main [& args]
   (try
@@ -40,6 +41,9 @@
         (println
           (json/write-value-as-string
             available-analysis-components))
+        (System/exit 0))
+      (when (get options :streamed)
+        (streamed/start options)
         (System/exit 0))
       (if (:only-analyze options)
         (analyze/analyze-lines (first positional-arguments) (rest positional-arguments) options)
