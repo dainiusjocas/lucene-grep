@@ -26,7 +26,7 @@
                                             ^Runnable (fn [] (.println writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (.println writer out-str))))))))
+                                              ^Runnable (fn [] (.println writer))))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn ordered-consume-reader
@@ -48,7 +48,7 @@
                                        (if out-str
                                          (.println writer out-str)
                                          (when with-empty-lines
-                                           (.println writer "")))))))
+                                           (.println writer)))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn grep [file-paths-to-analyze highlighter-fn options]

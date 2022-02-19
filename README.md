@@ -194,6 +194,7 @@ Supported options:
       --config-dir DIR                          A base directory from which to load text analysis resources, e.g. synonym files. Default: current dir.
       --analyzers-file FILE                     A file that contains definitions of text analyzers. Works in combinations with --config-dir flag.
       --query-update-buffer-size NUMBER         Number of queries to be buffered in memory before being committed to the queryindex. Default 100000.
+      --streamed                                Listens on STDIN for json with both query and a piece of text to be analyzed
   -h, --help
 ```
 
@@ -595,9 +596,30 @@ Or MacOS:
 echo "FooBar-Baz" | ./lmgrep --word-delimiter-graph-filter=99 --only-analyze --graph | dot -Tpng | open -a Preview.app -f
 ```
 
+## Streamed matching
+
+Start `lmgrep` process once and wait for the input from STDIN that includes both: text and the query.
+Using such a technique avoids the "cold start" issues when with the stream of text the query is known only when the text is known.
+
+Example:
+
+```shell
+echo '{"query": "nike~", "text": "I am selling nikee"}' | ./lmgrep --streamed --with-score --format=json --query-parser=simple
+#=> {"line-number":1,"line":"I am selling nikee","score":0.09807344}
+```
+
+Is equivalent to:
+
+```shell
+echo  "I am selling nikee" | ./lmgrep --query="nike~" --with-score --format=json --query-parser=simple
+#=> {"line-number":1,"line":"I am selling nikee","score":0.09807344}
+```
+
+All other options are also applicable.
+
 ## Custom Builds
 
-## Raudikko or Voikko stemming for Finnish Language
+### Raudikko or Voikko stemming for Finnish Language
 
 NOTE: The project is re-architected in a way that Raudikko token filter definition is in the subdirectory.
 Also, it was put under the deps.edn alias.

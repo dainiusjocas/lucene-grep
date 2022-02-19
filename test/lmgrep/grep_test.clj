@@ -7,7 +7,8 @@
 (deftest grepping-file
   (let [file "test/resources/test.txt"
         query "fox"
-        options {:split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
+        options {:preserve-order true
+                 :split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
     (is (= "The quick brown >fox< jumps over the lazy dog"
            (str/trim
              (with-out-str
