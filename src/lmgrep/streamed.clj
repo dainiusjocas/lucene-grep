@@ -87,5 +87,4 @@
                 writer writer-thread-pool-executor
                 with-empty-lines custom-analyzers options)
     (c/shutdown-thread-pool-executors matcher-thread-pool-executor writer-thread-pool-executor)
-    (Thread/sleep 100)
     (.flush writer)))
