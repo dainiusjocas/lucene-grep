@@ -39,10 +39,16 @@
       (when-not (nil? line)
         (let [f (.submit matcher-thread-pool-executor
                          ^Callable (fn []
-                                     (let [{:keys [query text]} (json/read-value line json/keyword-keys-object-mapper)
-                                           highlighter-fn (lucene/highlighter [{:query query}] options custom-analyzers)
-                                           matcher-fn (matching/matcher-fn highlighter-fn nil options)]
-                                       (matcher-fn line-nr text))))]
+                                     (try
+                                       (let [task (json/read-value line)
+                                             query (get task "query")
+                                             text (get task "text")]
+                                         (when (and query text)
+                                           ((matching/matcher-fn
+                                              (lucene/highlighter [{:query query}] options custom-analyzers) nil options)
+                                            line-nr text)))
+                                       (catch Exception e
+                                         (.println System/err (.getMessage e))))))]
           (.execute writer-thread-pool-executor
                     ^Runnable (fn []
                                 (let [^String out-str (.get f)]

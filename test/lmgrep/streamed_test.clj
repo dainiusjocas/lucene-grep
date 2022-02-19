@@ -88,4 +88,37 @@
              (with-in-str text-from-stdin
                           (str/trim
                             (with-out-str
-                              (streamed/grep options)))))))))
+                              (streamed/grep options))))))))
+
+  (testing "Testing JSON that doesn't contain the string"
+    (let [text-from-stdin "{\"query\": \"AND nike~\"}"
+          options {:preserve-order true
+                   :query-parser   "simple"
+                   :split          true}]
+      (is (empty?
+            (with-in-str
+              text-from-stdin
+              (with-out-str
+                (streamed/grep options)))))))
+
+  (testing "Testing JSON that doesn't contain query"
+    (let [text-from-stdin "{\"text\": \"I am selling nikee\"}"
+          options {:preserve-order true
+                   :query-parser   "simple"
+                   :split          true}]
+      (is (empty?
+            (with-in-str
+              text-from-stdin
+              (with-out-str
+                (streamed/grep options)))))))
+
+  (testing "Testing JSON that doesn't contain query"
+    (let [text-from-stdin "{}"
+          options {:preserve-order true
+                   :query-parser   "simple"
+                   :split          true}]
+      (is (empty?
+            (with-in-str
+              text-from-stdin
+              (with-out-str
+                (streamed/grep options))))))))
