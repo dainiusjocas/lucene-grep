@@ -49,7 +49,7 @@
                                   (if out-str
                                     (.println writer out-str)
                                     (when with-empty-lines
-                                      (.println writer "")))))))
+                                      (.println writer)))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn grep
