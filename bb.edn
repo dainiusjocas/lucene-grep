@@ -1,7 +1,14 @@
 {:paths          ["."]
  :deps           {}
  :min-bb-version "0.4.0"
- :tasks          {test
+ :tasks          {run
+                  {:requires ([script.env-profiles :as e])
+                   :doc      "Run lmgrep on JVM with required profiles"
+                   :task     (let [profiles (e/profiles)]
+                               (println "Running lmgrep on JVM with profiles: " profiles)
+                               (apply clojure (cond-> [(str "-M:" (clojure.string/join ":" profiles) " -m lmgrep.core")]
+                                                (not (empty? *command-line-args*)) (concat *command-line-args*))))}
+                  test
                   {:requires ([script.env-profiles :as e])
                    :doc      "Run tests with the required profiles"
                    :task     (let [profiles (e/profiles)]
