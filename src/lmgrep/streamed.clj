@@ -5,7 +5,8 @@
             [lmgrep.matching :as matching]
             [lmgrep.concurrent :as c])
   (:import (java.io BufferedReader BufferedWriter PrintWriter)
-           (java.util.concurrent ExecutorService)))
+           (java.util.concurrent ExecutorService)
+           (lmgrep.lucene LuceneMonitorMatcher)))
 
 (set! *warn-on-reflection* true)
 
@@ -13,7 +14,7 @@
   (try
     (json/read-value json-string)
     (catch Exception e
-      (when (System/getenv "DEBUG_MODE")
+      (when (Boolean/parseBoolean (System/getenv "DEBUG_MODE"))
         (.printStackTrace e))
       (.println System/err (.getMessage e)))))
 
@@ -23,9 +24,8 @@
           query (get task "query")
           text (get task "text")]
       (when (and query text)
-        ((matching/matcher-fn
-           (lucene/highlighter [{:query query}] options custom-analyzers) nil options)
-         line-nr text)))))
+        (with-open [^LuceneMonitorMatcher highlighter (lucene/highlighter-obj [{:query query}] options custom-analyzers)]
+          ((matching/matcher-fn-2 highlighter nil options) line-nr text))))))
 
 (defn unordered [reader ^ExecutorService matcher-thread-pool-executor
                  ^PrintWriter writer ^ExecutorService writer-thread-pool-executor
