@@ -9,58 +9,67 @@
 
 (set! *warn-on-reflection* true)
 
+(defn safe-json-parse [^String json-string]
+  (try
+    (json/read-value json-string)
+    (catch Exception e
+      (when (System/getenv "DEBUG_MODE")
+        (.printStackTrace e))
+      (.println System/err (.getMessage e)))))
+
+(defn wrapped-matcher-fn [custom-analyzers options]
+  (fn [^long line-nr ^String line]
+    (let [task (safe-json-parse line)
+          query (get task "query")
+          text (get task "text")]
+      (when (and query text)
+        ((matching/matcher-fn
+           (lucene/highlighter [{:query query}] options custom-analyzers) nil options)
+         line-nr text)))))
+
 (defn unordered [reader ^ExecutorService matcher-thread-pool-executor
                  ^PrintWriter writer ^ExecutorService writer-thread-pool-executor
                  with-empty-lines custom-analyzers options]
-  (with-open [^BufferedReader rdr reader]
-    (loop [^String line (.readLine rdr)
-           line-nr 1]
-      (when-not (nil? line)
-        (.execute matcher-thread-pool-executor
-                  ^Runnable (fn []
-                              (let [{:keys [query text]} (json/read-value line json/keyword-keys-object-mapper)
-                                    highlighter-fn (lucene/highlighter [{:query query}] options custom-analyzers)
-                                    matcher-fn (matching/matcher-fn highlighter-fn nil options)
-                                    ^String out-str (matcher-fn line-nr text)]
-                                (if out-str
+  (let [matcher-fn (wrapped-matcher-fn custom-analyzers options)]
+    (with-open [^BufferedReader rdr reader]
+      (loop [^String line (.readLine rdr)
+             line-nr 1]
+        (when-not (nil? line)
+          (.execute matcher-thread-pool-executor
+                    ^Runnable (fn []
+                                (if-let [out-str (matcher-fn line-nr line)]
                                   (.execute writer-thread-pool-executor
                                             ^Runnable (fn [] (.println writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (.println writer out-str))))))))
-        (recur (.readLine rdr) (inc line-nr))))))
+                                              ^Runnable (fn [] (.println writer)))))))
+          (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn ordered [reader ^ExecutorService matcher-thread-pool-executor
                ^PrintWriter writer ^ExecutorService writer-thread-pool-executor
                with-empty-lines custom-analyzers options]
-  (with-open [^BufferedReader rdr reader]
-    (loop [^String line (.readLine rdr)
-           line-nr 1]
-      (when-not (nil? line)
-        (let [f (.submit matcher-thread-pool-executor
-                         ^Callable (fn []
-                                     (try
-                                       (let [task (json/read-value line)
-                                             query (get task "query")
-                                             text (get task "text")]
-                                         (when (and query text)
-                                           ((matching/matcher-fn
-                                              (lucene/highlighter [{:query query}] options custom-analyzers) nil options)
-                                            line-nr text)))
-                                       (catch Exception e
-                                         (.println System/err (.getMessage e))))))]
-          (.execute writer-thread-pool-executor
-                    ^Runnable (fn []
-                                (let [^String out-str (.get f)]
-                                  (if out-str
-                                    (.println writer out-str)
-                                    (when with-empty-lines
-                                      (.println writer)))))))
-        (recur (.readLine rdr) (inc line-nr))))))
+  (let [matcher-fn (wrapped-matcher-fn custom-analyzers options)]
+    (with-open [^BufferedReader rdr reader]
+      (loop [^String line (.readLine rdr)
+             line-nr 1]
+        (when-not (nil? line)
+          (let [f (.submit matcher-thread-pool-executor
+                           ^Callable (fn [] (matcher-fn line-nr line)))]
+            (.execute writer-thread-pool-executor
+                      ^Runnable (fn []
+                                  (let [^String out-str (.get f)]
+                                    (if out-str
+                                      (.println writer out-str)
+                                      (when with-empty-lines
+                                        (.println writer)))))))
+          (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn grep
   "Listens on STDIN where every line should include JSON with both: query and the text.
-  Example input: {\"query\": \"nike~\", \"text\": \"I am selling nikee\"}"
+  Example input: {\"query\": \"nike~\", \"text\": \"I am selling nikee\"}
+
+  When a bad JSON string is passed then program doesn't crash.
+  First, ThreadPoolExecutor is async and it swallows Exceptions."
   [options]
   (let [custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         reader-buffer-size (get options :reader-buffer-size 8192)
