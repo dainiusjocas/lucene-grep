@@ -24,7 +24,8 @@
           query (get task "query")
           text (get task "text")]
       (when (and query text)
-        (with-open [^LuceneMonitorMatcher highlighter (lucene/highlighter-obj [{:query query}] options custom-analyzers)]
+        (with-open [^LuceneMonitorMatcher highlighter
+                    (lucene/highlighter-obj [{:query query}] options custom-analyzers)]
           ((matching/matcher-fn-2 highlighter nil options) line-nr text))))))
 
 (defn unordered [reader ^ExecutorService matcher-thread-pool-executor
@@ -68,8 +69,11 @@
   "Listens on STDIN where every line should include JSON with both: query and the text.
   Example input: {\"query\": \"nike~\", \"text\": \"I am selling nikee\"}
 
-  When a bad JSON string is passed then program doesn't crash.
-  First, ThreadPoolExecutor is async and it swallows Exceptions."
+  If either query or text is not present in the JSON, then matching is skipped.
+
+  When a bad JSON string is passed then program doesn't crash:
+    1. ThreadPoolExecutor is async and it 'swallows' Exceptions.
+    2. Upstream errors happen and we should handle them."
   [options]
   (let [custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
         reader-buffer-size (get options :reader-buffer-size 8192)
