@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2022.02.19
+
 - Streamed matching with a flag `--streamed`
 
 ## v2022.02.18
