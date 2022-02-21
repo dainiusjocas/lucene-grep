@@ -1,0 +1,8 @@
+[
+  {
+    "query": "jump"
+  },
+  {
+    "query": "\"quick fox\"~2^3"
+  }
+]
