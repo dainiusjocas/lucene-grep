@@ -62,3 +62,6 @@ lint:
 .PHONY: check-deps
 check-deps:
 	clojure -Sdeps '{:deps {antq/antq {:mvn/version "RELEASE"}}}' -M -m antq.core
+
+build-docker:
+	docker build -f Dockerfile.deploy -t dainiusjocas/lmgrep:"$$(echo "$$(git describe --tags --abbrev=0)-SNAPSHOT" | cut -c 2-)" .
