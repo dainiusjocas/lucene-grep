@@ -4,7 +4,7 @@ pom.xml.asc
 *.class
 /lib/
 /classes/
-/target/
+**/target/
 /checkouts/
 .lein-deps-sum
 .lein-repl-history
@@ -16,6 +16,7 @@ pom.xml.asc
 .clj-kondo/
 .env
 .lsp
+lmgrep
 lmgrep-*.zip
 lmgrep.build_artifacts.txt
 **.iml
