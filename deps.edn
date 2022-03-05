@@ -9,15 +9,16 @@
   org.apache.lucene/lucene-queryparser {:mvn/version "9.0.0"}
   metosin/jsonista                     {:mvn/version "0.3.5"}
   lmgrep/lucene-monitor-helpers        {:local/root "./lucene-monitor-helpers"}
-  babashka/fs                          {:mvn/version "0.1.2"}
+  lt.jocas/custom-analyzer             {:local/root "./modules/custom-analyzer"}
+  babashka/fs                          {:mvn/version "0.1.3"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
                                         :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc               {:mvn/version "2.7.1.Final"}
+  io.quarkus/quarkus-arc               {:mvn/version "2.7.2.Final"}
   com.github.clj-easy/graal-build-time {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.12.1148"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.12.1153"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -29,20 +30,20 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.02.09"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.03.04"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "raudikko"}}
-   :env "LMGREP_FEATURE_RAUDIKKO"}
+   :env        "LMGREP_FEATURE_RAUDIKKO"}
   :snowball-token-filters
   {:extra-deps {lmgrep/snowball-token-filters-src {:local/root "snowball-token-filters"}}
-   :env "LMGREP_FEATURE_SNOWBALL"}
+   :env        "LMGREP_FEATURE_SNOWBALL"}
   :stempel
   {:extra-deps {lmgrep/stempel {:local/root "stempel"}}
-   :env "LMGREP_FEATURE_STEMPEL"}
+   :env        "LMGREP_FEATURE_STEMPEL"}
   :bundled-analyzers
   {:extra-deps {lmgrep/bundled-analyzers {:local/root "bundled-analyzers"}}
-   :env "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
+   :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
   {:deps       {io.github.clojure/tools.build {:tag "v0.7.5" :sha "34727f7"}}
    :ns-default build}}}
