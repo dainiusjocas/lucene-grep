@@ -31,7 +31,7 @@ RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.
 
 COPY deps.edn /usr/src/app/
 COPY build.clj /usr/src/app/build.clj
-COPY lucene-monitor-helpers /usr/src/app/lucene-monitor-helpers
+COPY modules /usr/src/app/modules
 COPY raudikko /usr/src/app/raudikko
 COPY stempel /usr/src/app/stempel
 COPY bundled-analyzers /usr/src/app/bundled-analyzers

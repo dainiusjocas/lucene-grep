@@ -8,7 +8,7 @@
   org.apache.lucene/lucene-queries     {:mvn/version "9.0.0"}
   org.apache.lucene/lucene-queryparser {:mvn/version "9.0.0"}
   metosin/jsonista                     {:mvn/version "0.3.5"}
-  lmgrep/lucene-monitor-helpers        {:local/root "./lucene-monitor-helpers"}
+  lmgrep/lucene-monitor-helpers        {:local/root "./modules/lucene-monitor-helpers"}
   lt.jocas/custom-analyzer             {:local/root "./modules/custom-analyzer"}
   babashka/fs                          {:mvn/version "0.1.3"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
