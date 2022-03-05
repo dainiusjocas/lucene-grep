@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-ce:java17-21.3.0 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22.0.0.2 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 
@@ -22,7 +22,7 @@ RUN microdnf install wget git \
 
 ENV PATH=$PATH:${MUSL_DIR}/x86_64-linux-musl-native/bin
 
-COPY --from=babashka/babashka:0.7.4 /usr/local/bin/bb /usr/local/bin/bb
+COPY --from=babashka/babashka:0.7.7 /usr/local/bin/bb /usr/local/bin/bb
 
 RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.sh \
     && chmod +x linux-install-$CLOJURE_VERSION.sh \
@@ -31,11 +31,7 @@ RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.
 
 COPY deps.edn /usr/src/app/
 COPY build.clj /usr/src/app/build.clj
-COPY lucene-monitor-helpers /usr/src/app/lucene-monitor-helpers
-COPY raudikko /usr/src/app/raudikko
-COPY stempel /usr/src/app/stempel
-COPY bundled-analyzers /usr/src/app/bundled-analyzers
-COPY snowball-token-filters /usr/src/app/snowball-token-filters
+COPY modules /usr/src/app/modules
 
 ARG LMGREP_FEATURE_RAUDIKKO
 ENV LMGREP_FEATURE_RAUDIKKO=${LMGREP_FEATURE_RAUDIKKO:-true}
