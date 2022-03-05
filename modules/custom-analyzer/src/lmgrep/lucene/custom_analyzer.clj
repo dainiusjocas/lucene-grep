@@ -8,24 +8,20 @@
 (defn- stringify [m]
   (reduce-kv (fn [acc k v] (assoc acc (name k) (str v))) {} m))
 
-(defn load-tokenizer-factories []
+(defn tokenizer-factories []
   (reduce (fn [acc ^String tokenizer-name]
             (assoc acc tokenizer-name (TokenizerFactory/lookupClass tokenizer-name)))
           {} (TokenizerFactory/availableTokenizers)))
 
-(defn load-char-filter-factories []
+(defn char-filter-factories []
   (reduce (fn [acc ^String char-filter-name]
             (assoc acc char-filter-name (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
-(defn load-token-filter-factories []
+(defn token-filter-factories []
   (reduce (fn [acc ^String token-filter-name]
             (assoc acc token-filter-name (TokenFilterFactory/lookupClass token-filter-name)))
           {} (TokenFilterFactory/availableTokenFilters)))
-
-(def tokenizer-name->class (load-tokenizer-factories))
-(def char-filter-name->class (load-char-filter-factories))
-(def token-filter-name->class (load-token-filter-factories))
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
@@ -75,7 +71,7 @@
      - offset-gap: specify offset gap
      - namify-fn: function that changes the string identifier of the service name, e.g. str/lowercase, default: identity"
   (^Analyzer [opts]
-   (create opts char-filter-name->class tokenizer-name->class token-filter-name->class))
+   (create opts (char-filter-factories) (tokenizer-factories) (token-filter-factories)))
   (^Analyzer [{:keys [config-dir char-filters tokenizer token-filters namify-fn
                       position-increment-gap offset-gap]}
               char-filter-factories tokenizer-factories token-filter-factories]
