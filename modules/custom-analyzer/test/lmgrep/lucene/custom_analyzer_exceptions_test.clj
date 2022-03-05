@@ -1,4 +1,4 @@
-(ns lmgrep.lucene.custom-analyzer-test
+(ns lmgrep.lucene.custom-analyzer-exceptions-test
   (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.lucene.custom-analyzer :as analyzer]))
 

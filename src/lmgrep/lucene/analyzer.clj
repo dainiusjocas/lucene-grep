@@ -12,15 +12,15 @@
 
 (def token-filter-name->class
   (reduce-kv (fn [m k v] (assoc m (namify k) v))
-             {} ca/token-filter-name->class))
+             {} (ca/token-filter-factories)))
 
 (def tokenizer-name->class
   (reduce-kv (fn [m k v] (assoc m (namify k) v))
-             {} ca/tokenizer-name->class))
+             {} (ca/tokenizer-factories)))
 
 (def char-filter-name->class
   (reduce-kv (fn [m k v] (assoc m (namify k) v))
-             {} ca/char-filter-name->class))
+             {} (ca/char-filter-factories)))
 
 (defn get-analyzer [analyzer-name custom-analyzers]
   (or (get custom-analyzers (namify (str/replace analyzer-name "Analyzer" "")))
