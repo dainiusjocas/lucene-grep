@@ -71,10 +71,13 @@
      - char-filters: list of char filter descriptions
      - tokenizer: tokenizer description, default 'standard' tokenizer
      - token-filters: list of token filter descriptions
+     - position-increment-gap: specify position increment gap
+     - offset-gap: specify offset gap
      - namify-fn: function that changes the string identifier of the service name, e.g. str/lowercase, default: identity"
   (^Analyzer [opts]
    (create opts char-filter-name->class tokenizer-name->class token-filter-name->class))
-  (^Analyzer [{:keys [config-dir char-filters tokenizer token-filters namify-fn]}
+  (^Analyzer [{:keys [config-dir char-filters tokenizer token-filters namify-fn
+                      position-increment-gap offset-gap]}
               char-filter-factories tokenizer-factories token-filter-factories]
    (let [namify-fn (or namify-fn identity)
          ^CustomAnalyzer$Builder builder (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
@@ -112,6 +115,11 @@
                                                            "Token filter"
                                                            namify-fn)
                         ^Map (HashMap. ^Map (stringify args))))
+
+     (when position-increment-gap
+       (.withPositionIncrementGap builder position-increment-gap))
+     (when offset-gap
+       (.withOffsetGap builder offset-gap))
 
      (.build builder))))
 
