@@ -45,6 +45,14 @@
               char-filter-factories tokenizer-factories token-filter-factories]
    (let [namify-fn (or namify-fn identity)
          ^CustomAnalyzer$Builder builder (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
+
+     (assert (or (nil? char-filters) (sequential? char-filters))
+             (format "Character filters should be a list, was '%s'" char-filters))
+     (assert (or (nil? token-filters) (sequential? token-filters))
+             (format "Token filters should be a list, was '%s'" token-filters))
+
+     (assert (or (nil? tokenizer) (map? tokenizer))
+             (format "Tokenizer must have 'name' and 'args', but was '%s'" tokenizer))
      (.withTokenizer builder
                      ^Class (get-component-or-exception tokenizer-factories
                                                         (get tokenizer :name DEFAULT_TOKENIZER_NAME)
@@ -52,7 +60,9 @@
                                                         namify-fn)
                      ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
 
-     (doseq [{:keys [name args]} char-filters]
+     (doseq [{:keys [name args] :as char-filter} char-filters]
+       (assert (or (nil? char-filter) (map? char-filter))
+               (format "Character filter must have 'name' and 'args', but was '%s'" char-filter))
        (.addCharFilter builder
                        ^Class (get-component-or-exception char-filter-factories
                                                           name
@@ -60,7 +70,9 @@
                                                           namify-fn)
                        ^Map (HashMap. ^Map (stringify args))))
 
-     (doseq [{:keys [name args]} token-filters]
+     (doseq [{:keys [name args] :as token-filter} token-filters]
+       (assert (or (nil? token-filter) (map? token-filter))
+               (format "Token filter must have 'name' and 'args', but was '%s'" token-filter))
        (.addTokenFilter builder
                         ^Class (get-component-or-exception token-filter-factories
                                                            name
@@ -75,7 +87,7 @@
     {:tokenizer {:name "standard"
                  :args {:maxTokenLength 4}}
      :char-filters [{:name "patternReplace"
-                     :args {:pattern "joc"
+                     :args {:pattern "foo"
                             :replacement "foo"}}]
      :token-filters [{:name "uppercase"}
                      {:name "reverseString"}]})
