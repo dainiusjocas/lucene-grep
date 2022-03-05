@@ -88,7 +88,7 @@
              (format "Token filters should be a list, was '%s'" token-filters))
 
      (assert (or (nil? tokenizer) (map? tokenizer))
-             (format "Tokenizer must have 'name' and 'args', but was '%s'" tokenizer))
+             (format "Tokenizer must have 'name' and optional 'args', but was '%s'" tokenizer))
      (.withTokenizer builder
                      ^Class (get-component-or-exception tokenizer-factories
                                                         (get tokenizer :name DEFAULT_TOKENIZER_NAME)
@@ -98,7 +98,7 @@
 
      (doseq [{:keys [name args] :as char-filter} char-filters]
        (assert (or (nil? char-filter) (map? char-filter))
-               (format "Character filter must have 'name' and 'args', but was '%s'" char-filter))
+               (format "Character filter must have 'name' and optional 'args', but was '%s'" char-filter))
        (.addCharFilter builder
                        ^Class (get-component-or-exception char-filter-factories
                                                           name
@@ -108,7 +108,7 @@
 
      (doseq [{:keys [name args] :as token-filter} token-filters]
        (assert (or (nil? token-filter) (map? token-filter))
-               (format "Token filter must have 'name' and 'args', but was '%s'" token-filter))
+               (format "Token filter must have 'name' and optional 'args', but was '%s'" token-filter))
        (.addTokenFilter builder
                         ^Class (get-component-or-exception token-filter-factories
                                                            name
