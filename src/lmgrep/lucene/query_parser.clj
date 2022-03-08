@@ -1,6 +1,6 @@
 (ns lmgrep.lucene.query-parser
   (:require [clojure.string :as str])
-  (:import (org.apache.lucene.queryparser.classic QueryParser QueryParserBase)
+  (:import (org.apache.lucene.queryparser.classic QueryParser QueryParserBase QueryParser$Operator)
            (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
            (org.apache.lucene.queryparser.flexible.standard StandardQueryParser CommonQueryParserConfiguration)
            (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
@@ -9,12 +9,20 @@
            (org.apache.lucene.analysis Analyzer)
            (org.apache.lucene.util QueryBuilder)
            (java.util Locale TimeZone)
-           (org.apache.lucene.document DateTools$Resolution)))
+           (org.apache.lucene.document DateTools$Resolution)
+           (org.apache.lucene.queryparser.flexible.standard.config StandardQueryConfigHandler$Operator)))
 
 (set! *warn-on-reflection* true)
 
 (def query-parser-class->attrs
-  {SimpleQueryParser
+  {StandardQueryParser
+   {:default-operator
+    {:default "OR"
+     :handler (fn [^StandardQueryParser qp conf]
+                (.setDefaultOperator
+                  qp (StandardQueryConfigHandler$Operator/valueOf
+                       (str/upper-case (get conf :default-operator)))))}}
+   SimpleQueryParser
    {:default-operator
     {:default "should"
      :handler (fn [^SimpleQueryParser qp conf]
@@ -34,7 +42,14 @@
    {:determinize-work-limit
     {:default 10000
      :handler (fn [^QueryParserBase qp conf]
-                (.setDeterminizeWorkLimit qp (int (get conf :determinize-work-limit))))}}
+                (.setDeterminizeWorkLimit qp (int (get conf :determinize-work-limit))))}
+    :default-operator
+    {:default "OR"
+     :handler (fn [^QueryParserBase qp conf]
+                (.setDefaultOperator
+                  qp
+                  (QueryParser$Operator/valueOf
+                    ^String (str/upper-case (get conf :default-operator)))))}}
    QueryBuilder
    {:enable-position-increments
     {:default true

@@ -2,8 +2,7 @@
   (:require [clojure.core.reducers :as r]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.field-name :as field-name]
-            [lmgrep.lucene.query :as q]
-            [lmgrep.lucene.query-parser :as query-parser])
+            [lmgrep.lucene.query :as q])
   (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
@@ -22,10 +21,9 @@
   (try
     (let [query (get questionnaire-entry :query)
           query-parser-name (keyword (get questionnaire-entry :query-parser))
-          query-parser-conf (get questionnaire-entry :query-parser-conf)
-          qp (query-parser/create query-parser-name query-parser-conf field-name monitor-analyzer)]
+          query-parser-conf (get questionnaire-entry :query-parser-conf)]
       (MonitorQuery. ^String (get questionnaire-entry :id)
-                     ^Query (q/parse qp query query-parser-name field-name)
+                     ^Query (q/parse query query-parser-name query-parser-conf field-name monitor-analyzer)
                      ^String query
                      (prepare-metadata (get questionnaire-entry :type) (get questionnaire-entry :meta))))
     (catch ParseException e
