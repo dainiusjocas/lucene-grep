@@ -1,5 +1,5 @@
 (ns lmgrep.lucene.query-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [clojure.test :refer [deftest is]]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.query :as q])
   (:import (org.apache.lucene.search BooleanQuery)))
