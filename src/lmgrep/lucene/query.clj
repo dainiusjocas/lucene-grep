@@ -26,3 +26,6 @@
   ([^String query query-parser-name query-parser-conf ^String field-name ^Analyzer monitor-analyzer]
    (let [qp (query-parser/create query-parser-name query-parser-conf field-name monitor-analyzer)]
      (parse* qp query field-name))))
+
+(comment
+  (lmgrep.lucene.query/parse "foo bar baz" :classic {} "field-name"))

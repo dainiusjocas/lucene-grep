@@ -147,7 +147,7 @@
   "Constructs an Object that can be used for later query parsing.
   https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html"
   [query-parser-name conf ^String field-name ^Analyzer analyzer]
-  (case query-parser-name
+  (case (keyword query-parser-name)
     :classic (classic conf field-name analyzer)
     :complex-phrase (complex-phrase conf field-name analyzer)
     :surround (surround conf)
