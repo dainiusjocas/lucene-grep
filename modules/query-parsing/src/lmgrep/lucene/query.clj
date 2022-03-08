@@ -21,11 +21,24 @@
     (instance? StandardQueryParser query-parser) (.parse ^StandardQueryParser query-parser query-string field-name)))
 
 (defn ^Query parse
+  "Constructs query parser and parses the query.
+  Params:
+  - query: lucene query string
+  - query-parser-name: Lucene query parser id, one of #{:classic :complex-phrase :surround :simple :standard}, default: :classic
+  - query-parser-conf: map with query parser configuration
+  - field-name: default field for terms query, defaults \"\"
+  - analyzer: Lucene analyzer to apply on query terms, defaults StandardAnalyzer"
+  ([^String query]
+   (parse query :classic {} "" (StandardAnalyzer.)))
+  ([^String query query-parser-name]
+   (parse query query-parser-name {} "" (StandardAnalyzer.)))
+  ([^String query query-parser-name query-parser-conf]
+   (parse query query-parser-name query-parser-conf "" (StandardAnalyzer.)))
   ([^String query query-parser-name query-parser-conf ^String field-name]
    (parse query query-parser-name query-parser-conf field-name (StandardAnalyzer.)))
-  ([^String query query-parser-name query-parser-conf ^String field-name ^Analyzer monitor-analyzer]
-   (let [qp (query-parser/create query-parser-name query-parser-conf field-name monitor-analyzer)]
+  ([^String query query-parser-name query-parser-conf ^String field-name ^Analyzer analyzer]
+   (let [qp (query-parser/create query-parser-name query-parser-conf field-name analyzer)]
      (parse* qp query field-name))))
 
 (comment
-  (lmgrep.lucene.query/parse "foo bar baz" :classic {} "field-name"))
+  (lmgrep.lucene.query/parse "foo bar baz" :classic {} "field-name" (StandardAnalyzer.)))

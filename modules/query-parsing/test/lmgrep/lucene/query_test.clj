@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest is]]
             [lmgrep.lucene.query :as q])
   (:import (org.apache.lucene.search BooleanQuery)
-           (org.apache.lucene.queryparser.surround.query DistanceRewriteQuery)))
+           (org.apache.lucene.queryparser.surround.query DistanceRewriteQuery)
+           (org.apache.lucene.analysis.standard StandardAnalyzer)))
 
 (def field-name "field-name")
 (def empty-config {})
@@ -40,3 +41,11 @@
         parsed-query (q/parse query :standard config field-name)]
     (is (instance? BooleanQuery parsed-query))
     (is (= "+field-name:foo +field-name:bar +field-name:baz" (str parsed-query)))))
+
+(deftest minimal-configs
+  (let [query "foo bar baz"]
+    (is (= "foo bar baz" (str (q/parse query))))
+    (is (= "foo bar baz" (str (q/parse query :classic))))
+    (is (= "foo bar baz" (str (q/parse query :classic {}))))
+    (is (= "f:foo f:bar f:baz" (str (q/parse query :classic {} "f"))))
+    (is (= "f:foo f:bar f:baz" (str (q/parse query :classic {} "f" (StandardAnalyzer.)))))))

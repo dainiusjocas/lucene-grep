@@ -13,6 +13,9 @@ Code:
 ```clojure
 (require '[lmgrep.lucene.query :as q])
 
+(q/parse "foo bar baz")
+;; => #object[org.apache.lucene.search.BooleanQuery 0x650526d1 "foo bar baz"]
+
 (q/parse "foo bar baz" :classic {} "field-name")
 ;; => #object[org.apache.lucene.search.BooleanQuery 0x3218294 "field-name:foo field-name:bar field-name:baz"]
 ```
