@@ -16,19 +16,28 @@ Code:
 (require '[lmgrep.lucene.custom-analyzer :as custom-analyzer])
 
 (custom-analyzer/create
-  {:tokenizer              {:name "standard"
-                            :args {:maxTokenLength 4}}
-   :char-filters           [{:name "patternReplace"
-                             :args {:pattern     "foo"
-                                    :replacement "foo"}}]
-   :token-filters          [{:name "uppercase"}
-                            {:name "reverseString"}]
+  {:tokenizer              {:standard {:maxTokenLength 4}}
+   :char-filters           [{:patternReplace {:pattern     "foo"
+                                              :replacement "foo"}}]
+   :token-filters          [{:uppercase nil}
+                            {:reverseString nil}]
    :offset-gap             2
-   :position-increment-gap 3})
+   :position-increment-gap 3
+   :config-dir             "."})
 ;; =>
 ;; #object[org.apache.lucene.analysis.custom.CustomAnalyzer
 ;;         0x4686f87d
 ;;         "CustomAnalyzer(org.apache.lucene.analysis.pattern.PatternReplaceCharFilterFactory@2f1300,org.apache.lucene.analysis.standard.StandardTokenizerFactory@7e71a244,org.apache.lucene.analysis.core.UpperCaseFilterFactory@54e9f0d6,org.apache.lucene.analysis.reverse.ReverseStringFilterFactory@3e494ba7)"]
+```
+
+If nothing is provided then an Anlyzer with just the standard tokenizer is created:
+
+```clojure
+(custom-analyzer/create {})
+;; =>
+;; #object[org.apache.lucene.analysis.custom.CustomAnalyzer
+;;         0x456fe86
+;;         "CustomAnalyzer(org.apache.lucene.analysis.standard.StandardTokenizerFactory@5703f5b3)"]
 ```
 
 ## Design

@@ -25,17 +25,17 @@
 
 (def DEFAULT_TOKENIZER_NAME "standard")
 
-(defn ^Path config-dir->path [config-dir]
+(defn- ^Path config-dir->path [config-dir]
   (let [^String dir (or config-dir ".")]
     (.toPath (File. dir))))
 
-(defn get-component-or-exception [factories name component-type namify-fn]
-  (or (get factories (namify-fn name))
+(defn get-component-or-exception [factories component-name component-type namify-fn]
+  (or (get factories (namify-fn (name component-name)))
       (throw
         (Exception.
           (format "%s '%s' is not available. Choose one of: %s"
                   component-type
-                  name
+                  component-name
                   (sort (keys factories)))))))
 
 (defn create
@@ -43,10 +43,9 @@
    Under the hood it uses the factory classes TokenizerFactory, TokenFilterFactory, and CharFilterFactory.
    The factories are loaded with java.util.ServiceLoader.
 
-   Factory description is of shape:
+   Analysis component description is of shape:
    `
-   {:name String
-    :args Map}
+   {ComponentNameKeywordOrString MapOfArguments}
    `
 
    If needed factories can be passed as arguments in shape:
@@ -56,9 +55,9 @@
 
    Example:
    `
-   {:tokenizer {:name \"standard\", :args {:maxTokenLength 4}}
-    :char-filters [{:name \"patternReplace\" :args {:pattern \"foo\", :replacement \"foo\"}}]
-    :token-filters [{:name \"uppercase\"} {:name \"reverseString\"}]
+   {:tokenizer {\"standard\" {:maxTokenLength 4}}
+    :char-filters [{\"patternReplace\" {:pattern \"foo\", :replacement \"foo\"}}]
+    :token-filters [{\"uppercase\" nil} {\"reverseString\" nil}]
     :config-dir \".\"}
    `
 
@@ -70,14 +69,12 @@
      - position-increment-gap: specify position increment gap
      - offset-gap: specify offset gap
      - namify-fn: function that changes the string identifier of the service name, e.g. str/lowercase, default: identity"
-  (^Analyzer [opts]
-   (create opts (char-filter-factories) (tokenizer-factories) (token-filter-factories)))
+  (^Analyzer [opts] (create opts (char-filter-factories) (tokenizer-factories) (token-filter-factories)))
   (^Analyzer [{:keys [config-dir char-filters tokenizer token-filters namify-fn
                       position-increment-gap offset-gap]}
               char-filter-factories tokenizer-factories token-filter-factories]
    (let [namify-fn (or namify-fn identity)
          ^CustomAnalyzer$Builder builder (CustomAnalyzer/builder ^Path (config-dir->path config-dir))]
-
      (assert (or (nil? char-filters) (sequential? char-filters))
              (format "Character filters should be a list, was '%s'" char-filters))
      (assert (or (nil? token-filters) (sequential? token-filters))
@@ -85,32 +82,35 @@
 
      (assert (or (nil? tokenizer) (map? tokenizer))
              (format "Tokenizer must have 'name' and optional 'args', but was '%s'" tokenizer))
-     (.withTokenizer builder
-                     ^Class (get-component-or-exception tokenizer-factories
-                                                        (get tokenizer :name DEFAULT_TOKENIZER_NAME)
-                                                        "Tokenizer"
-                                                        namify-fn)
-                     ^Map (HashMap. ^Map (stringify (get tokenizer :args))))
-
-     (doseq [{:keys [name args] :as char-filter} char-filters]
-       (assert (or (nil? char-filter) (map? char-filter))
-               (format "Character filter must have 'name' and optional 'args', but was '%s'" char-filter))
-       (.addCharFilter builder
-                       ^Class (get-component-or-exception char-filter-factories
-                                                          name
-                                                          "Char filter"
+     (let [[tokenizer-name args] (first tokenizer)]
+       (.withTokenizer builder
+                       ^Class (get-component-or-exception tokenizer-factories
+                                                          (or tokenizer-name DEFAULT_TOKENIZER_NAME)
+                                                          "Tokenizer"
                                                           namify-fn)
                        ^Map (HashMap. ^Map (stringify args))))
 
-     (doseq [{:keys [name args] :as token-filter} token-filters]
-       (assert (or (nil? token-filter) (map? token-filter))
-               (format "Token filter must have 'name' and optional 'args', but was '%s'" token-filter))
-       (.addTokenFilter builder
-                        ^Class (get-component-or-exception token-filter-factories
-                                                           name
-                                                           "Token filter"
-                                                           namify-fn)
-                        ^Map (HashMap. ^Map (stringify args))))
+     (doseq [char-filter char-filters]
+       (let [[char-filter-name args] (first char-filter)]
+         (assert (or (nil? args) (map? args))
+                 (format "Character filter must have 'name' and optional 'args', but was '%s'" char-filter))
+         (.addCharFilter builder
+                         ^Class (get-component-or-exception char-filter-factories
+                                                            char-filter-name
+                                                            "Char filter"
+                                                            namify-fn)
+                         ^Map (HashMap. ^Map (stringify args)))))
+
+     (doseq [token-filter token-filters]
+       (let [[token-filter-name args] (first token-filter)]
+         (assert (or (nil? args) (map? args))
+                 (format "Token filter must have 'name' and optional 'args', but was '%s'" token-filter))
+         (.addTokenFilter builder
+                          ^Class (get-component-or-exception token-filter-factories
+                                                             token-filter-name
+                                                             "Token filter"
+                                                             namify-fn)
+                          ^Map (HashMap. ^Map (stringify args)))))
 
      (when position-increment-gap
        (.withPositionIncrementGap builder position-increment-gap))
@@ -121,10 +121,8 @@
 
 (comment
   (lmgrep.lucene.custom-analyzer/create
-    {:tokenizer {:name "standard"
-                 :args {:maxTokenLength 4}}
-     :char-filters [{:name "patternReplace"
-                     :args {:pattern "foo"
-                            :replacement "foo"}}]
-     :token-filters [{:name "uppercase"}
-                     {:name "reverseString"}]}))
+    {:tokenizer {:standard {:maxTokenLength 4}}
+     :char-filters [{:patternReplace {:pattern "foo"
+                                      :replacement "foo"}}]
+     :token-filters [{:uppercase nil}
+                     {:reverseString nil}]}))

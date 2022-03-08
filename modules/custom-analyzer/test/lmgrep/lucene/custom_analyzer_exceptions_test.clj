@@ -27,7 +27,7 @@
 
   (testing "individual char-filter configuration"
     (let [char-filter-config-as-string "FAIL"]
-      (is (thrown? AssertionError
+      (is (thrown? Exception
                    (analyzer/create
                      {:char-filters [char-filter-config-as-string]}))))
 
@@ -49,7 +49,7 @@
 
   (testing "individual token-filter configuration"
     (let [token-filter-config-as-string "FAIL"]
-      (is (thrown? AssertionError
+      (is (thrown? Exception
                    (analyzer/create
                      {:token-filters [token-filter-config-as-string]}))))
 
@@ -61,5 +61,4 @@
   (testing "invalid arguments passed throws an Exception"
     (is (thrown? IllegalArgumentException
                  (analyzer/create
-                   {:tokenizer {:name "standard"
-                                :args {:foo "foo"}}})))))
+                   {:tokenizer {"standard" {:foo "foo"}}})))))

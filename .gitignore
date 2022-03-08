@@ -18,5 +18,5 @@ pom.xml.asc
 .lsp
 lmgrep-*.zip
 lmgrep.build_artifacts.txt
-lucene-grep.iml
+**.iml
 .musl
