@@ -10,6 +10,22 @@
 (defn with-analyzers [opts]
   (analysis/create opts predefined/analyzers))
 
+(deftest converter
+  (let [conf {:tokenizer {:name "standard"
+                          :args {:maxTokenLength 4}}
+              :char-filters [{:name "patternReplace"
+                              :args {:pattern "foo"
+                                     :replacement "foo"}}]
+              :token-filters [{:name "uppercase"}
+                              {:name "reverseString"}]}
+
+        expected {:tokenizer {"standard" {:maxTokenLength 4}}
+                  :char-filters [{"patternReplace" {:pattern "foo"
+                                                    :replacement "foo"}}]
+                  :token-filters [{"uppercase" nil}
+                                  {"reverseString" nil}]}]
+    (is (= expected (analysis/custom-analyzer->short-notation conf)))))
+
 (when lmgrep.features/bundled?
   (deftest predefined-analyzers
     (let [text "The brown foxes"

@@ -10,40 +10,40 @@
 
 (deftest analyzer-building
   (testing "tokenizer params handling"
-    (let [analyzer (a/create {:tokenizer {:name "standard"}})]
+    (let [analyzer (a/create {:tokenizer {"standard" nil}})]
       (is (instance? Analyzer analyzer))
       (is (instance? CustomAnalyzer analyzer))
       (is (= StandardTokenizerFactory
              (class (.getTokenizerFactory ^CustomAnalyzer analyzer)))))
 
-    (let [analyzer (a/create {:tokenizer {:name "keyword"}})]
+    (let [analyzer (a/create {:tokenizer {"keyword" nil}})]
       (is (= KeywordTokenizerFactory
              (class (.getTokenizerFactory ^CustomAnalyzer analyzer))))))
 
   (testing "char filter params handling"
-    (let [analyzer (a/create {:char-filters [{:name "htmlStrip"}]})]
+    (let [analyzer (a/create {:char-filters [{"htmlStrip" nil}]})]
       (is (= 1 (count (.getCharFilterFactories ^CustomAnalyzer analyzer))))
       (is (= HTMLStripCharFilterFactory
              (class (first (.getCharFilterFactories ^CustomAnalyzer analyzer))))))
 
-    (let [analyzer (a/create {:char-filters [{:name "htmlStrip"} {:name "htmlStrip"}]})]
+    (let [analyzer (a/create {:char-filters [{"htmlStrip" nil} {"htmlStrip" nil}]})]
       (is (= 2 (count (.getCharFilterFactories ^CustomAnalyzer analyzer))))
       (is (= [HTMLStripCharFilterFactory HTMLStripCharFilterFactory]
              (map #(class %) (.getCharFilterFactories ^CustomAnalyzer analyzer))))))
 
   (testing "token filter params handling"
-    (let [analyzer (a/create {:token-filters [{:name "asciiFolding"}]})]
+    (let [analyzer (a/create {:token-filters [{"asciiFolding" nil}]})]
       (is (= 1 (count (.getTokenFilterFactories ^CustomAnalyzer analyzer))))
       (is (= [ASCIIFoldingFilterFactory]
              (map #(class %) (.getTokenFilterFactories ^CustomAnalyzer analyzer)))))
 
-    (let [analyzer (a/create {:token-filters [{:name "asciiFolding"} {:name "lowercase"}]})]
+    (let [analyzer (a/create {:token-filters [{"asciiFolding" nil} {"lowercase" nil}]})]
       (is (= 2 (count (.getTokenFilterFactories ^CustomAnalyzer analyzer))))
       (is (= [ASCIIFoldingFilterFactory LowerCaseFilterFactory]
              (map #(class %) (.getTokenFilterFactories ^CustomAnalyzer analyzer))))))
 
   (testing "gap param handling"
-    (let [^CustomAnalyzer analyzer (a/create {:offset-gap 12
+    (let [^CustomAnalyzer analyzer (a/create {:offset-gap              12
                                               :position-increment-gap 3})]
       (is (= 12 (.getOffsetGap analyzer "")))
       (is (= 3 (.getPositionIncrementGap analyzer ""))))))
