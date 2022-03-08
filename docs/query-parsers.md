@@ -17,10 +17,9 @@ Rows represent an attribute and in the columns are compatibility with a specific
 | :auto-generate-multi-term-synonyms-phrase-query |     true |            true |    true |     false |     false |
 |                   :auto-generate-phrase-queries |     true |            true |   false |     false |     false |
 |                                :date-resolution |     true |            true |   false |      true |     false |
-|                               :default-operator |    false |           false |    true |     false |     false |
+|                               :default-operator |     true |            true |    true |      true |     false |
 |                         :determinize-work-limit |     true |            true |   false |     false |     false |
 |                           :enable-graph-queries |     true |            true |    true |     false |     false |
-|                     :enable-position-increments |     true |            true |    true |      true |     false |
 |                     :enable-position-increments |     true |            true |    true |      true |     false |
 |                                  :fuzzy-min-sim |     true |            true |   false |      true |     false |
 |                            :fuzzy-prefix-length |     true |            true |   false |      true |     false |
