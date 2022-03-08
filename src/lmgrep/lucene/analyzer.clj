@@ -31,6 +31,16 @@
                   analyzer-name
                   (sort (keys custom-analyzers)))))))
 
+
+(defn custom-analyzer->short-notation [conf]
+  (let [old->new (fn [old] {(get old :name) (get old :args)})
+        converted-tokenizer {(get-in conf [:tokenizer :name]) (get-in conf [:tokenizer :args])}
+        converted-char-filters (mapv old->new (get conf :char-filters))
+        converted-token-filters (mapv old->new (get conf :token-filters))]
+    (assoc conf :tokenizer converted-tokenizer
+                :char-filters converted-char-filters
+                :token-filters converted-token-filters)))
+
 (defn ^Analyzer create
   "Either fetches a predefined analyzer or creates one from the config."
   ([opts] (create opts {}))
@@ -38,7 +48,7 @@
    (try
      (if-let [analyzer-name (get analyzer :name)]
        (get-analyzer analyzer-name custom-analyzers)
-       (ca/create (assoc opts :namify-fn namify)
+       (ca/create (custom-analyzer->short-notation (assoc opts :namify-fn namify))
                   char-filter-name->class
                   tokenizer-name->class
                   token-filter-name->class))
