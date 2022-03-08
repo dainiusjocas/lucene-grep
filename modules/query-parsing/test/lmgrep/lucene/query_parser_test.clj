@@ -1,6 +1,5 @@
 (ns lmgrep.lucene.query-parser-test
   (:require [clojure.test :refer [deftest is testing]]
-            [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.query-parser :as qp])
   (:import (org.apache.lucene.queryparser.classic QueryParser QueryParser$Operator)
            (org.apache.lucene.queryparser.simple SimpleQueryParser)
@@ -8,10 +7,11 @@
            (org.apache.lucene.queryparser.flexible.standard StandardQueryParser)
            (org.apache.lucene.queryparser.complexPhrase ComplexPhraseQueryParser)
            (java.lang.reflect Field)
-           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)))
+           (org.apache.lucene.queryparser.surround.query BasicQueryFactory)
+           (org.apache.lucene.analysis.standard StandardAnalyzer)))
 
 (def field-name "field-name")
-(def analyzer (analyzer/create {}))
+(def analyzer (StandardAnalyzer.))
 (def empty-config {})
 
 (defn get-private-field-value [obj field-name]

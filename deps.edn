@@ -10,6 +10,7 @@
   metosin/jsonista                     {:mvn/version "0.3.5"}
   lmgrep/lucene-monitor-helpers        {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/custom-analyzer             {:local/root "modules/custom-analyzer"}
+  lt.jocas/query-parsing               {:local/root "modules/query-parsing"}
   babashka/fs                          {:mvn/version "0.1.3"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
                                         :exclusions  [org.apache.lucene/lucene-analyzers-common]}
