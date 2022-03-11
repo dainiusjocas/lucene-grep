@@ -1,0 +1,9 @@
+{:paths ["src"]
+ :deps  {org.apache.lucene/lucene-core {:mvn/version "9.1.0"}
+         lt.jocas/helpers              {:local/root "../lucene-monitor-helpers"}}
+ :aliases
+ {:test {:extra-paths ["test" "test/resources"]
+         :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                                  :sha     "cc75980b43011773162b485f46f939dc5fba91e4"}
+                       lt.jocas/custom-analyzer  {:local/root "../custom-analyzer"}}
+         :main-opts   ["-m" "cognitect.test-runner"]}}}

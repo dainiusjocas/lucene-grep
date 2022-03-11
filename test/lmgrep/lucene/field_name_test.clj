@@ -1,4 +1,4 @@
-(ns lmgrep.lucene.text-analysis-test
+(ns lmgrep.lucene.field-name-test
   (:require [clojure.test :refer [deftest is testing]]
             [lmgrep.lucene.field-name :as ta]))
 
