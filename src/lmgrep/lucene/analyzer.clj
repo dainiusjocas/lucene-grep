@@ -41,10 +41,10 @@
                 :char-filters converted-char-filters
                 :token-filters converted-token-filters)))
 
-(defn ^Analyzer create
+(defn create
   "Either fetches a predefined analyzer or creates one from the config."
-  ([opts] (create opts {}))
-  ([{:keys [analyzer] :as opts} custom-analyzers]
+  (^Analyzer [opts] (create opts {}))
+  (^Analyzer [{:keys [analyzer] :as opts} custom-analyzers]
    (try
      (if-let [analyzer-name (get analyzer :name)]
        (get-analyzer analyzer-name custom-analyzers)

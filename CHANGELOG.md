@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Upgrade to Lucene 9.1.0
+
 ## v2022.02.19
 
 - Streamed matching with a flag `--streamed`
