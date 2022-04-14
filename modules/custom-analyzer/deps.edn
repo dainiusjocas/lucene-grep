@@ -1,6 +1,6 @@
 {:paths ["src"]
- :deps  {org.apache.lucene/lucene-core            {:mvn/version "9.0.0"}
-         org.apache.lucene/lucene-analysis-common {:mvn/version "9.0.0"}}
+ :deps  {org.apache.lucene/lucene-core            {:mvn/version "9.1.0"}
+         org.apache.lucene/lucene-analysis-common {:mvn/version "9.1.0"}}
  :aliases
  {:test {:extra-paths ["test" "test/resources"]
          :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
