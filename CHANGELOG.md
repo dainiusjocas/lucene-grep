@@ -9,6 +9,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Upgrade to Lucene 9.1.0
 - Graalvm Native image "quick build mode" for dev
 - Update to GraalVM 22.1.0
+- Text analysis as a separate module
 
 ## v2022.02.19
 

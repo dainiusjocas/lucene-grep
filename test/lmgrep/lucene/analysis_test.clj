@@ -35,34 +35,6 @@
           analyzer (with-analyzers {:analyzer {:name "CollationKeyAnalyzer"}})]
       (is (= ["The brown foxes"] (ta/text->token-strings text analyzer))))))
 
-(deftest graph-from-token-stream
-  (let [text "The brown foxes"
-        analyzer (with-analyzers {:analyzer {:name "StandardAnalyzer"}})]
-    (is (string? (ta/text->graph text analyzer)))))
-
-(deftest detailed-analysis
-  (let [text "The brown foxes"
-        analyzer (with-analyzers {:analyzer {:name "StandardAnalyzer"}})]
-    (is (= [{:end_offset     3
-             :position       0
-             :positionLength 1
-             :start_offset   0
-             :token          "the"
-             :type           "<ALPHANUM>"}
-            {:end_offset     9
-             :position       1
-             :positionLength 1
-             :start_offset   4
-             :token          "brown"
-             :type           "<ALPHANUM>"}
-            {:end_offset     15
-             :position       2
-             :positionLength 1
-             :start_offset   10
-             :token          "foxes"
-             :type           "<ALPHANUM>"}]
-           (map (fn [m] (into {} m)) (ta/text->tokens text analyzer))))))
-
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
         analyzer (analysis/create
