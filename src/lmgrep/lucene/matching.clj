@@ -3,7 +3,7 @@
   (:import (org.apache.lucene.monitor MonitorQuery Monitor
                                       HighlightsMatch HighlightsMatch$Hit
                                       ScoringMatch
-                                      ScoringHighlightsMatch ScoringHighlightsMatch$Hit)
+                                      ScoringHighlightsMatch ScoringHighlightsMatch$Hit MatcherFactory)
            (org.apache.lucene.document Document Field FieldType)
            (org.apache.lucene.index IndexOptions)
            (java.util Map$Entry Set Iterator)))
@@ -56,25 +56,24 @@
                                 :end-offset (.-endOffset hit)))))))
     (persistent! highlights)))
 
-(defn match-text [^String text ^Monitor monitor field-names]
+(defn ^:private match-and-collect
+  [^String text ^Monitor monitor field-names ^MatcherFactory matcher-factory collector-fn]
   (let [combined-highlights (transient [])
         doc (Document.)]
     (doseq [field-name field-names]
       (.add doc (Field. ^String field-name text field-type)))
-    (let [^Iterator miter (.iterator (.getMatches (.match monitor doc (HighlightsMatch/MATCHER))))]
+    (let [^Iterator miter (.iterator (.getMatches (.match monitor doc matcher-factory)))]
       (while (.hasNext miter)
-        (reduce conj! combined-highlights (highlights-match->highlights (.next miter) monitor)))
+        (reduce conj! combined-highlights (collector-fn (.next miter) monitor)))
       (persistent! combined-highlights))))
 
+(defn match-text [^String text ^Monitor monitor field-names]
+  (match-and-collect ^String text ^Monitor monitor field-names
+                     (HighlightsMatch/MATCHER) highlights-match->highlights))
+
 (defn match-with-scoring-highlights [^String text ^Monitor monitor field-names]
-  (let [combined-highlights (transient [])
-        doc (Document.)]
-    (doseq [field-name field-names]
-      (.add doc (Field. ^String field-name text field-type)))
-    (let [^Iterator miter (.iterator (.getMatches (.match monitor doc (ScoringHighlightsMatch/MATCHER))))]
-      (while (.hasNext miter)
-        (reduce conj! combined-highlights (scoring-highlights-match->highlights (.next miter) monitor)))
-      (persistent! combined-highlights))))
+  (match-and-collect ^String text ^Monitor monitor field-names
+                     (ScoringHighlightsMatch/MATCHER) scoring-highlights-match->highlights))
 
 (defn match-with-score [^String text ^Monitor monitor field-names]
   (let [doc (Document.)]
