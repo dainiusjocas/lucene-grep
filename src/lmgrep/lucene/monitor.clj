@@ -3,7 +3,7 @@
             [jsonista.core :as json]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.dictionary :as dictionary])
-  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery)
+  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery Presearcher)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (org.apache.lucene.util BytesRef)
            (org.apache.lucene.search MatchAllDocsQuery)
@@ -32,7 +32,7 @@
         per-field-analyzers (PerFieldAnalyzerWrapper. default-analyzer field-names-w-analyzers)]
     (.setIndexPath config nil monitor-query-serializer)
     (.setQueryUpdateBufferSize config (int (get options :query-update-buffer-size 100000)))
-    (Monitor. per-field-analyzers config)))
+    (Monitor. per-field-analyzers Presearcher/NO_FILTERING config)))
 
 (defn defer-to-one-by-one-registration [^Monitor monitor monitor-queries]
   (doseq [mq monitor-queries]
