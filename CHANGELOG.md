@@ -8,6 +8,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
+- Native build for the Apple Silicon
 - Upgrade to Lucene 9.1.0
 - Graalvm Native image "quick build mode" for dev
 - Update to GraalVM 22.1.0

@@ -20,49 +20,10 @@
       "pattern":"\\QMETA-INF/services/org.apache.lucene.codecs.PostingsFormat\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/services/org.jboss.logmanager.EmbeddedConfigurator\\E"
-    }, 
-    {
       "pattern":"\\Qbabashka/fs.cljc\\E"
     }, 
     {
       "pattern":"\\Qclojure/core.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/buffers.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/channels.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/concurrent.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/dispatch.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/exec/threadpool.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/ioc_macros.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/mutex.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/protocols.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/async/impl/timers.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/cache.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/core/memoize.clj\\E"
     }, 
     {
       "pattern":"\\Qclojure/core/protocols.clj\\E"
@@ -72,6 +33,9 @@
     }, 
     {
       "pattern":"\\Qclojure/core/reducers.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qclojure/core/reducers__init.class\\E"
     }, 
     {
       "pattern":"\\Qclojure/core/server.clj\\E"
@@ -102,15 +66,6 @@
     }, 
     {
       "pattern":"\\Qclojure/core_proxy__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/data/priority_map.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/datafy.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/datafy__init.class\\E"
     }, 
     {
       "pattern":"\\Qclojure/edn.clj\\E"
@@ -158,66 +113,6 @@
       "pattern":"\\Qclojure/main__init.class\\E"
     }, 
     {
-      "pattern":"\\Qclojure/pprint.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/cl_format.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/cl_format__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/column_writer.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/column_writer__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/dispatch.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/dispatch__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/pprint_base.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/pprint_base__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/pretty_writer.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/pretty_writer__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/print_table.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/print_table__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/utilities.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint/utilities__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/pprint__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/reflect.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/reflect/java.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/reflect/java__init.class\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/reflect__init.class\\E"
-    }, 
-    {
       "pattern":"\\Qclojure/set.clj\\E"
     }, 
     {
@@ -260,103 +155,7 @@
       "pattern":"\\Qclojure/test__init.class\\E"
     }, 
     {
-      "pattern":"\\Qclojure/tools/analyzer.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/ast.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/env.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/jvm.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/jvm/utils.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/add_binding_atom.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/cleanup.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/constant_lifter.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/elide_meta.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/emit_form.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/analyze_host_expr.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/annotate_host_info.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/annotate_loops.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/annotate_tag.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/box.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/classify_invoke.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/constant_lifter.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/emit_form.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/fix_case_test.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/infer_tag.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/validate.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/validate_loop_locals.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/validate_recur.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/jvm/warn_on_reflection.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/source_info.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/trim.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/uniquify.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/passes/warn_earmuff.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/analyzer/utils.clj\\E"
-    }, 
-    {
       "pattern":"\\Qclojure/tools/cli.cljc\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/logging.clj\\E"
-    }, 
-    {
-      "pattern":"\\Qclojure/tools/logging/impl.clj\\E"
     }, 
     {
       "pattern":"\\Qclojure/tools/namespace/dependency.cljc\\E"
@@ -425,6 +224,9 @@
       "pattern":"\\Qlmgrep/ansi_escapes.clj\\E"
     }, 
     {
+      "pattern":"\\Qlmgrep/bundled.clj\\E"
+    }, 
+    {
       "pattern":"\\Qlmgrep/cli.clj\\E"
     }, 
     {
@@ -438,6 +240,9 @@
     }, 
     {
       "pattern":"\\Qlmgrep/cli_test.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qlmgrep/concurrent.clj\\E"
     }, 
     {
       "pattern":"\\Qlmgrep/features.clj\\E"
@@ -467,10 +272,16 @@
       "pattern":"\\Qlmgrep/lucene/analyzer.clj\\E"
     }, 
     {
+      "pattern":"\\Qlmgrep/lucene/custom_analyzer.clj\\E"
+    }, 
+    {
       "pattern":"\\Qlmgrep/lucene/dictionary.clj\\E"
     }, 
     {
       "pattern":"\\Qlmgrep/lucene/field_name.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qlmgrep/lucene/field_name_test.clj\\E"
     }, 
     {
       "pattern":"\\Qlmgrep/lucene/matching.clj\\E"
@@ -485,16 +296,13 @@
       "pattern":"\\Qlmgrep/lucene/query_parser.clj\\E"
     }, 
     {
-      "pattern":"\\Qlmgrep/lucene/query_parser_test.clj\\E"
-    }, 
-    {
       "pattern":"\\Qlmgrep/lucene/text_analysis.clj\\E"
     }, 
     {
-      "pattern":"\\Qlmgrep/lucene/text_analysis_test.clj\\E"
+      "pattern":"\\Qlmgrep/lucene_test.clj\\E"
     }, 
     {
-      "pattern":"\\Qlmgrep/lucene_test.clj\\E"
+      "pattern":"\\Qlmgrep/matching.clj\\E"
     }, 
     {
       "pattern":"\\Qlmgrep/only_analyze.clj\\E"
@@ -506,13 +314,130 @@
       "pattern":"\\Qlmgrep/predefined_analyzers.clj\\E"
     }, 
     {
+      "pattern":"\\Qlmgrep/stempel.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qlmgrep/streamed.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qlmgrep/streamed_test.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qlmgrep/unordered.clj\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/ar/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/bg/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/bn/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/br/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/ca/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/cjk/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/ckb/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/cz/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/el/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/et/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/eu/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/fa/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/ga/stopwords.txt\\E"
+    }, 
+    {
       "pattern":"\\Qorg/apache/lucene/analysis/gl/galician.rslp\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/gl/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/hi/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/hy/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/id/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/lt/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/lv/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/pl/stemmer_20000.tbl\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/pl/stopwords.txt\\E"
     }, 
     {
       "pattern":"\\Qorg/apache/lucene/analysis/pt/portuguese.rslp\\E"
     }, 
     {
-      "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+      "pattern":"\\Qorg/apache/lucene/analysis/ro/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/danish_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/dutch_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/finnish_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/french_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/german_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/hungarian_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/italian_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/norwegian_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/portuguese_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/russian_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/spanish_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/snowball/swedish_stop.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/th/stopwords.txt\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/lucene/analysis/tr/stopwords.txt\\E"
     }
   ]},
   "bundles":[]

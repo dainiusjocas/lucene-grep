@@ -1,5 +1,9 @@
 [
 {
+  "name":"clojure.main",
+  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
+},
+{
   "name":"com.sun.management.VMOption$Origin",
   "fields":[
     {"name":"ATTACH_ON_DEMAND"}, 
@@ -10,37 +14,51 @@
     {"name":"MANAGEMENT"}, 
     {"name":"OTHER"}, 
     {"name":"VM_CREATION"}
-  ]}
-,
+  ]
+},
 {
   "name":"com.sun.management.internal.Flag",
-  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Object","boolean","boolean","com.sun.management.VMOption$Origin"] }]}
-,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Object","boolean","boolean","com.sun.management.VMOption$Origin"] }]
+},
 {
   "name":"java.lang.Boolean",
   "methods":[
     {"name":"<init>","parameterTypes":["boolean"] }, 
     {"name":"getBoolean","parameterTypes":["java.lang.String"] }
-  ]}
-,
+  ]
+},
 {
   "name":"java.lang.ClassLoader",
   "methods":[
     {"name":"getPlatformClassLoader","parameterTypes":[] }, 
     {"name":"loadClass","parameterTypes":["java.lang.String"] }
-  ]}
-,
+  ]
+},
 {
   "name":"java.lang.Long",
-  "methods":[{"name":"<init>","parameterTypes":["long"] }]}
-,
+  "methods":[{"name":"<init>","parameterTypes":["long"] }]
+},
 {
-  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader"}
-,
+  "name":"java.lang.String",
+  "methods":[
+    {"name":"lastIndexOf","parameterTypes":["int"] }, 
+    {"name":"substring","parameterTypes":["int"] }
+  ]
+},
 {
-  "name":"org.graalvm.nativebridge.jni.JNIExceptionWrapperEntryPoints",
-  "methods":[{"name":"getClassName","parameterTypes":["java.lang.Class"] }]}
-,
+  "name":"java.lang.System",
+  "methods":[
+    {"name":"getProperty","parameterTypes":["java.lang.String"] }, 
+    {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }
+  ]
+},
+{
+  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader"
+},
+{
+  "name":"org.graalvm.jniutils.JNIExceptionWrapperEntryPoints",
+  "methods":[{"name":"getClassName","parameterTypes":["java.lang.Class"] }]
+},
 {
   "name":"sun.management.VMManagementImpl",
   "fields":[
@@ -52,6 +70,6 @@
     {"name":"synchronizerUsageSupport"}, 
     {"name":"threadAllocatedMemorySupport"}, 
     {"name":"threadContentionMonitoringSupport"}
-  ]}
-
+  ]
+}
 ]
