@@ -10,6 +10,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Graalvm Native image "quick build mode" for dev
 - Update to GraalVM 22.1.0
 - Text analysis as a separate module
+- Eager processing of Lucene Monitor matches which makes ~20% throughput improvement.
 
 ## v2022.02.19
 
