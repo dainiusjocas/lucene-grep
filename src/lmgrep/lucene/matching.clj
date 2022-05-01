@@ -26,9 +26,9 @@
                           :dict-entry-id (.getQueryId query-match)
                           :meta          (dissoc (into {} meta) "_type")}]
                 (mapcat (fn [[_ ^HighlightsMatch$Hit hit]]
-                          (doall (map (fn [^HighlightsMatch$Hit h]
-                                        (assoc base :begin-offset (.-startOffset h)
-                                                    :end-offset (.-endOffset h))) hit)))
+                          (mapv (fn [^HighlightsMatch$Hit h]
+                                  (assoc base :begin-offset (.-startOffset h)
+                                              :end-offset (.-endOffset h))) hit))
                         (.getHits query-match))))
             (.getMatches (.match monitor doc (HighlightsMatch/MATCHER))))))
 
@@ -45,9 +45,9 @@
                           :meta          (dissoc (into {} meta) "_type")
                           :score         (.getScore query-match)}]
                 (mapcat (fn [[_ ^ScoringHighlightsMatch$Hit hit]]
-                          (doall (map (fn [^ScoringHighlightsMatch$Hit h]
-                                        (assoc base :begin-offset (.-startOffset h)
-                                                    :end-offset (.-endOffset h))) hit)))
+                          (mapv (fn [^ScoringHighlightsMatch$Hit h]
+                                  (assoc base :begin-offset (.-startOffset h)
+                                              :end-offset (.-endOffset h))) hit))
                         (.getHits query-match))))
             (.getMatches (.match monitor doc (ScoringHighlightsMatch/MATCHER))))))
 
@@ -55,15 +55,15 @@
   (let [doc (Document.)]
     (doseq [field-name field-names]
       (.add doc (Field. ^String field-name text field-type)))
-    (map (fn [^ScoringMatch query-match]
-           (let [^MonitorQuery query (.getQuery monitor (.getQueryId query-match))
-                 meta (.getMetadata query)]
-             {:query         (.getQueryString query)
-              :type          (get meta "_type")
-              :dict-entry-id (.getQueryId query-match)
-              :meta          (dissoc (into {} meta) "_type")
-              :score         (.getScore query-match)}))
-         (.getMatches (.match monitor doc (ScoringMatch/DEFAULT_MATCHER))))))
+    (mapv (fn [^ScoringMatch query-match]
+            (let [^MonitorQuery query (.getQuery monitor (.getQueryId query-match))
+                  meta (.getMetadata query)]
+              {:query         (.getQueryString query)
+               :type          (get meta "_type")
+               :dict-entry-id (.getQueryId query-match)
+               :meta          (dissoc (into {} meta) "_type")
+               :score         (.getScore query-match)}))
+          (.getMatches (.match monitor doc (ScoringMatch/DEFAULT_MATCHER))))))
 
 (defn match-monitor [text monitor field-names opts]
   (if (s/blank? text)
