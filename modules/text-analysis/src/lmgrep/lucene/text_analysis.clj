@@ -22,43 +22,45 @@
            (persistent! acc)))))))
 
 (defn text->graph
-  "Given a text turns into a TokenStream that will be writen out to dot language."
-  [^String text ^Analyzer analyzer]
-  (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
-        ^StringWriter sw (StringWriter.)]
-    (.toDot (TokenStreamToDot. text token-stream (PrintWriter. sw)))
-    (.end token-stream)
-    (.close token-stream)
-    (.toString sw)))
+  "Given a text turns into a TokenStream that will be converted to the `dot` language string."
+  ([^String text] (text->graph text (StandardAnalyzer.)))
+  ([^String text ^Analyzer analyzer]
+   (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
+         ^StringWriter sw (StringWriter.)]
+     (.toDot (TokenStreamToDot. text token-stream (PrintWriter. sw)))
+     (.end token-stream)
+     (.close token-stream)
+     (.toString sw))))
 
 (defrecord TokenRecord [token type start_offset end_offset position positionLength])
 
 (defn text->tokens
   "Given a text and an analyzer returns a list of tokens as strings."
-  [^String text ^Analyzer analyzer]
-  (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
-        ^CharTermAttribute termAtt (.addAttribute token-stream CharTermAttribute)
-        ^OffsetAttribute offsetAtt (.addAttribute token-stream OffsetAttribute)
-        ^PositionIncrementAttribute position (.addAttribute token-stream PositionIncrementAttribute)
-        ^TypeAttribute type (.addAttribute token-stream TypeAttribute)
-        ^PositionLengthAttribute pla (.addAttribute token-stream PositionLengthAttribute)]
-    (.reset token-stream)
-    (loop [acc (transient [])
-           pos 0]
-      (if (.incrementToken token-stream)
-        (recur (conj! acc (->TokenRecord (.toString termAtt)
-                                         (.type type)
-                                         (.startOffset offsetAtt)
-                                         (.endOffset offsetAtt)
-                                         pos
-                                         (.getPositionLength pla)))
-               (if (< 1 (.getPositionLength pla))
-                 pos
-                 (+ pos (max (.getPositionIncrement position) 1))))
-        (do
-          (.end token-stream)
-          (.close token-stream)
-          (persistent! acc))))))
+  ([^String text] (text->tokens text (StandardAnalyzer.)))
+  ([^String text ^Analyzer analyzer]
+   (let [^TokenStream token-stream (.tokenStream analyzer "not-important" (StringReader. text))
+         ^CharTermAttribute termAtt (.addAttribute token-stream CharTermAttribute)
+         ^OffsetAttribute offsetAtt (.addAttribute token-stream OffsetAttribute)
+         ^PositionIncrementAttribute position (.addAttribute token-stream PositionIncrementAttribute)
+         ^TypeAttribute type (.addAttribute token-stream TypeAttribute)
+         ^PositionLengthAttribute pla (.addAttribute token-stream PositionLengthAttribute)]
+     (.reset token-stream)
+     (loop [acc (transient [])
+            pos 0]
+       (if (.incrementToken token-stream)
+         (recur (conj! acc (->TokenRecord (.toString termAtt)
+                                          (.type type)
+                                          (.startOffset offsetAtt)
+                                          (.endOffset offsetAtt)
+                                          pos
+                                          (.getPositionLength pla)))
+                (if (< 1 (.getPositionLength pla))
+                  pos
+                  (+ pos (max (.getPositionIncrement position) 1))))
+         (do
+           (.end token-stream)
+           (.close token-stream)
+           (persistent! acc)))))))
 
 (comment
   (import 'org.apache.lucene.analysis.standard.StandardAnalyzer)
