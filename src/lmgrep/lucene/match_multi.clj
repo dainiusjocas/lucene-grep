@@ -16,11 +16,11 @@
     (.setStoreTermVectorOffsets true)))
 
 (defn create-docs [texts field-names]
-  (let [docs (reduce (fn [acc ^String text]
-                       (conj acc (let [doc (Document.)]
-                                   (doseq [field-name field-names]
-                                     (.add doc (Field. ^String field-name text field-type)))
-                                   doc))) [] texts)]
+  (let [docs (mapv (fn [^String text]
+                     (let [doc (Document.)]
+                       (doseq [^String field-name field-names]
+                         (.add doc (Field. field-name text field-type)))
+                       doc)) texts)]
     (into-array Document docs)))
 
 (defn handle-highlights-match [doc-id ^HighlightsMatch query-match ^Monitor monitor]
@@ -59,5 +59,5 @@
            acc (transient [])]
       (if (< doc-id docs-count)
         (recur (inc doc-id)
-               (reduce conj! acc (time (process doc-id (.getMatches multi-match-queries doc-id) monitor))))
+               (reduce conj! acc (process doc-id (.getMatches multi-match-queries doc-id) monitor)))
         (persistent! acc)))))

@@ -51,3 +51,12 @@
                :meta          {}
                :query         "fox~"
                :type          "default-type"}] matches)))))
+
+(comment
+  (testing "foo"
+    (let [{:keys [monitor field-names]} (lucene.monitor/setup [{:query "fox"
+                                                                :query-parser :classic
+                                                                :query-parser-conf {:allow-leading-wildcard true}}] "default-type" {} {})]
+
+      (time (count (reduce (fn [acc _] (conj! acc (lucene.matching/match-monitor "quick fox jumps" monitor field-names {}))) (transient []) (range 0 10000))))
+      (time (count (lucene.matching/match-multi (repeat 10000 "quick fox jumps") monitor field-names {}))))))
