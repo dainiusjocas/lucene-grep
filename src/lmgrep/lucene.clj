@@ -15,6 +15,16 @@
        ([text] (matching/match-monitor text monitor field-names {}))
        ([text opts] (matching/match-monitor text monitor field-names opts))))))
 
+(defn batched-highlighter
+  ([questionnaire] (batched-highlighter questionnaire {}))
+  ([questionnaire options] (batched-highlighter questionnaire options {}))
+  ([questionnaire {:keys [type-name] :as options} custom-analyzers]
+   (let [default-type (if (s/blank? type-name) "QUERY" type-name)
+         {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)]
+     (fn
+       ([texts] (matching/match-multi texts monitor field-names {}))
+       ([texts opts] (matching/match-multi texts monitor field-names opts))))))
+
 (defprotocol IMatcher
   (match [this text] [this text opts]))
 
@@ -38,6 +48,9 @@
 (comment
   ((highlighter [{:query "text"}] {}) "foo text bar")
   ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true})
+
+  ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text")
+  ((batched-highlighter [{:query "text bar"}]) ["foo text bar one more time text with bar text"] {:with-score true})
 
   (with-open [lm (highlighter-obj [{:query "text"}] {})]
     (.match lm "foo text bar")))

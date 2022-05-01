@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.matching
-  (:require [clojure.string :as s])
+  (:require [clojure.string :as s]
+            [lmgrep.lucene.match-multi :as mm])
   (:import (org.apache.lucene.monitor MonitorQuery Monitor
                                       HighlightsMatch HighlightsMatch$Hit
                                       ScoringMatch
@@ -7,6 +8,8 @@
            (org.apache.lucene.document Document Field FieldType)
            (org.apache.lucene.index IndexOptions)
            (java.util Map$Entry Set Iterator)))
+
+(set! *warn-on-reflection* true)
 
 (def ^FieldType field-type
   (doto (FieldType.)
@@ -97,3 +100,8 @@
       (if (:with-score opts)
         (match-with-score text monitor field-names)
         (match-text text monitor field-names)))))
+
+(defn match-multi [texts monitor field-names _]
+  (if (empty? texts)
+    []
+    (mm/multi-match texts monitor field-names)))

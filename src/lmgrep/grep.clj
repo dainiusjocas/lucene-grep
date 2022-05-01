@@ -34,12 +34,21 @@
         highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)
         file-paths-to-analyze (into (fs/get-files files-pattern options)
                                     (fs/filter-files files))]
-    (unordered/grep file-paths-to-analyze highlighter-fn options)))
+    (if (:batched options)
+      (unordered/batched-grep file-paths-to-analyze
+                              (lucene/batched-highlighter questionnaire options custom-analyzers)
+                              options)
+      (unordered/grep file-paths-to-analyze highlighter-fn options))))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
 
   (lmgrep.grep/grep ["test" "opt"] "**.md" nil {:split true})
+  (lmgrep.grep/grep ["test" "opt"] "**.md" nil {:split true :batched true})
+
+
+  (time (lmgrep.grep/grep ["Vilnius"] "/Users/dj/Downloads/archive/articles1.csv" nil {:split true}))
+  (time (lmgrep.grep/grep ["Vilnius"] "/Users/dj/Downloads/archive/articles1.csv" nil {:split true :batched true}))
 
   (time (lmgrep.grep/grep ["opt"] "**.class" nil {:format            :edn
                                                   :skip-binary-files true})))
