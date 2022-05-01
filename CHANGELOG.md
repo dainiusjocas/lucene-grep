@@ -5,6 +5,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ## Unreleased
 
 - Upgrade to Lucene 9.1.0
+- Graalvm Native image "quick build mode" for dev
 
 ## v2022.02.19
 
