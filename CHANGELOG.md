@@ -4,6 +4,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+## v2022.05.01
+
 ### Fixed/enhanced
 
 - Upgrade to Lucene 9.1.0
@@ -11,6 +13,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Update to GraalVM 22.1.0
 - Text analysis as a separate module
 - Eager processing of Lucene Monitor matches which makes ~20% throughput improvement.
+- Change the default presearcher to NO_FILTERING, less RAM
 
 ## v2022.02.19
 
