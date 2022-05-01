@@ -3,7 +3,7 @@
             [jsonista.core :as json]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.dictionary :as dictionary])
-  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery)
+  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery Presearcher)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (org.apache.lucene.util BytesRef)
            (org.apache.lucene.search MatchAllDocsQuery)

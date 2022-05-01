@@ -120,4 +120,11 @@
    [nil "--analyzers-file FILE" "A file that contains definitions of text analyzers. Works in combinations with --config-dir flag."]
    [nil "--query-update-buffer-size NUMBER" "Number of queries to be buffered in memory before being committed to the queryindex. Default 100000."]
    [nil "--streamed" "Listens on STDIN for json with both query and a piece of text to be analyzed" :default false]
+
+   [nil "--batched" "Process lines in batches of 10000." :default false]
+   [nil "--batch-size SIZE" "Number of lines read before matching"
+    :parse-fn #(Integer/parseInt %)
+    :validate [(fn [value] (< 0 value)) "Must be > 0"]
+    :default 1000]
+
    ["-h" "--help"]])

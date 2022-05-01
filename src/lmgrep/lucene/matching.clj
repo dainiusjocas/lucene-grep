@@ -101,7 +101,7 @@
         (match-with-score text monitor field-names)
         (match-text text monitor field-names)))))
 
-(defn match-multi [texts monitor field-names opts]
+(defn match-multi [texts monitor field-names _]
   (if (empty? texts)
     []
     (mm/multi-match texts monitor field-names)))

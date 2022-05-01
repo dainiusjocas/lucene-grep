@@ -4,7 +4,7 @@
                                       MultiMatchingQueries)
            (org.apache.lucene.document Document Field FieldType)
            (org.apache.lucene.index IndexOptions)
-           (java.util Set Collection Map$Entry)))
+           (java.util Set Collection Map$Entry Iterator)))
 
 (set! *warn-on-reflection* true)
 
@@ -44,17 +44,20 @@
     (persistent! highlights)))
 
 (defn process [^long doc-id ^Collection matches ^Monitor monitor]
-  (loop [matches matches
-         acc (transient [])]
-    (if (first matches)
-      (recur (rest matches)
-             (reduce conj! acc (handle-highlights-match doc-id (first matches) monitor)))
-      (persistent! acc))))
+  (let [acc (transient [])
+        ^Iterator iterator (.iterator matches)]
+    (while (.hasNext iterator)
+      (reduce conj! acc (handle-highlights-match doc-id (.next iterator) monitor)))
+    (persistent! acc)))
 
 (defn multi-match [texts ^Monitor monitor field-names]
   (let [#^"[Lorg.apache.lucene.document.Document;" docs (create-docs texts field-names)
         docs-count (alength docs)
         ^MultiMatchingQueries multi-match-queries (.match monitor docs (HighlightsMatch/MATCHER))]
+    (println "" (.getQueryBuildTime multi-match-queries)
+             "" (.getQueriesRun multi-match-queries)
+             "" (.getSearchTime multi-match-queries)
+             "" (.getBatchSize multi-match-queries))
     (loop [doc-id (long 0)
            acc (transient [])]
       (if (< doc-id docs-count)
