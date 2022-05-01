@@ -14,12 +14,12 @@
   babashka/fs                          {:mvn/version "0.1.4"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
                                         :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc               {:mvn/version "2.8.0.Final"}
+  io.quarkus/quarkus-arc               {:mvn/version "2.9.0.CR1"}
   com.github.clj-easy/graal-build-time {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "classes" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.14.1173"
+   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.14.1178"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
@@ -31,7 +31,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.04.08"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.04.25"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "modules/raudikko"}}
