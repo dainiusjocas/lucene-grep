@@ -60,6 +60,16 @@ Code:
 
 Every function accepts a Lucene `Analyzer` as the second argument.
 
+## Use cases
+
+- Do ascii folding person names
+```clojure
+(lmgrep.lucene.text-analysis/text->token-strings 
+  "Thomas Müller" 
+  (lmgrep.lucene.custom-analyzer/create {:token-filters [{:asciiFolding {}}]}))
+;; => ["Thomas" "Muller"]
+```
+
 ## How to draw a graph image?
 
 The example assumes that the GraphViz `dot` program is installed:
