@@ -54,6 +54,12 @@ if [ "$LMGREP_FEATURE_EPSILON_GC" = "true" ]; then
   args+=("--gc=epsilon")
 fi
 
+LMGREP_DEV_BUILD=${LMGREP_DEV_BUILD:-}
+
+if [ "$LMGREP_DEV_BUILD" = "true" ]; then
+  args+=("-Ob")
+fi
+
 "$GRAALVM_HOME/bin/native-image" "${args[@]}"
 
 #upx -7 -k lmgrep
