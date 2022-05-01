@@ -1,11 +1,11 @@
 # text-analysis
 
-Library to analyze text using [Lucene](https://lucene.apache.org) analysis pipeline.
+Library to analyze text using [Lucene](https://lucene.apache.org) text analysis pipeline.
 
 Supports 3 ways of analyzing text:
 - string to list of strings;
-- String to list of tokens;
-- string to GraphViz program to draw a graph.
+- String to list of tokens (similar to the Elasticsearch/Opensearch `_analyze` API);
+- string to GraphViz program to draw a Lucene `TokenStream` as a graph.
 
 ## Quickstart
 
@@ -18,12 +18,11 @@ Dependencies:
 Code:
 ```clojure
 (require '[lmgrep.lucene.text-analysis :as analysis])
-(import 'org.apache.lucene.analysis.standard.StandardAnalyzer)
 
-(analysis/text->token-strings "Test TEXT" (StandardAnalyzer.))
+(analysis/text->token-strings "Test TEXT")
 ;; => ["test" "text"]
 
-(analysis/text->tokens "Test TEXT" (StandardAnalyzer.))
+(analysis/text->tokens "Test TEXT")
 ;; => 
 [#lmgrep.lucene.text_analysis.TokenRecord{:token "test",
                                           :type "<ALPHANUM>",
@@ -38,7 +37,7 @@ Code:
                                           :position 1,
                                           :positionLength 1}]
 
-(analysis/text->graph "Test TEXT" (StandardAnalyzer.))
+(analysis/text->graph "Test TEXT")
 ;; =>
 "digraph tokens {
    graph [ fontsize=30 labelloc=\"t\" label=\"\" splines=true overlap=false rankdir = \"LR\" ];
@@ -58,6 +57,30 @@ Code:
  }
  "
 ```
+
+Every function accepts a Lucene `Analyzer` as the second argument.
+
+## How to draw a graph image?
+
+The example assumes that the GraphViz `dot` program is installed:
+
+```shell
+clojure -M --eval '(require `lmgrep.lucene.text-analysis)(println (lmgrep.lucene.text-analysis/text->graph "one two three"))' | dot -Tpng -o docs/assets/images/token-graph.png
+```
+Results in an image
+
+<img src="docs/assets/images/token-graph.png"
+alt="Token Graph" title="Token Graph" />
+
+## Development
+
+Compile Java classes:
+
+```shell
+clojure -T:build compile-java
+```
+
+Start your REPL.
 
 ## License
 

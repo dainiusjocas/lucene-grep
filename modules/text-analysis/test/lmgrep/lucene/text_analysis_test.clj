@@ -15,3 +15,12 @@
 
   (testing "text to graph"
     (is (string? (text-analysis/text->graph "text to tokens" (StandardAnalyzer.))))))
+
+(deftest nil-handling
+  (testing "empty string and nil are equal"
+    (is (= (text-analysis/text->token-strings "")
+           (text-analysis/text->token-strings nil)))
+    (is (= (text-analysis/text->tokens "")
+           (text-analysis/text->tokens nil)))
+    (is (= (text-analysis/text->graph "")
+           (text-analysis/text->graph nil)))))
