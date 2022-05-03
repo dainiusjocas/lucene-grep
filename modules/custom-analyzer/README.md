@@ -1,10 +1,17 @@
 # custom-analyzer
 
-Library to build [Lucene](https://lucene.apache.org) analyzers in the data-driven fashion.
+(Micro)Library to build [Lucene](https://lucene.apache.org) analyzers in a data-driven fashion.
+
+Why's:
+- Current Clojure Lucene libraries (e.g. [jaju/lucene-clj](https://github.com/jaju/lucene-clj), [federkasten/clucie](https://github.com/federkasten/clucie)) doesn't expose a mechanism to build your custom Lucene Analyzer.
+- Data-driven.
+- Allows for extensibility using standard [Lucene SPI](https://lucene.apache.org/core/9_1_0/core/org/apache/lucene/analysis/AnalysisSPILoader.html), i.e. just put a JAR in the CLASSPATH.
+- Allows to specify a directory from which resources will be loaded, e.g. synonyms dictionaries.
 
 ## Quickstart
 
 Dependencies:
+
 ```clojure
 {:deps
  {lt.jocas/custom-analyzer {:local/root "./modules/custom-analyzer"}}}
@@ -30,7 +37,7 @@ Code:
 ;;         "CustomAnalyzer(org.apache.lucene.analysis.pattern.PatternReplaceCharFilterFactory@2f1300,org.apache.lucene.analysis.standard.StandardTokenizerFactory@7e71a244,org.apache.lucene.analysis.core.UpperCaseFilterFactory@54e9f0d6,org.apache.lucene.analysis.reverse.ReverseStringFilterFactory@3e494ba7)"]
 ```
 
-If nothing is provided then an Anlyzer with just the standard tokenizer is created:
+If no options are provided then an Analyzer with just the standard tokenizer is created:
 
 ```clojure
 (custom-analyzer/create {})
@@ -40,15 +47,25 @@ If nothing is provided then an Anlyzer with just the standard tokenizer is creat
 ;;         "CustomAnalyzer(org.apache.lucene.analysis.standard.StandardTokenizerFactory@5703f5b3)"]
 ```
 
+If you want to check which analysis components are available run:
+
+```clojure
+(lmgrep.lucene.custom-analyzer/char-filter-factories)
+(lmgrep.lucene.custom-analyzer/tokenizer-factories)
+(lmgrep.lucene.custom-analyzer/token-filter-factories)
+```
+
 ## Design
 
-Under the hood the library uses the factory classes `TokenizerFactory`, `TokenFilterFactory`, and `CharFilterFactory`.
-The factories are loaded with `java.util.ServiceLoader`.
+Under the hood this library uses the factory classes `TokenizerFactory`, `TokenFilterFactory`, and `CharFilterFactory`.
+The actual factories are loaded with `java.util.ServiceLoader`.
 All the available classes are automatically discovered.
 
-If you want to include additional factory classes you need to add to the classpath two things:
- 1. Implementation class of one of the Factory classes
- 2. Under the `META-INF/services` add e.g. `org.apache.lucene.analysis.TokenFilterFactory` that lists the classes from step 1.
+If you want to include additional factory classes, e.g. your implementation of the `TokenFilterFactory,` you need to add it to the classpath 2 things:
+ 1. The implementation class of one of the Factory classes
+ 2. Under the `META-INF/services` add/change a file named `org.apache.lucene.analysis.TokenFilterFactory` that lists the classes from the step 1.
+
+An example can be found [here](https://github.com/dainiusjocas/lucene-grep/tree/main/modules/raudikko).
 
 ## Future work
 
