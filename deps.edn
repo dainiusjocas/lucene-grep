@@ -9,7 +9,8 @@
   org.apache.lucene/lucene-queryparser {:mvn/version "9.1.0"}
   metosin/jsonista                     {:mvn/version "0.3.5"}
   lmgrep/lucene-monitor-helpers        {:local/root "modules/lucene-monitor-helpers"}
-  lt.jocas/lucene-custom-analyzer      {:local/root "modules/custom-analyzer"}
+  lt.jocas/lucene-custom-analyzer      {:git/url "https://github.com/dainiusjocas/lucene-custom-analyzer.git"
+                                        :sha "5fc85d7ec2e58348964c5e1dd4ba8f050194597a"}
   lt.jocas/query-parsing               {:local/root "modules/query-parsing"}
   lt.jocas/text-analysis               {:local/root "modules/text-analysis"}
   babashka/fs                          {:mvn/version "0.1.4"}
