@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### Fixed/enhanced
+
+- Lucene custom analyzer as an external library
+
 ## v2022.05.01
 
 ### Fixed/enhanced

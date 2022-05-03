@@ -1,6 +1,6 @@
 (ns lmgrep.lucene.analyzer
   (:require [clojure.string :as str]
-            [lmgrep.lucene.custom-analyzer :as ca])
+            [lucene.custom.analyzer :as ca])
   (:import (org.apache.lucene.analysis Analyzer)))
 
 (set! *warn-on-reflection* true)
