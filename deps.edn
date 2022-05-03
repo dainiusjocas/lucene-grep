@@ -20,16 +20,15 @@
   com.github.clj-easy/graal-build-time {:mvn/version "0.1.4"}}
  :aliases
  {:dev
-  {:extra-paths ["dev" "classes" "test" "test/resources"]
+  {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.14.1178"
                                                :exclusions  [org.slf4j/slf4j-log4j12
                                                              org.slf4j/slf4j-api
                                                              org.slf4j/slf4j-nop]}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
-  {:extra-paths ["test" "test/resources"]
-   :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                            :sha     "cc75980b43011773162b485f46f939dc5fba91e4"}}
+  {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
+   :extra-deps  {io.github.cognitect-labs/test-runner {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
