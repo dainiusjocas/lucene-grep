@@ -5,20 +5,31 @@
            (org.apache.lucene.analysis.custom CustomAnalyzer CustomAnalyzer$Builder)
            (org.apache.lucene.analysis Analyzer CharFilterFactory TokenFilterFactory TokenizerFactory)))
 
-(defn- stringify [m]
-  (reduce-kv (fn [acc k v] (assoc acc (name k) (str v))) {} m))
+(defn- prepare-params
+  "Converts associative collection into a HashMap<String, String> as expected by Lucene.
+  HashMap because the map must be modifiable."
+  [params]
+  (reduce-kv (fn [^Map hashmap k v]
+               (doto hashmap (.put (name k) (str v))))
+             (HashMap.) params))
 
-(defn tokenizer-factories []
+(defn tokenizer-factories
+  "Returns a map of available tokenizer factories: <String, Class>"
+  []
   (reduce (fn [acc ^String tokenizer-name]
             (assoc acc tokenizer-name (TokenizerFactory/lookupClass tokenizer-name)))
           {} (TokenizerFactory/availableTokenizers)))
 
-(defn char-filter-factories []
+(defn char-filter-factories
+  "Returns a map of available char filter factories: <String, Class>"
+  []
   (reduce (fn [acc ^String char-filter-name]
             (assoc acc char-filter-name (CharFilterFactory/lookupClass char-filter-name)))
           {} (CharFilterFactory/availableCharFilters)))
 
-(defn token-filter-factories []
+(defn token-filter-factories
+  "Returns a map of available token filter factories: <String, Class>"
+  []
   (reduce (fn [acc ^String token-filter-name]
             (assoc acc token-filter-name (TokenFilterFactory/lookupClass token-filter-name)))
           {} (TokenFilterFactory/availableTokenFilters)))
@@ -45,7 +56,7 @@
 
    Analysis component description is of shape:
    `
-   {ComponentNameKeywordOrString MapOfArguments}
+   {ComponentNameKeywordOrString MapOfParams}
    `
 
    If needed factories can be passed as arguments in shape:
@@ -61,7 +72,7 @@
     :config-dir \".\"}
    `
 
-   `opts` can have specified:
+   `opts` map can specify these keys:
      - config-dir: path to directory from which resources will be loaded, default '.'
      - char-filters: list of char filter descriptions
      - tokenizer: tokenizer description, default 'standard' tokenizer
@@ -81,36 +92,36 @@
              (format "Token filters should be a list, was '%s'" token-filters))
 
      (assert (or (nil? tokenizer) (map? tokenizer))
-             (format "Tokenizer must have 'name' and optional 'args', but was '%s'" tokenizer))
-     (let [[tokenizer-name args] (first tokenizer)]
+             (format "Tokenizer must have 'name' and optional 'params', but was '%s'" tokenizer))
+     (let [[tokenizer-name params] (first tokenizer)]
        (.withTokenizer builder
                        ^Class (get-component-or-exception tokenizer-factories
                                                           (or tokenizer-name DEFAULT_TOKENIZER_NAME)
                                                           "Tokenizer"
                                                           namify-fn)
-                       ^Map (HashMap. ^Map (stringify args))))
+                       ^Map (prepare-params params)))
 
      (doseq [char-filter char-filters]
-       (let [[char-filter-name args] (first char-filter)]
-         (assert (or (nil? args) (map? args))
-                 (format "Character filter must have 'name' and optional 'args', but was '%s'" char-filter))
+       (let [[char-filter-name params] (first char-filter)]
+         (assert (or (nil? params) (map? params))
+                 (format "Character filter must have 'name' and optional 'params', but was '%s'" char-filter))
          (.addCharFilter builder
                          ^Class (get-component-or-exception char-filter-factories
                                                             char-filter-name
                                                             "Char filter"
                                                             namify-fn)
-                         ^Map (HashMap. ^Map (stringify args)))))
+                         ^Map (prepare-params params))))
 
      (doseq [token-filter token-filters]
-       (let [[token-filter-name args] (first token-filter)]
-         (assert (or (nil? args) (map? args))
-                 (format "Token filter must have 'name' and optional 'args', but was '%s'" token-filter))
+       (let [[token-filter-name params] (first token-filter)]
+         (assert (or (nil? params) (map? params))
+                 (format "Token filter must have 'name' and optional 'params', but was '%s'" token-filter))
          (.addTokenFilter builder
                           ^Class (get-component-or-exception token-filter-factories
                                                              token-filter-name
                                                              "Token filter"
                                                              namify-fn)
-                          ^Map (HashMap. ^Map (stringify args)))))
+                          ^Map (prepare-params params))))
 
      (when position-increment-gap
        (.withPositionIncrementGap builder position-increment-gap))
