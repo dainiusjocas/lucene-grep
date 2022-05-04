@@ -4,7 +4,7 @@
             [lmgrep.concurrent :as c]
             [lmgrep.fs :as fs]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.text-analysis :as text-analysis])
+            [lucene.custom.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (org.apache.lucene.analysis Analyzer)
            (java.util.concurrent ExecutorService)))

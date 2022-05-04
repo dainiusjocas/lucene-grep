@@ -4,7 +4,7 @@
             [jsonista.core :as json]
             [lmgrep.features]
             [lmgrep.lucene.analyzer :as analysis]
-            [lmgrep.lucene.text-analysis :as ta]
+            [lucene.custom.text-analysis :as ta]
             [lmgrep.predefined-analyzers :as predefined]))
 
 (defn with-analyzers [opts]

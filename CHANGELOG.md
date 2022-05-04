@@ -7,6 +7,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 ### Fixed/enhanced
 
 - Lucene custom analyzer as an external library
+- Lucene custom text analysis as an external library 
 
 ## v2022.05.01
 

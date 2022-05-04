@@ -9,7 +9,7 @@
   lt.jocas/lucene-custom-analyzer      {:mvn/version "1.0.14"}
   lmgrep/lucene-monitor-helpers        {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/query-parsing               {:local/root "modules/query-parsing"}
-  lt.jocas/text-analysis               {:local/root "modules/text-analysis"}
+  lt.jocas/lucene-text-analysis        {:mvn/version "1.0.4"}
   babashka/fs                          {:mvn/version "0.1.5"}
   io.quarkiverse.lucene/quarkus-lucene {:mvn/version "0.3"
                                         :exclusions  [org.apache.lucene/lucene-analyzers-common]}
