@@ -15,9 +15,10 @@
       ((:handler (.nth ^Indexed config-key-and-attrs 1)) query-parser conf))))
 
 (defn configure [query-parser conf]
-  (doseq [class-and-defaults query-parser.conf/query-parser-class->attrs]
-    (when (instance? ^Class (.nth ^Indexed class-and-defaults 0) query-parser)
-      (set-conf query-parser conf (.nth ^Indexed class-and-defaults 1))))
+  (when-not (empty? conf)
+    (doseq [class-and-defaults query-parser.conf/query-parser-class->attrs]
+      (when (instance? ^Class (.nth ^Indexed class-and-defaults 0) query-parser)
+        (set-conf query-parser conf (.nth ^Indexed class-and-defaults 1)))))
   query-parser)
 
 (defn classic ^QueryParser [conf field-name analyzer]
