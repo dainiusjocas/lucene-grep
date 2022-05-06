@@ -53,3 +53,6 @@ Default values for every Lucene query parser configuration option:
 |                                    :phrase-slop |                      0 |                      0 |         |                      0 |           |
 |                            :split-on-whitespace |                   true |                   true |         |                        |           |
 |                                      :time-zone |                        |                        |         |                        |           |
+
+In case you're lost: those cells that in the compatibility table states true but in the default values is empty 
+mean that the default value is nil.
