@@ -1,6 +1,6 @@
 (ns lmgrep.lucene.query-parser-test
   (:require [clojure.test :refer [deftest is testing]]
-            [lmgrep.lucene.query-parser :as qp])
+            [lmgrep.lucene.query-parser.parsers :as qp])
   (:import (org.apache.lucene.queryparser.classic QueryParser QueryParser$Operator)
            (org.apache.lucene.queryparser.simple SimpleQueryParser)
            (org.apache.lucene.search BooleanClause$Occur)

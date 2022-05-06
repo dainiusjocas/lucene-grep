@@ -1,36 +1,9 @@
-# lucene-query-parsing
+# Query Parsers
 
-Library to build [Lucene](https://lucene.apache.org) query parsers and parse queries in the data-driven fashion.
+5 Lucene query parsers are supported: `[:classic :complex-phrase :simple :standard :surround]`.
 
-## Quickstart
+## Configuration
 
-Dependencies:
-```clojure
-{:deps
- {lt.jocas/query-parsing {:local/root "modules/query-parsing"}}}
-```
-Code:
-```clojure
-(require '[lmgrep.lucene.query :as q])
-
-(q/parse "foo bar baz")
-;; => #object[org.apache.lucene.search.BooleanQuery 0x650526d1 "foo bar baz"]
-
-(q/parse "foo bar baz" :classic {} "field-name")
-;; => #object[org.apache.lucene.search.BooleanQuery 0x3218294 "field-name:foo field-name:bar field-name:baz"]
-```
-
-## Available Query Parsers
-
-Currently, 5 [Lucene query parsers](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html) are supported:
-
-- classic: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
-- complex-phrase: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
-- simple: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
-- standard: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
-- surround: [docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html)
-
-These query parsers can be further configured with these parameters that were extracted from the Lucene source code.
 The configuration options compatibility table for each supported query parser:
 
 |                                         :option | :classic | :complex-phrase | :simple | :standard | :surround |
@@ -81,13 +54,5 @@ Default values for every Lucene query parser configuration option:
 |                            :split-on-whitespace |                   true |                   true |         |                        |           |
 |                                      :time-zone |                        |                        |         |                        |           |
 
-In case you're lost: those cells that in the compatibility table states true but in the default values is empty
+In case you're lost: those cells that in the compatibility table states true but in the default values is empty 
 mean that the default value is nil.
-
-For further details consult the [Lucene docs](https://javadoc.io/doc/org.apache.lucene/lucene-queryparser/latest/index.html).
-
-## License
-
-Copyright &copy; 2022 [Dainius Jocas](https://www.jocas.lt).
-
-Distributed under The Apache License, Version 2.0.
