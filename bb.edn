@@ -22,9 +22,10 @@
                    :doc      "Generate config files for GraalVM native-image"
                    :task     (let [profiles (e/profiles)]
                                (println "Running the tests with a native image agent with profiles: " profiles)
-                               (clojure (str "-J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
-                                          (clojure.string/join ":" profiles)
-                                          ":test"))
+                               (clojure {:extra-env {"LMGREP_WRITE_TEST_DATA" "true"}}
+                                 (str "-J-agentlib:native-image-agent=config-output-dir=graalvm -M:"
+                                   (clojure.string/join ":" profiles)
+                                   ":test"))
                                (println "Filtering Lucene classes with all their constructors:")
                                (r/gen))}
 
