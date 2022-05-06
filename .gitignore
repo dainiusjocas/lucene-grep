@@ -20,3 +20,4 @@ lmgrep-*.zip
 lmgrep.build_artifacts.txt
 **.iml
 .musl
+graalvm/
