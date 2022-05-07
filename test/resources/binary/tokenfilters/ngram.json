@@ -1,1 +1,0 @@
-{"token-filters":[{"name":"ngram","args":{"minGramSize":1,"maxGramSize":5}}]}

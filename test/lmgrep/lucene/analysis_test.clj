@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analysis-test
   (:require [clojure.test :refer [deftest testing is]]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.features]
@@ -141,8 +142,9 @@
         (let [analyzer (with-analyzers {:analyzer {:name an}})]
           (is (seq (ta/text->token-strings text analyzer)))
           (when write-to-disk?
-            (spit (format "test/resources/binary/analyzers/%s.json" an)
-                  (json/write-value-as-string {:analyzer {:name an}}))))
+            (let [file-name (format "test/resources/binary/analyzers/%s.json" an)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string {:analyzer {:name an}})))))
         (catch Exception e
           (println (format "Failed analyzer: '%s'" an))
           (.printStackTrace e))))))
@@ -160,8 +162,9 @@
               analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer))
               (when write-to-disk?
-                (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
-                      (json/write-value-as-string conf)))))
+                (let [file-name (format "test/resources/binary/charfilters/%s.json" char-filter-name)]
+                  (io/make-parents file-name)
+                  (spit file-name (json/write-value-as-string conf))))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -184,8 +187,9 @@
               analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer)))
           (when write-to-disk?
-            (spit (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)
-                  (json/write-value-as-string conf))))
+            (let [file-name (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string conf)))))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
@@ -228,8 +232,9 @@
               analyzer (analysis/create analyzer-conf)]
           (is (vector? (ta/text->token-strings text analyzer)))
           (when write-to-disk?
-            (spit (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)
-                  (json/write-value-as-string analyzer-conf))))
+            (let [file-name (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string analyzer-conf)))))
         (catch Exception e
           (println (format "Failed token filter name: '%s' class: '%s'"
                            token-filter-name (get components token-filter-name)))
