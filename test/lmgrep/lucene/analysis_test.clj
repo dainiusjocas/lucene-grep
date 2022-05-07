@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analysis-test
   (:require [clojure.test :refer [deftest testing is]]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.features]
@@ -10,18 +11,20 @@
 (defn with-analyzers [opts]
   (analysis/create opts predefined/analyzers))
 
+(def write-to-disk? (= "true" (System/getenv "LMGREP_WRITE_TEST_DATA")))
+
 (deftest converter
-  (let [conf {:tokenizer {:name "standard"
-                          :args {:maxTokenLength 4}}
-              :char-filters [{:name "patternReplace"
-                              :args {:pattern "foo"
-                                     :replacement "foo"}}]
+  (let [conf {:tokenizer     {:name "standard"
+                              :args {:maxTokenLength 4}}
+              :char-filters  [{:name "patternReplace"
+                               :args {:pattern     "foo"
+                                      :replacement "foo"}}]
               :token-filters [{:name "uppercase"}
                               {:name "reverseString"}]}
 
-        expected {:tokenizer {"standard" {:maxTokenLength 4}}
-                  :char-filters [{"patternReplace" {:pattern "foo"
-                                                    :replacement "foo"}}]
+        expected {:tokenizer     {"standard" {:maxTokenLength 4}}
+                  :char-filters  [{"patternReplace" {:pattern     "foo"
+                                                     :replacement "foo"}}]
                   :token-filters [{"uppercase" nil}
                                   {"reverseString" nil}]}]
     (is (= expected (analysis/custom-analyzer->short-notation conf)))))
@@ -38,7 +41,7 @@
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
         analyzer (analysis/create
-                   {:tokenizer {:name "standard"}
+                   {:tokenizer     {:name "standard"}
                     :token-filters [{:name "uppercase"}]})]
     (is (= ["THE" "QUICK" "BROWN" "FOX"]
            (ta/text->token-strings text analyzer)))
@@ -49,9 +52,9 @@
                (ta/text->token-strings text analyzer)))))
 
     (testing "specifying empty lists works as expected"
-      (let [analyzer (analysis/create {:tokenizer {}
+      (let [analyzer (analysis/create {:tokenizer     {}
                                        :token-filters []
-                                       :char-filters []})]
+                                       :char-filters  []})]
         (is (= ["The" "quick" "brown" "fox"]
                (ta/text->token-strings text analyzer)))))
 
@@ -112,17 +115,17 @@
 (deftest word-delimiter-graph
   (let [text "TestClass"
         analyzer (analysis/create {:token-filters [{:name "worddelimitergraph"
-                                                    :args {"generateWordParts" 1
+                                                    :args {"generateWordParts"   1
                                                            "generateNumberParts" 1
-                                                           "preserveOriginal" 1
-                                                           "splitOnCaseChange" 1}}]})]
+                                                           "preserveOriginal"    1
+                                                           "splitOnCaseChange"   1}}]})]
     (is (= ["TestClass" "Test" "Class"] (ta/text->token-strings text analyzer)))))
 
 (when lmgrep.features/snowball?
- (deftest lithuanian-snowball-stemmer-token-filter-factory
-   (let [text "lietus lyja"
-         analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
-     (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer))))))
+  (deftest lithuanian-snowball-stemmer-token-filter-factory
+    (let [text "lietus lyja"
+          analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
+      (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer))))))
 
 (when lmgrep.features/stempel?
   (deftest stempel-token-filter-factory
@@ -138,8 +141,10 @@
       (try
         (let [analyzer (with-analyzers {:analyzer {:name an}})]
           (is (seq (ta/text->token-strings text analyzer)))
-          (spit (format "test/resources/binary/analyzers/%s.json" an)
-                (json/write-value-as-string {:analyzer {:name an}})))
+          (when write-to-disk?
+            (let [file-name (format "test/resources/binary/analyzers/%s.json" an)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string {:analyzer {:name an}})))))
         (catch Exception e
           (println (format "Failed analyzer: '%s'" an))
           (.printStackTrace e))))))
@@ -156,8 +161,10 @@
                                      {:name char-filter-name})]}
               analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer))
-              (spit (format "test/resources/binary/charfilters/%s.json" char-filter-name)
-                    (json/write-value-as-string conf))))
+              (when write-to-disk?
+                (let [file-name (format "test/resources/binary/charfilters/%s.json" char-filter-name)]
+                  (io/make-parents file-name)
+                  (spit file-name (json/write-value-as-string conf))))))
         (catch Exception e
           (println (format "Failed char filter name: '%s' class: '%s'"
                            char-filter-name
@@ -169,8 +176,8 @@
         components analysis/tokenizer-name->class
         tokenizer-names (keys components)
         args {"simplepatternsplit" {"pattern" " "}
-              "simplepattern" {"pattern" " "}
-              "pattern" {"pattern" " "}}]
+              "simplepattern"      {"pattern" " "}
+              "pattern"            {"pattern" " "}}]
     (is (seq tokenizer-names))
     (doseq [tokenizer-name tokenizer-names]
       (try
@@ -179,8 +186,10 @@
                                  {:name tokenizer-name})}
               analyzer (analysis/create conf)]
           (is (seq (ta/text->token-strings text analyzer)))
-          (spit (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)
-                (json/write-value-as-string conf)))
+          (when write-to-disk?
+            (let [file-name (format "test/resources/binary/tokenizers/%s.json" tokenizer-name)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string conf)))))
         (catch Exception e
           (println (format "Failed tokenizer name: '%s' class: '%s'"
                            tokenizer-name (get components tokenizer-name)))
@@ -222,8 +231,10 @@
                                                {:name token-filter-name})]}
               analyzer (analysis/create analyzer-conf)]
           (is (vector? (ta/text->token-strings text analyzer)))
-          (spit (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)
-                (json/write-value-as-string analyzer-conf)))
+          (when write-to-disk?
+            (let [file-name (format "test/resources/binary/tokenfilters/%s.json" token-filter-name)]
+              (io/make-parents file-name)
+              (spit file-name (json/write-value-as-string analyzer-conf)))))
         (catch Exception e
           (println (format "Failed token filter name: '%s' class: '%s'"
                            token-filter-name (get components token-filter-name)))

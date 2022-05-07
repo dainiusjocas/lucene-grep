@@ -1,1 +1,0 @@
-{"token-filters":[{"name":"hunspellstem","args":{"dictionary":"test/resources/hunspell_dict.dic","affix":"test/resources/hunspell_dict.aff"}}]}

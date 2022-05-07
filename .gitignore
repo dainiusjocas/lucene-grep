@@ -20,3 +20,5 @@ lmgrep-*.zip
 lmgrep.build_artifacts.txt
 **.iml
 .musl
+graalvm/
+test/resources/binary/
