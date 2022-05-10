@@ -1,8 +1,8 @@
 (ns lmgrep.lucene.dictionary
   (:require [clojure.core.reducers :as r]
+            [lucene.custom.query :as q]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.field-name :as field-name]
-            [lmgrep.lucene.query :as q])
+            [lmgrep.lucene.field-name :as field-name])
   (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)

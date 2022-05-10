@@ -7,5 +7,5 @@
  :aliases
  {:build
   {:deps       {org.clojure/clojure           {:mvn/version "1.11.1"}
-                io.github.clojure/tools.build {:tag "v0.8.1" :sha "7d40500"}}
+                io.github.clojure/tools.build {:tag "v0.8.2" :sha "ba1a2bf"}}
    :ns-default build}}}
