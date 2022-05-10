@@ -28,9 +28,4 @@
                                    ":test"))
                                (println "Filtering Lucene classes with all their constructors:")
                                (r/gen))}
-
-                  print-query-parsers-attributes-compatibility-table
-                  {:requires ([script.reflection :as r])
-                   :doc      "Print query parsers attributes compatibility table"
-                   :task     (clojure "-M -i script/query-parser-attributes-table.clj")}
                   }}
