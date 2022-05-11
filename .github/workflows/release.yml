@@ -52,7 +52,7 @@ jobs:
       - name: Install clojure tools-deps`
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.11.1.1113
+          cli: 1.11.1.1113
 
       - name: Setup Babashka
         uses: turtlequeue/setup-babashka@v1.3.0
@@ -167,7 +167,7 @@ jobs:
         with:
           name: uberjar
 
-      - name: Build static HelloWorld image with Native Image and musl
+      - name: Build static lmgrep image with Native Image and musl
         env:
           LMGREP_STATIC: true
           LMGREP_MUSL: true
@@ -175,7 +175,7 @@ jobs:
           ./script/compile
           zip lmgrep-${RELEASE_VERSION}-linux-amd64-static.zip lmgrep
 
-      - name: Upload binary to the release
+      - name: Upload ziped binary to the release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
@@ -198,6 +198,10 @@ jobs:
           tags: |
             type=raw,value=latest
             type=raw,value=${{ env.RELEASE_VERSION }}
+
+      - name: Just show the list of files
+        run: |
+          ls
 
       - name: Build and push
         uses: docker/build-push-action@v3

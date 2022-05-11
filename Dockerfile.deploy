@@ -1,4 +1,6 @@
 FROM scratch
 
-COPY lmgrep /lmgrep
+WORKDIR /
+
+COPY lmgrep lmgrep
 CMD ["/lmgrep"]
