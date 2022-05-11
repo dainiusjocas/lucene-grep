@@ -70,7 +70,7 @@
    [nil "--presearcher PRESEARCHER" (str "Which Lucene Monitor Presearcher to use, one of: " (options-to-str presearchers))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? presearchers %) (str "Query parser must be one of: " (options-to-str presearchers))]
-    :default :no-filtering]
+    :default "no-filtering"]
    [nil "--with-score" "If the matching score should be computed"]
    [nil "--format FORMAT" (str "How the output should be formatted, one of: " (options-to-str format-options))
     :parse-fn #(keyword (str/lower-case %))
