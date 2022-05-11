@@ -9,6 +9,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Lucene custom analyzer as an external library
 - Lucene custom text analysis as an external library 
 - Lucene query parsing as an external library
+- Deploying to the DockerHub
 
 ## v2022.05.01
 

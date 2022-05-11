@@ -51,6 +51,14 @@ Upgrade:
 brew upgrade lmgrep
 ```
 
+### Docker
+
+`lmgrep` is deployed in the [Docker Hub](https://hub.docker.com/repository/docker/dainiusjocas/lmgrep):
+
+```shell
+echo "Lucene is awesome" | docker run -i dainiusjocas/lmgrep /lmgrep lucene
+```
+
 ### Windows
 
 On Windows you can install using [scoop](https://scoop.sh/) and the [scoop-clojure](https://github.com/littleli/scoop-clojure) bucket.
