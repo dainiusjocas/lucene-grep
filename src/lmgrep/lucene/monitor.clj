@@ -1,29 +1,18 @@
 (ns lmgrep.lucene.monitor
-  (:require [clojure.java.io :as io]
-            [jsonista.core :as json]
-            [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.dictionary :as dictionary])
-  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer MonitorQuery Presearcher TermFilteredPresearcher MultipassTermFilteredPresearcher)
+  (:require [lmgrep.lucene.analyzer :as analyzer]
+            [lmgrep.lucene.dictionary :as dictionary]
+            [lucene.custom.query :as query])
+  (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer Presearcher TermFilteredPresearcher MultipassTermFilteredPresearcher)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
-           (org.apache.lucene.util BytesRef)
-           (org.apache.lucene.search MatchAllDocsQuery)
            (java.util ArrayList)
-           (clojure.lang Indexed)))
+           (clojure.lang Indexed)
+           (java.util.function Function)))
 
 (def monitor-query-serializer
-  (reify MonitorQuerySerializer
-    (serialize [_ query]
-      (BytesRef. ^bytes
-        (json/write-value-as-bytes
-          [(.getId query)
-           (.getQueryString query)
-           (.getMetadata query)])))
-    (deserialize [_ binary-value]
-      (let [dq (json/read-value (io/reader (.bytes ^BytesRef binary-value)))]
-        (MonitorQuery. (.nth ^Indexed dq 0)
-                       (MatchAllDocsQuery.)
-                       (.nth ^Indexed dq 1)
-                       (.nth ^Indexed dq 2))))))
+  (MonitorQuerySerializer/fromParser
+    (reify Function
+      (apply [_ str-value]
+        (query/parse str-value :simple)))))
 
 (def default-analyzer (analyzer/create {}))
 
