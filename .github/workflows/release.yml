@@ -199,10 +199,6 @@ jobs:
             type=raw,value=latest
             type=raw,value=${{ env.RELEASE_VERSION }}
 
-      - name: Just show the list of files
-        run: |
-          ls
-
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
