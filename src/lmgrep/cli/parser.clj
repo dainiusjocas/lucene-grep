@@ -38,6 +38,8 @@
 
 (def query-parsers #{:classic :complex-phrase :surround :simple :standard})
 
+(def presearchers #{:no-filtering :term-filtered :multipass-term-filtered})
+
 (defn read-json [json-string]
   (json/read-value json-string json/keyword-keys-object-mapper))
 
@@ -65,6 +67,10 @@
    [nil "--stemmer STEMMER" (str "Which stemmer to use for token stemming, one of: " (options-to-str stemmers))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? stemmers %) (str "Stemmer must be one of: " (options-to-str stemmers))]]
+   [nil "--presearcher PRESEARCHER" (str "Which Lucene Monitor Presearcher to use, one of: " (options-to-str presearchers))
+    :parse-fn #(keyword (str/lower-case %))
+    :validate [#(contains? presearchers %) (str "Query parser must be one of: " (options-to-str presearchers))]
+    :default :no-filtering]
    [nil "--with-score" "If the matching score should be computed"]
    [nil "--format FORMAT" (str "How the output should be formatted, one of: " (options-to-str format-options))
     :parse-fn #(keyword (str/lower-case %))
