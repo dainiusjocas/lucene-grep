@@ -16,21 +16,32 @@
     (let [text "foo text bar"
           query "text"]
       (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
-               :meta {"foo" "bar"} :begin-offset 4 :end-offset 8}]
+               :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
              ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]) text))))))
+
+(deftest highlighter-with-presearcher
+  (testing "presearching implementations should not change the output"
+    (let [presearchers #{:no-filtering :term-filtered :multipass-term-filtered}]
+      (doseq [presearcher presearchers]
+        (let [text "foo text bar"
+              query "text"]
+          (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
+                   :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
+                 ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]
+                                      {:presearcher presearcher}) text))))))))
 
 (deftest word-delimiter-highlights
   (testing "word delimiter"
     (let [text "foo text bar BestClass fooo name"
           query "best class"
-          conf {:query                       query
-                :id                          "0"
-                :analysis {:tokenizer {:name "standard"}
+          conf {:query    query
+                :id       "0"
+                :analysis {:tokenizer     {:name "standard"}
                            :token-filters [{:name "worddelimitergraph"
-                                            :args {"generateWordParts" 1
+                                            :args {"generateWordParts"   1
                                                    "generateNumberParts" 1
-                                                   "preserveOriginal" 1
-                                                   "splitOnCaseChange" 1}}
+                                                   "preserveOriginal"    1
+                                                   "splitOnCaseChange"   1}}
                                            {:name "lowercase"} {:name "asciifolding"}
                                            {:name "englishMinimalStem"}]}}
           dictionary [conf]]
