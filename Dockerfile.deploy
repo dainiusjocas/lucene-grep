@@ -1,6 +1,6 @@
-FROM scratch
+FROM alpine:3.15.4
 
 WORKDIR /
 
-COPY ./lmgrep /lmgrep
+COPY ./lmgrep lmgrep
 CMD ["/lmgrep"]
