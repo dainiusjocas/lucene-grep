@@ -6,9 +6,11 @@ pom.xml:
 deps-prep:
 	clojure -T:build prep-deps
 
+SNAPSHOT_SUFFIX = "-SNAPSHOT"
+
 .PHONY: uberjar
 uberjar: deps-prep pom.xml
-	echo "$$(git describe --tags --abbrev=0)-SNAPSHOT" > resources/LMGREP_VERSION
+	echo "$$(git describe --tags --abbrev=0)$(SNAPSHOT_SUFFIX)" > resources/LMGREP_VERSION
 	clojure -T:build uberjar
 
 .PHONY: build
@@ -64,4 +66,4 @@ check-deps:
 	clojure -Sdeps '{:deps {antq/antq {:mvn/version "RELEASE"}}}' -M -m antq.core
 
 build-docker:
-	docker build -f Dockerfile.deploy -t dainiusjocas/lmgrep:"$$(echo "$$(git describe --tags --abbrev=0)-SNAPSHOT" | cut -c 2-)" .
+	docker build -f Dockerfile.deploy -t dainiusjocas/lmgrep:"$$(echo "$$(git describe --tags --abbrev=0)$(SNAPSHOT_SUFFIX)" | cut -c 2-)" .
