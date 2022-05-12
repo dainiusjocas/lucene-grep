@@ -6,6 +6,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
+## v2022.05.12 
+
+### Fixed/enhanced
+
 - Lucene custom analyzer as an external library
 - Lucene custom text analysis as an external library 
 - Lucene query parsing as an external library
