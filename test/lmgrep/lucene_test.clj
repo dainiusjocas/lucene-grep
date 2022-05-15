@@ -9,7 +9,7 @@
           highlighter-fn (lucene/highlighter [{:query query-string}])
           text "prefix text suffix"]
       (is (= (str "prefix " \ "[1;31mtext" \ "[0m suffix")
-             (formatter/highlight-line text (highlighter-fn text) {}))))))
+             (formatter/highlight-text text (highlighter-fn text) {}))))))
 
 (deftest highlighter-details
   (testing "simple case"

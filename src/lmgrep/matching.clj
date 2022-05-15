@@ -1,6 +1,7 @@
 (ns lmgrep.matching
   (:require [jsonista.core :as json]
-            [lmgrep.formatter :as formatter])
+            [lmgrep.formatter :as formatter]
+            [lmgrep.lucene])
   (:import (lmgrep.lucene LuceneMonitorMatcher)))
 
 (defn sum-score [highlights]

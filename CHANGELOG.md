@@ -6,6 +6,8 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
+- Fixed `--no-split` grep processing
+
 ## v2022.05.12 
 
 ### Fixed/enhanced
