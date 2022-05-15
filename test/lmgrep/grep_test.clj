@@ -81,7 +81,9 @@
 (deftest grepping-stdin-with-detailed-json-output
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
-        options {:format :json :with-details true}]
+        options {:format :json
+                 :with-details true
+                 :split true}]
     (is (= {:line-number 1
             :line        text-from-stdin
             :highlights  [{:type          "QUERY"
@@ -100,7 +102,10 @@
 (deftest grepping-stdin-with-detailed-json-output-with-score
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
-        options {:format :json :with-details true :with-score true}]
+        options {:format :json
+                 :with-details true
+                 :with-score true
+                 :split true}]
     (is (= {:highlights  [{:dict-entry-id "1044772177"
                            :meta          {}
                            :query         "fox"
@@ -119,7 +124,10 @@
 (deftest grepping-stdin-with-detailed-json-output-with-scored-highlights
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
-        options {:format :json :with-details true :with-scored-highlights true}]
+        options {:format :json
+                 :with-details true
+                 :with-scored-highlights true
+                 :split true}]
     (is (= {:highlights  [{:begin-offset  16
                            :dict-entry-id "1044772177"
                            :end-offset    19
@@ -140,7 +148,10 @@
   (testing "fuzzy matching"
     (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
           query "fxo~2"
-          options {:format :json :with-details true :with-scored-highlights true}]
+          options {:format :json
+                   :with-details true
+                   :with-scored-highlights true
+                   :split true}]
       (is (= {:highlights  [{:begin-offset  16
                              :dict-entry-id "1081731735"
                              :end-offset    19

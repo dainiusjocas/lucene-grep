@@ -4,6 +4,7 @@
             [lmgrep.fs :as fs]
             [lmgrep.lucene :as lucene]
             [lmgrep.analysis :as analysis]
+            [lmgrep.no-split :as no-split]
             [lmgrep.unordered :as unordered])
   (:import (java.io File)))
 
@@ -34,7 +35,9 @@
         highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)
         file-paths-to-analyze (into (fs/get-files files-pattern options)
                                     (fs/filter-files files))]
-    (unordered/grep file-paths-to-analyze highlighter-fn options)))
+    (if (:split options)
+      (unordered/grep file-paths-to-analyze highlighter-fn options)
+      (no-split/grep file-paths-to-analyze highlighter-fn options))))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})
