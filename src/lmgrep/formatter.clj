@@ -3,6 +3,8 @@
             [clojure.java.io :as io]
             [lmgrep.ansi-escapes :as ansi]))
 
+; highlights should be reconsiliated:
+; - back-to-back highlights should be joined into one
 (defn cutout-highlight [^String input-text highlights options]
   (let [highlight-fn (if (and (string? (:pre-tags options)) (string? (:post-tags options)))
                        #(str (:pre-tags options) % (:post-tags options))
