@@ -6,7 +6,9 @@
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (java.util ArrayList)
            (clojure.lang Indexed)
-           (java.util.function Function)))
+           (java.util.function Function)
+           (org.apache.lucene.util IOSupplier)
+           (org.apache.lucene.store ByteBuffersDirectory)))
 
 (def monitor-query-serializer
   (MonitorQuerySerializer/fromParser
@@ -27,7 +29,9 @@
   (let [^MonitorConfiguration config (MonitorConfiguration.)
         per-field-analyzers (PerFieldAnalyzerWrapper. default-analyzer field-names-w-analyzers)
         presearcher (get presearchers (get options :presearcher) DEFAULT_PRESEARCHER)]
-    (.setIndexPath config nil monitor-query-serializer)
+    (.setDirectoryProvider config (reify IOSupplier
+                                    (get [_] (ByteBuffersDirectory.)))
+                           monitor-query-serializer)
     (.setQueryUpdateBufferSize config (int (get options :query-update-buffer-size 100000)))
     (Monitor. per-field-analyzers presearcher config)))
 
