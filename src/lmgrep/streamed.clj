@@ -26,7 +26,7 @@
       (when (and query text)
         (with-open [^LuceneMonitorMatcher highlighter
                     (lucene/highlighter-obj [{:query query}] options custom-analyzers)]
-          ((matching/matcher-fn-2 highlighter nil options) line-nr text))))))
+          ((matching/matcher-fn highlighter nil options) line-nr text))))))
 
 (defn unordered [reader ^ExecutorService matcher-thread-pool-executor
                  ^PrintWriter writer ^ExecutorService writer-thread-pool-executor

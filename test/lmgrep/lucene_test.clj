@@ -3,17 +3,13 @@
             [lmgrep.formatter :as formatter]
             [lmgrep.lucene :as lucene]))
 
-(defn highlight [dictionary highlighter-opts text match-opts]
-  (with-open [highlighter (lucene/highlighter-obj dictionary highlighter-opts)]
-    (lucene/match highlighter text match-opts)))
-
 (deftest highlighting-test
   (testing "coloring the output"
     (let [query-string "text"
           text "prefix text suffix"
           dictionary [{:query query-string}]]
       (is (= (str "prefix " \ "[1;31mtext" \ "[0m suffix")
-             (formatter/highlight-line text (highlight dictionary {} text {}) {}))))))
+             (formatter/highlight-line text (lucene/highlight dictionary {} text {}) {}))))))
 
 (deftest highlighter-details
   (testing "simple case"
@@ -22,7 +18,7 @@
           dictionary [{:query query :id "0" :meta {:foo "bar"}}]]
       (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
                :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
-             (highlight dictionary {} text {}))))))
+             (lucene/highlight dictionary {} text {}))))))
 
 (deftest highlighter-with-presearcher
   (testing "presearching implementations should not change the output"
@@ -33,7 +29,7 @@
               dictionary [{:query query :id "0" :meta {:foo "bar"}}]]
           (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
                    :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
-                 (highlight dictionary {:presearcher presearcher} text {}))))))))
+                 (lucene/highlight dictionary {:presearcher presearcher} text {}))))))))
 
 (deftest word-delimiter-highlights
   (testing "word delimiter"
@@ -62,4 +58,4 @@
                :meta          {}
                :query         "best class"
                :type          "QUERY"}]
-             (highlight dictionary {} text {}))))))
+             (lucene/highlight dictionary {} text {}))))))
