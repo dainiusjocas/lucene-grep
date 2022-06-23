@@ -15,6 +15,11 @@
        ([text] (matching/match-monitor text monitor field-names {}))
        ([text opts] (matching/match-monitor text monitor field-names opts))))))
 
+(comment
+  (dotimes [_ 10000]
+    ((highlighter [{:query "text"}] {}) "foo text bar"))
+  ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true}))
+
 (defprotocol IMatcher
   (match [this text] [this text opts]))
 
@@ -36,8 +41,5 @@
      (->LuceneMonitorMatcher monitor field-names))))
 
 (comment
-  ((highlighter [{:query "text"}] {}) "foo text bar")
-  ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true})
-
   (with-open [lm (highlighter-obj [{:query "text"}] {})]
     (.match lm "foo text bar")))
