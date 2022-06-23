@@ -37,4 +37,4 @@
     (match highlighter text match-opts)))
 
 (comment
-  (dotimes [_ 10000] (highlight [{:query "text"}] {} "foo text bar" {})))
+  (highlight [{:query "text"}] {} "foo text bar" {}))
