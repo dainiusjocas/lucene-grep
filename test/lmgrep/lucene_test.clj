@@ -6,29 +6,30 @@
 (deftest highlighting-test
   (testing "coloring the output"
     (let [query-string "text"
-          highlighter-fn (lucene/highlighter [{:query query-string}])
-          text "prefix text suffix"]
+          text "prefix text suffix"
+          dictionary [{:query query-string}]]
       (is (= (str "prefix " \ "[1;31mtext" \ "[0m suffix")
-             (formatter/highlight-line text (highlighter-fn text) {}))))))
+             (formatter/highlight-line text (lucene/highlight dictionary {} text {}) {}))))))
 
 (deftest highlighter-details
   (testing "simple case"
     (let [text "foo text bar"
-          query "text"]
+          query "text"
+          dictionary [{:query query :id "0" :meta {:foo "bar"}}]]
       (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
                :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
-             ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]) text))))))
+             (lucene/highlight dictionary {} text {}))))))
 
 (deftest highlighter-with-presearcher
   (testing "presearching implementations should not change the output"
     (let [presearchers #{:no-filtering :term-filtered :multipass-term-filtered}]
       (doseq [presearcher presearchers]
         (let [text "foo text bar"
-              query "text"]
+              query "text"
+              dictionary [{:query query :id "0" :meta {:foo "bar"}}]]
           (is (= [{:query "text" :type "QUERY" :dict-entry-id "0"
                    :meta  {"foo" "bar"} :begin-offset 4 :end-offset 8}]
-                 ((lucene/highlighter [{:query query :id "0" :meta {:foo "bar"}}]
-                                      {:presearcher presearcher}) text))))))))
+                 (lucene/highlight dictionary {:presearcher presearcher} text {}))))))))
 
 (deftest word-delimiter-highlights
   (testing "word delimiter"
@@ -57,4 +58,4 @@
                :meta          {}
                :query         "best class"
                :type          "QUERY"}]
-             ((lucene/highlighter dictionary {}) text))))))
+             (lucene/highlight dictionary {} text {}))))))

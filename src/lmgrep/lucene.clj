@@ -5,16 +5,6 @@
   (:import (java.io Closeable)
            (org.apache.lucene.monitor Monitor)))
 
-(defn highlighter
-  ([questionnaire] (highlighter questionnaire {}))
-  ([questionnaire options] (highlighter questionnaire options {}))
-  ([questionnaire {:keys [type-name] :as options} custom-analyzers]
-   (let [default-type (if (s/blank? type-name) "QUERY" type-name)
-         {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)]
-     (fn
-       ([text] (matching/match-monitor text monitor field-names {}))
-       ([text opts] (matching/match-monitor text monitor field-names opts))))))
-
 (defprotocol IMatcher
   (match [this text] [this text opts]))
 
@@ -28,16 +18,23 @@
   (close [_] (.close ^Monitor monitor)))
 
 (defn highlighter-obj
-  ([questionnaire] (highlighter-obj questionnaire {}))
-  ([questionnaire options] (highlighter-obj questionnaire options {}))
-  ([questionnaire {:keys [type-name] :as options} custom-analyzers]
+  (^LuceneMonitorMatcher [questionnaire] (highlighter-obj questionnaire {}))
+  (^LuceneMonitorMatcher [questionnaire options] (highlighter-obj questionnaire options {}))
+  (^LuceneMonitorMatcher [questionnaire {:keys [type-name] :as options} custom-analyzers]
    (let [default-type (if (s/blank? type-name) "QUERY" type-name)
          {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)]
      (->LuceneMonitorMatcher monitor field-names))))
 
 (comment
-  ((highlighter [{:query "text"}] {}) "foo text bar")
-  ((highlighter [{:query "text bar"}]) "foo text bar one more time text with bar text" {:with-score true})
-
   (with-open [lm (highlighter-obj [{:query "text"}] {})]
-    (.match lm "foo text bar")))
+    (match lm "foo text bar")))
+
+(defn highlight
+  "Convenience function that creates a highlighter, matches the text,
+  closes the highlighter, returns matches."
+  [dictionary highlighter-opts text match-opts]
+  (with-open [highlighter (highlighter-obj dictionary highlighter-opts)]
+    (match highlighter text match-opts)))
+
+(comment
+  (highlight [{:query "text"}] {} "foo text bar" {}))

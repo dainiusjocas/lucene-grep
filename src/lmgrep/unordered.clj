@@ -51,7 +51,7 @@
                                            (.println writer)))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
-(defn grep [file-paths-to-analyze highlighter-fn options]
+(defn grep [file-paths-to-analyze highlighter options]
   (let [preserve-order? (get options :preserve-order true)
         reader-buffer-size (get options :reader-buffer-size 8192)
         print-writer-buffer-size (get options :writer-buffer-size 8192)
@@ -69,7 +69,7 @@
       (let [reader (if path
                      (BufferedReader. (FileReader. path) reader-buffer-size)
                      (BufferedReader. *in* reader-buffer-size))
-            matcher-fn (matching/matcher-fn highlighter-fn path options)]
+            matcher-fn (matching/matcher-fn highlighter path options)]
         (consume-fn reader
                     matcher-fn
                     matcher-thread-pool-executor

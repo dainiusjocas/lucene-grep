@@ -31,10 +31,10 @@
 (defn grep [lucene-query-strings files-pattern files options]
   (let [questionnaire (combine-questionnaire lucene-query-strings options)
         custom-analyzers (analysis/prepare-analyzers (get options :analyzers-file) options)
-        highlighter-fn (lucene/highlighter questionnaire options custom-analyzers)
         file-paths-to-analyze (into (fs/get-files files-pattern options)
                                     (fs/filter-files files))]
-    (unordered/grep file-paths-to-analyze highlighter-fn options)))
+    (with-open [highlighter (lucene/highlighter-obj questionnaire options custom-analyzers)]
+      (unordered/grep file-paths-to-analyze highlighter options))))
 
 (comment
   (lmgrep.grep/grep ["opt"] "**.md" nil {:format :edn})

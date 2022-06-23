@@ -8,7 +8,10 @@
   (let [file "test/resources/test.txt"
         query "fox"
         options {:preserve-order true
-                 :split true :pre-tags ">" :post-tags "<" :template "{{highlighted-line}}"}]
+                 :split          true
+                 :pre-tags       ">"
+                 :post-tags      "<"
+                 :template       "{{highlighted-line}}"}]
     (is (= "The quick brown >fox< jumps over the lazy dog"
            (str/trim
              (with-out-str
@@ -30,9 +33,9 @@
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "fox"
         options {:preserve-order false
-                 :split true
-                 :pre-tags ">" :post-tags "<"
-                 :template "{{highlighted-line}}"}]
+                 :split          true
+                 :pre-tags       ">" :post-tags "<"
+                 :template       "{{highlighted-line}}"}]
     (is (= "The quick brown >fox< jumps over the lazy dog"
            (with-in-str text-from-stdin
                         (str/trim
@@ -42,9 +45,9 @@
 (deftest grepping-ordered-vs-unordered
   (let [file "README.md"
         query "test"
-        options {:split          true
-                 :pre-tags       ">" :post-tags "<"
-                 :template       "{{line-number}}"}
+        options {:split    true
+                 :pre-tags ">" :post-tags "<"
+                 :template "{{line-number}}"}
         ordered-options (assoc options :preserve-order true)
         ordered-matched-lines (str/split-lines
                                 (str/trim
@@ -171,10 +174,10 @@
 (deftest grepping-multiple-queries-from-file
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         queries []
-        options {:split true
-                 :pre-tags ">"
-                 :post-tags "<"
-                 :template "{{highlighted-line}}"
+        options {:split        true
+                 :pre-tags     ">"
+                 :post-tags    "<"
+                 :template     "{{highlighted-line}}"
                  :queries-file "test/resources/queries.json"}]
     (is (= "The quick brown >fox< jumps over the lazy >dog<"
            (with-in-str text-from-stdin
@@ -186,10 +189,10 @@
   (testing "with classic query parser fails"
     (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
           queries []
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
                    :queries-file "test/resources/problematic-queries.json"}]
       (is (thrown? Exception
                    (with-in-str text-from-stdin
@@ -199,28 +202,28 @@
   (testing "with simple query parser it works"
     (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
           queries []
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
                    :query-parser "simple"
                    :queries-file "test/resources/problematic-queries.json"}]
       (is (= "The quick brown >fox< jumps over the lazy >dog<"
-                   (with-in-str text-from-stdin
-                                (str/trim
-                                  (with-out-str
-                                    (grep/grep queries nil nil options)))))))))
+             (with-in-str text-from-stdin
+                          (str/trim
+                            (with-out-str
+                              (grep/grep queries nil nil options)))))))))
 
 (deftest grepping-multiple-queries-from-file-options
   (testing "options text analysis is injected into dictionary entry if not present"
     (let [text-from-stdin (str/upper-case "The quick brown fox jumps over the lazy dog")
           queries []
-          options {:split           true
-                   :analysis {:token-filters []}
-                   :pre-tags        ">"
-                   :post-tags       "<"
-                   :template        "{{highlighted-line}}"
-                   :queries-file    "test/resources/queries.json"}]
+          options {:split        true
+                   :analysis     {:token-filters []}
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :queries-file "test/resources/queries.json"}]
       (is (= ""
              (with-in-str text-from-stdin
                           (str/trim
@@ -239,7 +242,7 @@
           options {:split        true
                    :format       :json
                    :with-details true
-                   :analysis {:token-filters [{:name "lowercase"}]}
+                   :analysis     {:token-filters [{:name "lowercase"}]}
                    :queries-file "test/resources/queries.json"}]
       (is (= {:highlights  [{:begin-offset  16
                              :dict-entry-id "1372536417"
@@ -309,11 +312,11 @@
 (deftest grepping-when-no-match-with-flag-to-println-empty-line
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "foo"
-        options {:split true
-                 :pre-tags ">"
-                 :post-tags "<"
+        options {:split            true
+                 :pre-tags         ">"
+                 :post-tags        "<"
                  :with-empty-lines true
-                 :template "{{highlighted-line}}"}]
+                 :template         "{{highlighted-line}}"}]
     (is (= "\n" (with-in-str text-from-stdin
                              (with-out-str
                                (grep/grep [query] nil nil options)))))))
@@ -335,11 +338,11 @@
 (deftest combination-of-flags-and-analysis-conf
   (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
         query "jump"
-        options {:split true
-                 :pre-tags ">"
-                 :post-tags "<"
+        options {:split            true
+                 :pre-tags         ">"
+                 :post-tags        "<"
                  :with-empty-lines true
-                 :template "{{highlighted-line}}"}]
+                 :template         "{{highlighted-line}}"}]
 
     (testing "standard analyzer should produce no matches"
       (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
@@ -357,7 +360,7 @@
 (deftest hyperlink-with-stdin
   (let [text-from-stdin "this will generate an exception"
         query "exception"
-        options {:split true
+        options {:split     true
                  :hyperlink true}]
     (testing "hyperlinking on stdin should be ignored"
       (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
@@ -369,11 +372,11 @@
 (deftest grepping-with-simple-query-parser
   (let [text-from-stdin "john foo peters post"
         query "\"john peters\"~2"
-        options {:split true
+        options {:split        true
                  :query-parser "simple"
-                 :pre-tags ">"
-                 :post-tags "<"
-                 :template "{{highlighted-line}}"}]
+                 :pre-tags     ">"
+                 :post-tags    "<"
+                 :template     "{{highlighted-line}}"}]
     (testing "simple case"
       (is (= ">john foo peters< post"
              (with-in-str text-from-stdin
@@ -384,11 +387,11 @@
 (deftest grepping-with-standard-query-parser
   (let [text-from-stdin "john foo peters post"
         query "\"john peters\"~2"
-        options {:split true
+        options {:split        true
                  :query-parser "standard"
-                 :pre-tags ">"
-                 :post-tags "<"
-                 :template "{{highlighted-line}}"}]
+                 :pre-tags     ">"
+                 :post-tags    "<"
+                 :template     "{{highlighted-line}}"}]
     (testing "simple case"
       (is (= ">john foo peters< post"
              (with-in-str text-from-stdin
@@ -399,10 +402,10 @@
 (deftest grepping-with-complex-phrase-query-parser
   (let [text-from-stdin "john foo peters post"
         query "\"john peters\"~2"
-        options {:split true
-                 :pre-tags ">"
+        options {:split     true
+                 :pre-tags  ">"
                  :post-tags "<"
-                 :template "{{highlighted-line}}"}]
+                 :template  "{{highlighted-line}}"}]
     (testing "without complex phrase flag doesn't match"
       (is (= ">john foo peters< post"
              (with-in-str text-from-stdin
@@ -432,11 +435,11 @@
   (testing "basic query"
     (let [text-from-stdin "nike and adidas"
           query "2W(nike, adidas)"
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :analysis     {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">nike< and >adidas<"
              (with-in-str text-from-stdin
@@ -461,11 +464,11 @@
   (testing "unordered"
     (let [text-from-stdin "adidas and nike"
           query "2N(nike, adidas)"
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :analysis     {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas< and >nike<"
              (with-in-str text-from-stdin
@@ -476,11 +479,11 @@
   (testing "fuzzy match"
     (let [text-from-stdin "adidas and nikon"
           query "2N(nik*, adidas)"
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :analysis     {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas< and >nikon<"
              (with-in-str text-from-stdin
@@ -489,11 +492,11 @@
                               (grep/grep [query] nil nil options)))))))
     (let [text-from-stdin "adibas and nikon"
           query "2N(nik*, adi?as)"
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :analysis {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :analysis     {:token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adibas< and >nikon<"
              (with-in-str text-from-stdin
@@ -504,13 +507,13 @@
   (testing "quoting"
     (let [text-from-stdin "adidas foos"
           query "OR(\"adidas foo\"*, nike)"                 ; `adidas foo` should be one term
-          options {:split true
-                   :pre-tags ">"
-                   :post-tags "<"
-                   :template "{{highlighted-line}}"
-                   :stem? false
-                   :analysis {:tokenizer {:name "keyword"}
-                              :token-filters [{:name "lowercase"} {:name "asciifolding"}]}
+          options {:split        true
+                   :pre-tags     ">"
+                   :post-tags    "<"
+                   :template     "{{highlighted-line}}"
+                   :stem?        false
+                   :analysis     {:tokenizer     {:name "keyword"}
+                                  :token-filters [{:name "lowercase"} {:name "asciifolding"}]}
                    :query-parser "surround"}]
       (is (= ">adidas foos<"
              (with-in-str text-from-stdin
@@ -521,7 +524,7 @@
 (deftest grepping-multiple-queries-from-file-with-query-parsers
   (let [text-from-stdin "john foo peterson post"
         queries []
-        options {:split true
+        options {:split        true
                  :format       :json
                  :with-details true
                  :queries-file "test/resources/queries-query-parsers.json"}]
@@ -550,7 +553,7 @@
   (testing "by default query parser allows loading wildcards"
     (let [file "test/resources/test.txt"
           query "*fox"
-          options {:split true :pre-tags ">" :post-tags "<"
+          options {:split    true :pre-tags ">" :post-tags "<"
                    :template "{{highlighted-line}}"}]
       (is (= "The quick brown >fox< jumps over the lazy dog"
              (str/trim
@@ -560,16 +563,16 @@
   (testing "explicitly declared :allow-leading-wildcard false causes exception"
     (let [file "test/resources/test.txt"
           query "*fox"
-          options {:split true
-                   :pre-tags ">" :post-tags "<"
-                   :template "{{highlighted-line}}"
+          options {:split             true
+                   :pre-tags          ">" :post-tags "<"
+                   :template          "{{highlighted-line}}"
                    :query-parser-conf {:allow-leading-wildcard false}}]
       (is (thrown? Exception (grep/grep [query] file nil options)))))
 
   (testing "explicitly declared :allow-leading-wildcard false causes exception in queries file"
     (let [file "test/resources/test.txt"
-          options {:split true
-                   :pre-tags ">" :post-tags "<"
-                   :template "{{highlighted-line}}"
+          options {:split        true
+                   :pre-tags     ">" :post-tags "<"
+                   :template     "{{highlighted-line}}"
                    :queries-file "test/resources/query-parser-conf.json"}]
       (is (thrown? Exception (grep/grep [] file nil options))))))
