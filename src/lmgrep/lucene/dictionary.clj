@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.dictionary
   (:require [clojure.core.reducers :as r]
+            [jsonista.core :as json]
             [lucene.custom.query :as q]
             [lmgrep.lucene.analyzer :as analyzer]
             [lmgrep.lucene.field-name :as field-name])
@@ -45,21 +46,64 @@
 (def ^String get-field-name
   (memoize field-name/construct))
 
+(defn prepare-meta
+  "Metadata must be a map String->String"
+  [meta]
+  (if meta
+    (reduce-kv (fn [m k v] (assoc m (name k) v)) {} meta)
+    {}))
+
+(def CONF_KEY "__MQ_CONF")
+(def DEFAULT_FIELD_NAME_KEY "__DEFAULT_FIELD_NAME")
+
+(defn monitor-query-constructor
+  "Returns a function that can create a MonitorQuery object"
+  [custom-analyzers]
+  (fn monitor-query ^MonitorQuery
+    [{:keys [id query meta default-field-name query-parser-name query-parser-conf analyzer] :as mq}]
+    (try
+      (let [monitor-analyzer (get-string-analyzer analyzer custom-analyzers)]
+        (MonitorQuery. ^String id
+                       ^Query (q/parse query query-parser-name query-parser-conf default-field-name monitor-analyzer)
+                       ^String query
+                       (assoc (prepare-meta meta)
+                         CONF_KEY (json/write-value-as-string mq)
+                         DEFAULT_FIELD_NAME_KEY default-field-name)))
+      (catch ParseException e
+        (when (System/getenv "DEBUG_MODE")
+          (.println System/err (format "Failed to parse query: '%s' with exception '%s'" mq e))
+          (.printStackTrace e))
+        (throw e))
+      (catch Exception e
+        (when (System/getenv "DEBUG_MODE")
+          (.println System/err (format "Failed create query: '%s' with '%s'" mq e))
+          (.printStackTrace e))
+        (throw e)))))
+
 (defn ensure-type [questionnaire-entry default-type]
   (update questionnaire-entry :type (fn [type] (if type type default-type))))
 
 (defn prepare-query-entry
-  [questionnaire-entry default-type global-analysis-conf custom-analyzers]
+  [questionnaire-entry default-type global-analysis-conf custom-analyzers monitor-query-constructor-fn]
   (let [analysis-conf (if (empty? (get questionnaire-entry :analysis))
                         global-analysis-conf
                         (assoc (get questionnaire-entry :analysis)
                           :config-dir (get global-analysis-conf :config-dir)))
-        field-name (get-field-name analysis-conf)
-        monitor-analyzer (get-string-analyzer analysis-conf custom-analyzers)]
+        ; parameter for the query parser
+        default-field-name (get-field-name analysis-conf)
+        monitor-analyzer (get-string-analyzer analysis-conf custom-analyzers)
+        monitor-query (monitor-query-constructor-fn
+                        {:id                 (get questionnaire-entry :id)
+                         :query              (get questionnaire-entry :query)
+                         :meta               (assoc (get questionnaire-entry :meta) "_type" default-type)
+                         :default-field-name default-field-name
+                         :query-parser-name  (keyword (get questionnaire-entry :query-parser))
+                         :query-parser-conf  (get questionnaire-entry :query-parser-conf)
+                         :analyzer           analysis-conf})]
     (Dict.
-      field-name
+      default-field-name
       monitor-analyzer
-      (query->monitor-query (ensure-type questionnaire-entry default-type) field-name monitor-analyzer))))
+      monitor-query)))
 
 (defn handle-query-parser-settings [questionnaire-entry options]
   (if (get questionnaire-entry :query-parser)
@@ -79,7 +123,8 @@
   - construct Lucene MonitorQuery object."
   [questionnaire default-type options custom-analyzers]
   (let [global-analysis-conf (assoc (get options :analysis)
-                               :config-dir (get options :config-dir))]
+                               :config-dir (get options :config-dir))
+        monitor-query-constructor-fn (monitor-query-constructor custom-analyzers)]
     (->> questionnaire
          (r/map (fn [questionnaire-entry]
                   (if (get questionnaire-entry :id)
@@ -87,7 +132,10 @@
                     (assoc questionnaire-entry :id (str (Math/abs ^int (.hashCode ^PersistentArrayMap questionnaire-entry)))))))
          (r/map (fn [questionnaire-entry]
                   (prepare-query-entry (handle-query-parser-settings questionnaire-entry options)
-                                       default-type global-analysis-conf custom-analyzers)))
+                                       default-type
+                                       global-analysis-conf
+                                       custom-analyzers
+                                       monitor-query-constructor-fn)))
          (r/foldcat))))
 
 (defn get-monitor-queries
