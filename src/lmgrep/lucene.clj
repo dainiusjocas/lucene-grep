@@ -1,7 +1,8 @@
 (ns lmgrep.lucene
   (:require [clojure.string :as s]
             [lmgrep.lucene.matching :as matching]
-            [lmgrep.lucene.monitor :as monitor])
+            [lmgrep.lucene.monitor :as monitor]
+            [lmgrep.lucene.dictionary :as dictionary])
   (:import (java.io Closeable)
            (org.apache.lucene.monitor Monitor)))
 
@@ -22,7 +23,12 @@
   (^LuceneMonitorMatcher [questionnaire options] (highlighter-obj questionnaire options {}))
   (^LuceneMonitorMatcher [questionnaire {:keys [type-name] :as options} custom-analyzers]
    (let [default-type (if (s/blank? type-name) "QUERY" type-name)
-         {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)]
+         {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)
+         field-names (if (:queries-index-dir options)
+                       ; in case monitor is loaded from disk we need to collect the default field names from the monitor
+                       (concat field-names (set (mapv (fn [^String query-id] (get (.getMetadata (.getQuery monitor query-id))
+                                                                                  dictionary/DEFAULT_FIELD_NAME_KEY)) (.getQueryIds monitor))))
+                       field-names)]
      (->LuceneMonitorMatcher monitor field-names))))
 
 (comment
@@ -37,4 +43,11 @@
     (match highlighter text match-opts)))
 
 (comment
-  (highlight [{:query "text"}] {} "foo text bar" {}))
+  (highlight [{:query "text"}] {} "foo text bar" {})
+  (highlight [] {} "foo text bar" {})
+
+  (highlight [{:query "text"}] {:queries-index-dir "index"} "foo text bar" {})
+  (highlight [] {:queries-index-dir "index"} "foo text bar" {})
+
+  (highlight [{:query "text" :id "0" :analysis {:tokenizer {:name "standard"}}}] {} "foo text bar" {})
+  (highlight [] {} "foo text bar" {}))

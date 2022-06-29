@@ -55,6 +55,8 @@
 
    [nil "--queries-file QUERIES_FILE"
     "A file path to the Lucene query strings with their config. If specified then all the positional arguments are interpreted as files."]
+   [nil "--queries-index-dir QUERIES_INDEX_DIR"
+    "A directory where Lucene Monitor queries are stored."]
    [nil "--tokenizer TOKENIZER" (str "Tokenizer to use, one of: " (options-to-str tokenizers))
     :parse-fn #(keyword (str/lower-case %))
     :validate [#(contains? tokenizers %) (str "Tokenizer must be one of: " (options-to-str tokenizers))]]
