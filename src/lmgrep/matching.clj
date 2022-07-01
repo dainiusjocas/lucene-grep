@@ -1,7 +1,8 @@
 (ns lmgrep.matching
   (:require [jsonista.core :as json]
             [lmgrep.formatter :as formatter]
-            [lmgrep.lucene :as lucene])
+            [lmgrep.lucene :as lucene]
+            [clojure.pprint])
   (:import (lmgrep.lucene LuceneMonitorMatcher)))
 
 (defn sum-score [highlights]
@@ -15,6 +16,7 @@
         scored? (or (get options :with-score) (get options :with-scored-highlights))]
     (fn [line-nr line]
       (when-let [highlights (seq (lucene/match highlighter-obj line highlight-opts))]
+        (clojure.pprint/pprint highlights)
         (let [details (cond-> {:line-number line-nr
                                :line        line}
                               file-path (assoc :file file-path)
