@@ -21,8 +21,9 @@
 (defn monitor-default-field-names
   [^Monitor monitor]
   (mapv (fn default-field-name [^String query-id]
-          (get (.getMetadata (.getQuery monitor query-id))
-               dictionary/DEFAULT_FIELD_NAME_KEY))
+          (-> (.getQuery monitor query-id)
+              (.getMetadata)
+              (get dictionary/DEFAULT_FIELD_NAME_KEY)))
         (.getQueryIds monitor)))
 
 (defn highlighter-obj
@@ -40,8 +41,9 @@
      (->LuceneMonitorMatcher monitor field-names))))
 
 (comment
-  (with-open [lm (highlighter-obj [{:query "text"}] {})]
-    (match lm "foo text bar")))
+  ; Intended usage example
+  (with-open [highlighter (highlighter-obj [{:query "text"}] {})]
+    (match highlighter "foo text bar")))
 
 (defn highlight
   "Convenience function that creates a highlighter, matches the text,
@@ -51,11 +53,4 @@
     (match highlighter text match-opts)))
 
 (comment
-  (highlight [{:query "text"}] {} "foo text bar" {})
-  (highlight [] {} "foo text bar" {})
-
-  (highlight [{:query "text"}] {:queries-index-dir "index"} "foo text bar" {})
-  (highlight [] {:queries-index-dir "index"} "foo text bar" {})
-
-  (highlight [{:query "text" :id "0" :analysis {:tokenizer {:name "standard"}}}] {} "foo text bar" {})
-  (highlight [] {} "foo text bar" {}))
+  (highlight [{:query "text" :analysis {:tokenizer {:name "standard"}}}] {} "foo text bar" {}))
