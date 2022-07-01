@@ -21,7 +21,8 @@
 (defn zero-queries? [arguments options]
   (and (zero? (count arguments))
        (empty? (:query options))
-       (nil? (:queries-file options))))
+       (nil? (:queries-file options))
+       (nil? (:queries-index-dir options))))
 
 (def available-analysis-components
   {:analyzers     (sort (keys predefined/analyzers))
@@ -55,7 +56,7 @@
               (System/exit 0)))
           (if-let [lucene-queries (seq (:query options))]
             (grep/grep lucene-queries (first positional-arguments) (rest positional-arguments) options)
-            (if (:queries-file options)
+            (if (or (:queries-file options) (:queries-index-dir options))
               (grep/grep [] (first positional-arguments) (rest positional-arguments) options)
               (grep/grep [lucene-query] file-pattern files options))))))
     (catch Exception e
