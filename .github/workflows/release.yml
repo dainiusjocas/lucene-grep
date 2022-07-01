@@ -106,6 +106,10 @@ jobs:
             platform: windows
             gu-binary: gu.exe
             arch: 'amd64'
+          - os: self-hosted
+            platform: macos
+            gu-binary: gu
+            arch: 'aarch64'
     steps:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
