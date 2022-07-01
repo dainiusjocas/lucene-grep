@@ -18,6 +18,13 @@
   Closeable
   (close [_] (.close ^Monitor monitor)))
 
+(defn monitor-default-field-names
+  [^Monitor monitor]
+  (mapv (fn default-field-name [^String query-id]
+          (get (.getMetadata (.getQuery monitor query-id))
+               dictionary/DEFAULT_FIELD_NAME_KEY))
+        (.getQueryIds monitor)))
+
 (defn highlighter-obj
   (^LuceneMonitorMatcher [questionnaire] (highlighter-obj questionnaire {}))
   (^LuceneMonitorMatcher [questionnaire options] (highlighter-obj questionnaire options {}))
@@ -25,9 +32,10 @@
    (let [default-type (if (s/blank? type-name) "QUERY" type-name)
          {:keys [monitor field-names]} (monitor/setup questionnaire default-type options custom-analyzers)
          field-names (if (:queries-index-dir options)
-                       ; in case monitor is loaded from disk we need to collect the default field names from the monitor
-                       (concat field-names (set (mapv (fn [^String query-id] (get (.getMetadata (.getQuery monitor query-id))
-                                                                                  dictionary/DEFAULT_FIELD_NAME_KEY)) (.getQueryIds monitor))))
+                       ; in case monitor is loaded from disk we need to collect
+                       ; the default field names from the monitor
+                       ; put names into the set to prevent duplicates
+                       (set (concat field-names (monitor-default-field-names monitor)))
                        field-names)]
      (->LuceneMonitorMatcher monitor field-names))))
 
