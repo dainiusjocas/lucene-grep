@@ -52,12 +52,12 @@ jobs:
       - name: Install clojure tools-deps`
         uses: DeLaGuardo/setup-clojure@master
         with:
-          cli: 1.11.1.1113
+          cli: 1.11.1.1149
 
       - name: Setup Babashka
-        uses: turtlequeue/setup-babashka@v1.3.0
+        uses: turtlequeue/setup-babashka@v1.5.0
         with:
-          babashka-version: 0.8.1
+          babashka-version: 0.8.156
 
       - name: Compile uberjar
         run: |
