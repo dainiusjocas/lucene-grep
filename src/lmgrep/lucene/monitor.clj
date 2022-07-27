@@ -19,15 +19,9 @@
   (MonitorQuerySerializer/fromParser
     (reify Function
       (apply [_ str-value]
-        (println "<<<" str-value)
-        (query/parse str-value
-                     :simple
-                     {}
-                     "text"
-                     (analyzer/create
-                       {:tokenizer {:name "standard"}}))))))
+        (query/parse str-value :simple)))))
 
-(defn alternative-monitor-query-serializer [monitor-query-constructor-fn]
+(defn disk-oriented-monitor-query-serializer [monitor-query-constructor-fn]
   (reify MonitorQuerySerializer
     (serialize [_ monitor-query]
       (BytesRef. ^CharSequence (.get (.getMetadata monitor-query) dictionary/CONF_KEY)))
@@ -48,14 +42,12 @@
 (defn create [field-names-w-analyzers custom-analyzers options]
   (let [^MonitorConfiguration config (MonitorConfiguration.)
         per-field-analyzers (PerFieldAnalyzerWrapper. default-analyzer field-names-w-analyzers)
-        presearcher (get presearchers (get options :presearcher) DEFAULT_PRESEARCHER)
-        monitor-query-constructor-fn (dictionary/monitor-query-constructor custom-analyzers)
-        monitor-query-serializer (alternative-monitor-query-serializer monitor-query-constructor-fn)
-        queries-index-dir (get options :queries-index-dir)]
-    (if queries-index-dir
+        presearcher (get presearchers (get options :presearcher) DEFAULT_PRESEARCHER)]
+    (if-let [queries-index-dir (get options :queries-index-dir)]
       (.setIndexPath config
                      (Path/of queries-index-dir (into-array String []))
-                     monitor-query-serializer)
+                     (disk-oriented-monitor-query-serializer
+                       (dictionary/monitor-query-constructor custom-analyzers)))
       (.setDirectoryProvider config (reify IOSupplier
                                       (get [_] (ByteBuffersDirectory.)))
                              monitor-query-serializer))
@@ -95,7 +87,6 @@
   [questionnaire default-type options custom-analyzers]
   (let [questionnaire-with-analyzers (dictionary/normalize questionnaire default-type options custom-analyzers)
         mappings-from-field-names-to-analyzers (field-name-analyzer-mappings questionnaire-with-analyzers)
-
         monitor (create mappings-from-field-names-to-analyzers custom-analyzers options)]
     (register-queries monitor (dictionary/get-monitor-queries questionnaire-with-analyzers))
     {:monitor     monitor
