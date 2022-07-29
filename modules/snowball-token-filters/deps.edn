@@ -1,6 +1,6 @@
 {:paths         ["target/snowball-token-filters.jar"]
- :deps          {org.apache.lucene/lucene-core            {:mvn/version "9.2.0"}
-                 org.apache.lucene/lucene-analysis-common {:mvn/version "9.2.0"}}
+ :deps          {org.apache.lucene/lucene-core            {:mvn/version "9.3.0"}
+                 org.apache.lucene/lucene-analysis-common {:mvn/version "9.3.0"}}
  :deps/prep-lib {:ensure "target/snowball-token-filters.jar"
                  :alias  :build
                  :fn     jar}
