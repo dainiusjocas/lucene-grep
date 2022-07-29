@@ -6,6 +6,12 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
+- Upgrade to Lucene 9.3.0
+
+## v2022.07.27
+
+### Fixed/enhanced
+
 - Upgrade to Lucene 9.2.0
 
 ## v2022.05.12 

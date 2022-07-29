@@ -22,3 +22,4 @@ lmgrep.build_artifacts.txt
 .musl
 graalvm/
 test/resources/binary/
+resources/LMGREP_VERSION
