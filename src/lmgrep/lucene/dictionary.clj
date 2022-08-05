@@ -38,7 +38,7 @@
         (.printStackTrace e))
       (throw e))))
 
-(defrecord Dict [field-name monitor-analyzer monitor-query])
+(defrecord Dict [field-name monitor-analyzer monitor-query analysis-conf])
 
 (def ^Analyzer get-string-analyzer
   (memoize analyzer/create))
@@ -103,7 +103,8 @@
     (Dict.
       default-field-name
       monitor-analyzer
-      monitor-query)))
+      monitor-query
+      analysis-conf)))
 
 (defn handle-query-parser-settings [questionnaire-entry options]
   (if (get questionnaire-entry :query-parser)

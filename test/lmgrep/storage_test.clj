@@ -1,9 +1,9 @@
 (ns lmgrep.storage-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
-            [babashka.fs :as fs]
-            [lmgrep.lucene :as lucene]
             [clojure.string :as str]
-            [lmgrep.grep :as grep]))
+            [babashka.fs :as fs]
+            [lmgrep.grep :as grep]
+            [lmgrep.lucene :as lucene]))
 
 (def dir "target/index-test")
 
@@ -50,8 +50,7 @@
                           (str/trim
                             (with-out-str
                               (grep/grep [query] nil nil options))))))
-
-      #_(is (= "foo >texts< bar"
+      (is (= "foo >texts< bar"
              (with-in-str text-from-stdin
                           (str/trim
                             (with-out-str
