@@ -2,7 +2,6 @@
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as sh]
             [clojure.string :as str]
-            [clojure.core.reducers :as r]
             [babashka.fs :as bfs])
   (:import (java.nio.file FileSystems Path Files LinkOption)
            (java.io File IOException)))
@@ -19,7 +18,7 @@
              "charset=binary"))
 
 (defn filter-files [files]
-  (r/filter (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
+  (filterv (fn [^String file-path] (.isFile ^File (io/file file-path))) files))
 
 (defn infer-root-folder
   "Peel the GLOB pattern up to the directory from which to start file search."

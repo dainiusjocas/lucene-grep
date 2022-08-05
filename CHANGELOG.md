@@ -8,6 +8,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 - Upgrade to Lucene 9.3.0
 - Upgrade GraalVM to 22.2.0
+- Option for Lucene Monitor queries index disk storage under option `:queries-index-dir`
+
+### Changed
+
+- Remove usage of the `clojure.core.reducers` to simplify code.
 
 ## v2022.07.27
 
