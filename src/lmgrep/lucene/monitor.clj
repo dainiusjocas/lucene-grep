@@ -45,7 +45,7 @@
   (reduce-kv (fn [schema field-name analysis-conf]
                (assoc schema
                  (name field-name)
-                 (analyzer/create analysis-conf custom-analyzers)))
+                 (dictionary/get-string-analyzer analysis-conf custom-analyzers)))
              {} field-name->analysis-conf))
 
 (defn questionnaire->schema [questionnaire]
