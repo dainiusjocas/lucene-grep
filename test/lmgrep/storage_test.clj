@@ -9,6 +9,8 @@
 
 (defn clean-index-files-fixture [f]
   (fs/delete-tree dir)
+  (when-not (fs/exists? "target")
+    (fs/create-dir "target"))
   (f))
 
 (use-fixtures :each clean-index-files-fixture)
