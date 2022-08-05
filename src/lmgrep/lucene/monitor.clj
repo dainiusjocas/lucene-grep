@@ -8,7 +8,6 @@
   (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer Presearcher TermFilteredPresearcher MultipassTermFilteredPresearcher)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (java.util ArrayList)
-           (clojure.lang Indexed)
            (java.util.function Function)
            (java.nio.file Path)
            (org.apache.lucene.util BytesRef IOSupplier)
@@ -41,16 +40,6 @@
   {:no-filtering            Presearcher/NO_FILTERING
    :term-filtered           (TermFilteredPresearcher.)
    :multipass-term-filtered (MultipassTermFilteredPresearcher. 2)})
-
-(defn field-name-analyzer-mappings
-  "Creates a map with field names as keys and Lucene analyzers as values.
-  First, group dictionary entries by field name. Then from every group of dictionary entries
-  take the first entry and get the analyzer."
-  [questionnaire]
-  (reduce (fn [acc [field-name dict]]
-            (assoc acc field-name (get (.nth ^Indexed dict 0) :monitor-analyzer)))
-          {}
-          (group-by :field-name questionnaire)))
 
 (defn prepare-per-field-analyzers [field-name->analysis-conf custom-analyzers]
   (reduce-kv (fn [schema field-name analysis-conf]

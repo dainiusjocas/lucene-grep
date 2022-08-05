@@ -38,7 +38,7 @@
         (.printStackTrace e))
       (throw e))))
 
-(defrecord Dict [field-name monitor-analyzer monitor-query analysis-conf])
+(defrecord Dict [field-name monitor-query analysis-conf])
 
 (def ^Analyzer get-string-analyzer
   (memoize analyzer/create))
@@ -80,9 +80,6 @@
           (.printStackTrace e))
         (throw e)))))
 
-(defn ensure-type [questionnaire-entry default-type]
-  (update questionnaire-entry :type (fn [type] (if type type default-type))))
-
 (defn prepare-query-entry
   [questionnaire-entry default-type global-analysis-conf custom-analyzers monitor-query-constructor-fn]
   (let [analysis-conf (if (empty? (get questionnaire-entry :analysis))
@@ -91,7 +88,6 @@
                           :config-dir (get global-analysis-conf :config-dir)))
         ; parameter for the query parser
         default-field-name (get-field-name analysis-conf)
-        monitor-analyzer (get-string-analyzer analysis-conf custom-analyzers)
         monitor-query (monitor-query-constructor-fn
                         {:id                 (get questionnaire-entry :id)
                          :query              (get questionnaire-entry :query)
@@ -102,7 +98,6 @@
                          :analyzer           analysis-conf})]
     (Dict.
       default-field-name
-      monitor-analyzer
       monitor-query
       analysis-conf)))
 
