@@ -37,7 +37,7 @@
                    :with-score     true
                    :with-details   true
                    :format         :json}
-          expected {"highlights"  [{"dict-entry-id" "636317675"
+          expected {"highlights"  [{"dict-entry-id" "597795130"
                                     "meta"          {}
                                     "query"         "nike~"
                                     "score"         0.09807344
@@ -61,7 +61,7 @@
                    :with-details           true
                    :format                 :json}
           expected {"highlights"  [{"begin-offset"  13
-                                    "dict-entry-id" "636317675"
+                                    "dict-entry-id" "597795130"
                                     "end-offset"    18
                                     "meta"          {}
                                     "query"         "nike~"

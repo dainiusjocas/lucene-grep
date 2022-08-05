@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.matching
-  (:require [clojure.string :as s])
+  (:require [clojure.string :as s]
+            [lmgrep.lucene.dictionary :as dictionary])
   (:import (org.apache.lucene.monitor MonitorQuery Monitor
                                       HighlightsMatch HighlightsMatch$Hit
                                       ScoringMatch
@@ -22,7 +23,7 @@
         base {:query         (.getQueryString query)
               :type          (get meta "_type")
               :dict-entry-id (.getQueryId query-match)
-              :meta          (dissoc (into {} meta) "_type")}
+              :meta          (dissoc (into {} meta) "_type" dictionary/CONF_KEY dictionary/DEFAULT_FIELD_NAME_KEY)}
         hits-iterator (.iterator (.entrySet (.getHits query-match)))
         highlights (transient [])]
     (while (.hasNext hits-iterator)
@@ -42,7 +43,7 @@
         base {:query         (.getQueryString query)
               :type          (get meta "_type")
               :dict-entry-id (.getQueryId query-match)
-              :meta          (dissoc (into {} meta) "_type")
+              :meta          (dissoc (into {} meta) "_type" dictionary/CONF_KEY dictionary/DEFAULT_FIELD_NAME_KEY)
               :score         (.getScore query-match)}
         hits-iterator (.iterator (.entrySet (.getHits query-match)))
         highlights (transient [])]
@@ -85,7 +86,7 @@
               {:query         (.getQueryString query)
                :type          (get meta "_type")
                :dict-entry-id (.getQueryId query-match)
-               :meta          (dissoc (into {} meta) "_type")
+               :meta          (dissoc (into {} meta) "_type" dictionary/CONF_KEY dictionary/DEFAULT_FIELD_NAME_KEY)
                :score         (.getScore query-match)}))
           (.getMatches (.match monitor doc (ScoringMatch/DEFAULT_MATCHER))))))
 

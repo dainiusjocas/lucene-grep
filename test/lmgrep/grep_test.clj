@@ -244,17 +244,17 @@
                    :with-details true
                    :analysis     {:token-filters [{:name "lowercase"}]}
                    :queries-file "test/resources/queries.json"}]
-      (is (= {:highlights  [{:begin-offset  16
-                             :dict-entry-id "1372536417"
-                             :end-offset    19
-                             :meta          {:foo "bar"}
-                             :query         "fox"
-                             :type          "QUERY"}
-                            {:begin-offset  40
-                             :dict-entry-id "601069600"
+      (is (= {:highlights  [{:begin-offset  40
+                             :dict-entry-id "562547055"
                              :end-offset    43
                              :meta          {}
                              :query         "dog"
+                             :type          "QUERY"}
+                            {:begin-offset  16
+                             :dict-entry-id "1411058962"
+                             :end-offset    19
+                             :meta          {:foo "bar"}
+                             :query         "fox"
                              :type          "QUERY"}]
               :line        "The quick brown fox jumps over the lazy dog"
               :line-number 1}
