@@ -12,7 +12,7 @@
   lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.18"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.4"}
-  lt.jocas/lucene-text-analysis            {:mvn/version "1.0.15"}
+  lt.jocas/lucene-text-analysis            {:mvn/version "1.0.17"}
   babashka/fs                              {:mvn/version "0.1.6"}
   io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "0.3"
                                             :exclusions  [org.apache.lucene/lucene-analyzers-common]}
@@ -21,10 +21,9 @@
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
-   :extra-deps  {org.clojure/tools.deps.alpha {:mvn/version "0.14.1212"
-                                               :exclusions  [org.slf4j/slf4j-log4j12
-                                                             org.slf4j/slf4j-api
-                                                             org.slf4j/slf4j-nop]}
+   :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
+                                               :git/sha "c0ce485ddac6ad96fcc43491318c847287299d9b"}
+                 org.slf4j/slf4j-nop          {:mvn/version "1.7.36"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
   {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
