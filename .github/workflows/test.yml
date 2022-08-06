@@ -27,12 +27,12 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: 1.11.1.1149
+          tools-deps: 1.11.1.1155
 
       - name: Setup Babashka
         uses: turtlequeue/setup-babashka@v1.5.0
         with:
-          babashka-version: 0.8.156
+          babashka-version: 0.9.161
 
       - name: Unit Tests
         env:
