@@ -61,9 +61,5 @@ test-all: test test-binary
 lint:
 	clojure -M:clj-kondo
 
-.PHONY: check-deps
-check-deps:
-	clojure -Sdeps '{:deps {antq/antq {:mvn/version "RELEASE"}}}' -M -m antq.core
-
 build-docker:
 	docker build -f Dockerfile.deploy -t dainiusjocas/lmgrep:"$$(echo "$$(git describe --tags --abbrev=0)$(SNAPSHOT_SUFFIX)" | cut -c 2-)" .

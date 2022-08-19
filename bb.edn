@@ -16,6 +16,9 @@
                                (clojure (str "-M:"
                                           (clojure.string/join ":" profiles)
                                           ":test")))}
+                  outdated
+                  {:doc  "Checks for outdated dependencies."
+                   :task (clojure "-Sdeps '{:deps {com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}' -M -m antq.core")}
                   generate-reflection-config
                   {:requires ([script.reflection :as r]
                               [script.env-profiles :as e])
