@@ -3,6 +3,9 @@
             [clojure.string :as str]
             [clojure.java.io :as io]))
 
+(defn no-color? []
+  (not (str/blank? (System/getenv "NO_COLOR"))))
+
 (defn highlight-line
   "TODO: overlapping phrase highlights are combined under one color, maybe solve it?"
   [line-str highlights options]
@@ -12,7 +15,9 @@
       (let [highlights (sort-by :begin-offset highlights)
             highlight-fn (if (and (string? (:pre-tags options)) (string? (:post-tags options)))
                            #(str (:pre-tags options) % (:post-tags options))
-                           ansi/red-text)]
+                           (if (no-color?)
+                             str
+                             ansi/red-text))]
         (loop [[[ann next-ann] & ann-pairs] (partition 2 1 nil highlights)
                acc ""
                last-position 0]
@@ -39,6 +44,31 @@
     (ansi/link file (str (.toURI (io/file file)) "#" line-number))
     file))
 
+(defn colored-non-template-string-output [highlights details options]
+  (if (:score details)
+    (format "%s:%s:%s:%s"
+            (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
+            (ansi/green-text (:line-number details))
+            (ansi/purple-text (:score details))
+            (highlight-line (:line details) highlights options))
+    (format "%s:%s:%s"
+            (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
+            (ansi/green-text (:line-number details))
+            (highlight-line (:line details) highlights options))))
+
+
+(defn colorless-non-template-string-output [highlights details options]
+  (if (:score details)
+    (format "%s:%s:%s:%s"
+            (or (file-string (:file details) (:line-number details) options) "*STDIN*")
+            (:line-number details)
+            (:score details)
+            (highlight-line (:line details) highlights options))
+    (format "%s:%s:%s"
+            (or (file-string (:file details) (:line-number details) options) "*STDIN*")
+            (:line-number details)
+            (highlight-line (:line details) highlights options))))
+
 (defn string-output [highlights details options]
   (if-let [template (:template options)]
     (if (str/blank? template)
@@ -49,13 +79,6 @@
           (str/replace "{{highlighted-line}}" (highlight-line (:line details) highlights options))
           (str/replace "{{line}}" (:line details))
           (str/replace "{{score}}" (str (:score details)))))
-    (if (:score details)
-      (format "%s:%s:%s:%s"
-              (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
-              (ansi/green-text (:line-number details))
-              (ansi/purple-text (:score details))
-              (highlight-line (:line details) highlights options))
-      (format "%s:%s:%s"
-              (ansi/purple-text (or (file-string (:file details) (:line-number details) options) "*STDIN*"))
-              (ansi/green-text (:line-number details))
-              (highlight-line (:line details) highlights options)))))
+    (if (no-color?)
+      (colorless-non-template-string-output highlights details options)
+      (colored-non-template-string-output highlights details options))))
