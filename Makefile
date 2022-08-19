@@ -57,9 +57,5 @@ test-all: export LMGREP_FEATURE_RAUDIKKO = true
 .PHONY: test-all
 test-all: test test-binary
 
-.PHONY: lint
-lint:
-	clojure -M:clj-kondo
-
 build-docker:
 	docker build -f Dockerfile.deploy -t dainiusjocas/lmgrep:"$$(echo "$$(git describe --tags --abbrev=0)$(SNAPSHOT_SUFFIX)" | cut -c 2-)" .
