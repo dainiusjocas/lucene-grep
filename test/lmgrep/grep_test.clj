@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [jsonista.core :as json]
-            [lmgrep.grep :as grep]))
+            [lmgrep.grep :as grep]
+            [lmgrep.formatter]))
 
 (deftest grepping-file
   (let [file "test/resources/test.txt"
@@ -368,6 +369,33 @@
                (with-in-str text-from-stdin
                             (with-out-str
                               (grep/grep [query] nil nil options)))))))))
+
+(deftest handle-no-color-env-variable
+  (with-redefs [lmgrep.formatter/no-color? (fn [] true)]
+    ; Templates are not important
+    (testing "Non scored case"
+      (let [text-from-stdin "lucene is awesome"
+            query "lucene"
+            options {:split     true
+                     :hyperlink false}]
+        (testing "output text should not be colored"
+          (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
+            (is (= "*STDIN*:1:lucene is awesome\n"
+                   (with-in-str text-from-stdin
+                                (with-out-str
+                                  (grep/grep [query] nil nil options)))))))))
+    (testing "with-score case"
+      (let [text-from-stdin "lucene is awesome"
+            query "lucene"
+            options {:split     true
+                     :hyperlink false
+                     :with-score true}]
+        (testing "output text should not be colored"
+          (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
+            (is (= "*STDIN*:1:0.13076457:lucene is awesome\n"
+                   (with-in-str text-from-stdin
+                                (with-out-str
+                                  (grep/grep [query] nil nil options)))))))))))
 
 (deftest grepping-with-simple-query-parser
   (let [text-from-stdin "john foo peters post"

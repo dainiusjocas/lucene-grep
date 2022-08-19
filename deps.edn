@@ -9,14 +9,14 @@
   org.apache.lucene/lucene-queries         {:mvn/version "9.3.0"}
   org.apache.lucene/lucene-queryparser     {:mvn/version "9.3.0"}
   metosin/jsonista                         {:mvn/version "0.3.6"}
-  lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.18"}
+  lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.21"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.4"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.17"}
   babashka/fs                              {:mvn/version "0.1.6"}
   io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "0.3"
                                             :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc                   {:mvn/version "2.11.2.Final"}
+  io.quarkus/quarkus-arc                   {:mvn/version "2.12.0.CR1"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev

@@ -16,6 +16,15 @@
                                (clojure (str "-M:"
                                           (clojure.string/join ":" profiles)
                                           ":test")))}
+                  lint
+                  {:doc  "Either clj-kondo CLI or the JVM version"
+                   :task (try
+                           (shell "clj-kondo" "--lint" "src" "test")
+                           (catch Exception _
+                             (clojure "-M:clj-kondo")))}
+                  outdated
+                  {:doc  "Checks for outdated dependencies."
+                   :task (clojure "-Sdeps '{:deps {com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}' -M -m antq.core")}
                   generate-reflection-config
                   {:requires ([script.reflection :as r]
                               [script.env-profiles :as e])
@@ -27,5 +36,5 @@
                                    (clojure.string/join ":" profiles)
                                    ":test"))
                                (println "Filtering Lucene classes with all their constructors:")
-                               (r/gen))}
-                  }}
+                               (r/gen))}}}
+
