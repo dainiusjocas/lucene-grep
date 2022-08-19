@@ -487,7 +487,7 @@ make test
 
 Lint the core with clj-kondo:
 ```shell
-make lint
+bb lint
 ```
 
 ## Print results with a custom format

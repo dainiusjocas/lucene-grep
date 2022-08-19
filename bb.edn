@@ -19,7 +19,7 @@
                   lint
                   {:doc  "Either clj-kondo CLI or the JVM version"
                    :task (try
-                           (shell "clj-kondso" "--lint" "src" "test")
+                           (shell "clj-kondo" "--lint" "src" "test")
                            (catch Exception _
                              (clojure "-M:clj-kondo")))}
                   outdated
