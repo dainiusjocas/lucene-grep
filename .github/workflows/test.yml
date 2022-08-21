@@ -31,7 +31,7 @@ jobs:
       - name: Install clojure tools-deps
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: ${{ env.CLOJURE_VERSION }}
+          cli: ${{ env.CLOJURE_VERSION }}
 
       - name: Setup Babashka
         uses: turtlequeue/setup-babashka@v1.5.0
