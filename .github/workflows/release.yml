@@ -101,18 +101,22 @@ jobs:
             platform: linux
             gu-binary: gu
             arch: 'amd64'
+            native-image-musl: 'false'
           - os: macos-latest
             platform: macos
             gu-binary: gu
             arch: 'amd64'
+            native-image-musl: 'false'
           - os: windows-latest
             platform: windows
             gu-binary: gu.exe
             arch: 'amd64'
+            native-image-musl: 'false'
           - os: self-hosted
             platform: macos
             gu-binary: gu
             arch: 'aarch64'
+            native-image-musl: 'false'
     steps:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -123,6 +127,7 @@ jobs:
           version: ${{ env.GRAALVM_VERSION }}
           java-version: '17'
           components: 'native-image'
+          native-image-musl: ${{ matrix.native-image-musl }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download uberjar from job 'build-uberjar-upload-to-release-and-store-artifacts'
