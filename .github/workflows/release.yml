@@ -95,7 +95,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [
+          ubuntu-latest,
+          ubuntu-20.04
+#          ,
+#          macos-latest,
+#          windows-latest
+        ]
         include:
           - os: ubuntu-latest
             platform: linux
@@ -103,7 +109,7 @@ jobs:
             arch: 'amd64'
             native-image-musl: 'false'
             static-suffix: ''
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             platform: linux
             gu-binary: gu
             arch: 'amd64'
