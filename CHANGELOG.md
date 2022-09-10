@@ -11,6 +11,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 - Option for Lucene Monitor queries index disk storage under option `:queries-index-dir`
 - Update `lucene-text-analysis` to 1.0.17
 - Handle `NO_COLOR` environment variable
+- Support for multiple `--analyzers-file`
 
 ### Changed
 
