@@ -37,6 +37,10 @@
         (throw (Exception. (format "Analysis configuration file '%s' doesn't exist." file-path)))))
     {}))
 
-(defn prepare-analyzers [^String file-path options]
-  (merge predefined/analyzers
-         (read-analysis-conf-from-file file-path options)))
+(defn prepare-analyzers
+  "Given a list of paths to analyzer files returns a map of custom analyzers."
+  [analyzer-files options]
+  (reduce (fn [analyzers file-path]
+            (merge analyzers (read-analysis-conf-from-file file-path options)))
+          predefined/analyzers
+          analyzer-files))

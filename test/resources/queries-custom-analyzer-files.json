@@ -1,0 +1,16 @@
+[
+  {
+    "id": "phrase",
+    "query": "\"bar bar\"",
+    "analysis": {
+      "analyzer": {"name": "some-custom-analyzer"}
+    }
+  },
+  {
+    "id": "reverse-phrase",
+    "query": "\"baz bar\"",
+    "analysis": {
+      "analyzer": {"name": "reverse-foobar-analyzer"}
+    }
+  }
+]

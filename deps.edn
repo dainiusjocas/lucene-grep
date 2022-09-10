@@ -13,17 +13,17 @@
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.4"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.17"}
-  babashka/fs                              {:mvn/version "0.1.6"}
+  babashka/fs                              {:mvn/version "0.1.11"}
   io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "0.3"
                                             :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc                   {:mvn/version "2.12.0.CR1"}
+  io.quarkus/quarkus-arc                   {:mvn/version "2.12.1.Final"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
                                                :git/sha "c0ce485ddac6ad96fcc43491318c847287299d9b"}
-                 org.slf4j/slf4j-nop          {:mvn/version "1.7.36"}
+                 org.slf4j/slf4j-nop          {:mvn/version "2.0.0"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
   {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
@@ -31,7 +31,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.08.03"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.09.08"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "modules/raudikko"}}

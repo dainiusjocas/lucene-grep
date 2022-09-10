@@ -387,8 +387,8 @@
     (testing "with-score case"
       (let [text-from-stdin "lucene is awesome"
             query "lucene"
-            options {:split     true
-                     :hyperlink false
+            options {:split      true
+                     :hyperlink  false
                      :with-score true}]
         (testing "output text should not be colored"
           (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
@@ -604,3 +604,70 @@
                    :template     "{{highlighted-line}}"
                    :queries-file "test/resources/query-parser-conf.json"}]
       (is (thrown? Exception (grep/grep [] file nil options))))))
+
+(deftest analyzers-file-handling
+  (let [text-from-stdin "foo bar baz"
+        query "\"bar bar\""
+        options {:split        true
+                 :format       :json
+                 :with-details true
+                 :analysis     {:analyzer {:name "some-custom-analyzer"}}}
+        analyzers-file "test/resources/analyzers.json"
+        another-analyzers-file "test/resources/analyzers-reverse-foobar.json"]
+
+    (testing "exception is thrown that there is not such analyzer"
+      (is (thrown? Exception (with-in-str text-from-stdin
+                                          (str/trim
+                                            (with-out-str
+                                              (grep/grep [query] nil nil options)))))))
+
+    (testing "standard analyzer doesn't match"
+      (let [options (dissoc options :analysis)]
+        (is (= "" (with-in-str text-from-stdin
+                               (str/trim
+                                 (with-out-str
+                                   (grep/grep [query] nil nil options))))))))
+
+    (testing "analyzer from the file is found"
+      (let [options (assoc options :analyzers-file [analyzers-file])]
+        (is (= {:highlights  [{:begin-offset  0
+                               :dict-entry-id "2120207166"
+                               :end-offset    7
+                               :meta          {}
+                               :query         "\"bar bar\""
+                               :type          "QUERY"}]
+                :line        "foo bar baz"
+                :line-number 1}
+               (json/read-value
+                 (with-in-str text-from-stdin
+                              (str/trim
+                                (with-out-str
+                                  (grep/grep [query] nil nil options))))
+                 json/keyword-keys-object-mapper)))))
+
+    (testing "two queries with analyzers defined in separate files both matches"
+      (let [queries []
+            options (-> options
+                        (assoc :queries-file "test/resources/queries-custom-analyzer-files.json")
+                        (dissoc :analysis)
+                        (assoc :analyzers-file [analyzers-file another-analyzers-file]))]
+        (is (= {:highlights  [{:begin-offset  0
+                               :dict-entry-id "phrase"
+                               :end-offset    7
+                               :meta          {}
+                               :query         "\"bar bar\""
+                               :type          "QUERY"}
+                              {:begin-offset  0
+                               :dict-entry-id "reverse-phrase"
+                               :end-offset    7
+                               :meta          {}
+                               :query         "\"baz bar\""
+                               :type          "QUERY"}]
+                :line        "foo bar baz"
+                :line-number 1}
+               (json/read-value
+                 (with-in-str text-from-stdin
+                              (str/trim
+                                (with-out-str
+                                  (grep/grep queries nil nil options))))
+                 json/keyword-keys-object-mapper)))))))
