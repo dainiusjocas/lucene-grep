@@ -1,0 +1,17 @@
+{
+  "analyzers": [
+    {
+      "name": "reverse-foobar-analyzer",
+      "char-filters": [
+        {
+          "name": "patternReplace",
+          "args": {
+            "pattern": "foo",
+            "replacement": "baz"
+          }
+        }
+      ],
+      "tokenizer": {"name": "standard"}
+    }
+  ]
+}
