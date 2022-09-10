@@ -387,8 +387,8 @@
     (testing "with-score case"
       (let [text-from-stdin "lucene is awesome"
             query "lucene"
-            options {:split     true
-                     :hyperlink false
+            options {:split      true
+                     :hyperlink  false
                      :with-score true}]
         (testing "output text should not be colored"
           (let [options (assoc options :analysis {:analyzer {:name "standard"}})]
@@ -604,3 +604,35 @@
                    :template     "{{highlighted-line}}"
                    :queries-file "test/resources/query-parser-conf.json"}]
       (is (thrown? Exception (grep/grep [] file nil options))))))
+
+(deftest analyzers-file-handling
+  (let [text-from-stdin "foo bar baz"
+        query "\"bar bar\""
+        options {:split        true
+                 :format       :json
+                 :with-details true
+                 :analysis     {:analyzer {:name "some-custom-analyzer"}}}]
+
+    (testing "exception is thrown that there is not such analyzer"
+      (is (thrown? Exception (with-in-str text-from-stdin
+                                          (str/trim
+                                            (with-out-str
+                                              (grep/grep [query] nil nil options)))))))
+
+    (testing "analyzer from the file is found"
+      (let [analyzers-file "test/resources/analyzers.json"
+            options (assoc options :analyzers-file analyzers-file)]
+        (is (= {:highlights  [{:begin-offset  0
+                               :dict-entry-id "2120207166"
+                               :end-offset    7
+                               :meta          {}
+                               :query         "\"bar bar\""
+                               :type          "QUERY"}]
+                :line        "foo bar baz"
+                :line-number 1}
+               (json/read-value
+                 (with-in-str text-from-stdin
+                              (str/trim
+                                (with-out-str
+                                  (grep/grep [query] nil nil options))))
+                 json/keyword-keys-object-mapper)))))))
