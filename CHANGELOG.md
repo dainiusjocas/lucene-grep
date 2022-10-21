@@ -6,7 +6,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
-- Upgrade to Lucene 9.3.0
+- Upgrade to Lucene 9.4.0
 - Upgrade GraalVM to 22.2.0
 - Option for Lucene Monitor queries index disk storage under option `:queries-index-dir`
 - Update `lucene-text-analysis` to 1.0.17
