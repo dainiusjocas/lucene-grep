@@ -3,11 +3,11 @@
  :deps
  {org.clojure/clojure                      {:mvn/version "1.11.1"}
   org.clojure/tools.cli                    {:mvn/version "1.0.214"}
-  org.apache.lucene/lucene-core            {:mvn/version "9.4.0"}
-  org.apache.lucene/lucene-analysis-common {:mvn/version "9.4.0"}
-  org.apache.lucene/lucene-monitor         {:mvn/version "9.4.0"}
-  org.apache.lucene/lucene-queries         {:mvn/version "9.4.0"}
-  org.apache.lucene/lucene-queryparser     {:mvn/version "9.4.0"}
+  org.apache.lucene/lucene-core            {:mvn/version "9.4.1"}
+  org.apache.lucene/lucene-analysis-common {:mvn/version "9.4.1"}
+  org.apache.lucene/lucene-monitor         {:mvn/version "9.4.1"}
+  org.apache.lucene/lucene-queries         {:mvn/version "9.4.1"}
+  org.apache.lucene/lucene-queryparser     {:mvn/version "9.4.1"}
   metosin/jsonista                         {:mvn/version "0.3.6"}
   lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.24"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
@@ -22,7 +22,7 @@
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
-                                               :git/sha "37ce804269b2bbc2227d7101c32013a352f76e57"}
+                                               :git/sha "fd47c2c07d3a0646d3e8bc95f120275b088d562d"}
                  org.slf4j/slf4j-nop          {:mvn/version "2.0.3"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test

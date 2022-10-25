@@ -4,6 +4,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### Fixed/enhanced
+
+- Upgrade to Lucene 9.4.1
+- Upgrade GraalVM to 22.3.0 (still Java 17)
+
 ## v2022.10.21
 
 ### Fixed/enhanced
