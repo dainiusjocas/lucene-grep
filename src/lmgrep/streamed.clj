@@ -1,5 +1,6 @@
 (ns lmgrep.streamed
   (:require [jsonista.core :as json]
+            [lmgrep.io :as io]
             [lmgrep.lucene :as lucene]
             [lmgrep.analysis :as analysis]
             [lmgrep.matching :as matching]
@@ -16,7 +17,7 @@
     (catch Exception e
       (when (Boolean/parseBoolean (System/getenv "DEBUG_MODE"))
         (.printStackTrace e))
-      (.println System/err (.getMessage e)))))
+      (io/println-to-err (.getMessage e)))))
 
 (defn wrapped-matcher-fn [custom-analyzers options]
   (fn [^long line-nr ^String line]
@@ -40,10 +41,10 @@
                     ^Runnable (fn []
                                 (if-let [out-str (matcher-fn line-nr line)]
                                   (.execute writer-thread-pool-executor
-                                            ^Runnable (fn [] (.println writer out-str)))
+                                            ^Runnable (fn [] (io/print-to-writer writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (.println writer)))))))
+                                              ^Runnable (fn [] (io/print-to-writer writer)))))))
           (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn ordered [reader ^ExecutorService matcher-thread-pool-executor
@@ -60,9 +61,9 @@
                       ^Runnable (fn []
                                   (let [^String out-str (.get f)]
                                     (if out-str
-                                      (.println writer out-str)
+                                      (io/print-to-writer writer out-str)
                                       (when with-empty-lines
-                                        (.println writer)))))))
+                                        (io/print-to-writer writer)))))))
           (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn grep
