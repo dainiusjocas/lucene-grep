@@ -3,27 +3,27 @@
  :deps
  {org.clojure/clojure                      {:mvn/version "1.11.1"}
   org.clojure/tools.cli                    {:mvn/version "1.0.214"}
-  org.apache.lucene/lucene-core            {:mvn/version "9.4.1"}
-  org.apache.lucene/lucene-analysis-common {:mvn/version "9.4.1"}
-  org.apache.lucene/lucene-monitor         {:mvn/version "9.4.1"}
-  org.apache.lucene/lucene-queries         {:mvn/version "9.4.1"}
-  org.apache.lucene/lucene-queryparser     {:mvn/version "9.4.1"}
-  metosin/jsonista                         {:mvn/version "0.3.6"}
+  org.apache.lucene/lucene-core            {:mvn/version "9.4.2"}
+  org.apache.lucene/lucene-analysis-common {:mvn/version "9.4.2"}
+  org.apache.lucene/lucene-monitor         {:mvn/version "9.4.2"}
+  org.apache.lucene/lucene-queries         {:mvn/version "9.4.2"}
+  org.apache.lucene/lucene-queryparser     {:mvn/version "9.4.2"}
+  metosin/jsonista                         {:mvn/version "0.3.7"}
   lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.24"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.6"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.20"}
-  babashka/fs                              {:mvn/version "0.1.11"}
+  babashka/fs                              {:mvn/version "0.2.12"}
   io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "0.3"
                                             :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc                   {:mvn/version "2.13.3.Final"}
+  io.quarkus/quarkus-arc                   {:mvn/version "2.15.0.Final"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
                                                :git/sha "fd47c2c07d3a0646d3e8bc95f120275b088d562d"}
-                 org.slf4j/slf4j-nop          {:mvn/version "2.0.3"}
+                 org.slf4j/slf4j-nop          {:mvn/version "2.0.5"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
   {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
@@ -31,7 +31,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.10.14"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2022.12.10"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "modules/raudikko"}}
@@ -46,5 +46,5 @@
   {:extra-deps {lmgrep/bundled-analyzers {:local/root "modules/bundled-analyzers"}}
    :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
-  {:deps       {io.github.clojure/tools.build {:tag "v0.8.3" :sha "0d20256"}}
+  {:deps       {io.github.clojure/tools.build {:git/tag "v0.8.5" :git/sha "9c738da"}}
    :ns-default build}}}
