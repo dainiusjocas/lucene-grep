@@ -96,7 +96,7 @@
       (.register monitor (doto (ArrayList.) (.add mq)))
       (catch Exception e
         (when (System/getenv "DEBUG_MODE")
-          (.printStackTrace e))
+          (print/throwable e))
         (print/to-err (format "Failed to register query %s with exception '%s'" mq (.getMessage e)))))))
 
 (defn register-queries [^Monitor monitor monitor-queries]
@@ -104,7 +104,7 @@
     (.register monitor ^Iterable monitor-queries)
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
-        (.printStackTrace e))
+        (print/throwable e))
       (print/to-err (format "Failed to register queries with exception '%s'" (.getMessage e)))
       (defer-to-one-by-one-registration monitor monitor-queries))))
 

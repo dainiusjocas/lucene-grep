@@ -7,6 +7,7 @@
             [lmgrep.grep :as grep]
             [lmgrep.only-analyze :as analyze]
             [lmgrep.predefined-analyzers :as predefined]
+            [lmgrep.print :as print]
             [lmgrep.streamed :as streamed])
   (:gen-class))
 
@@ -61,7 +62,7 @@
               (grep/grep [lucene-query] file-pattern files options))))))
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
-        (.printStackTrace e))
-      (.println System/err (.getMessage e))
+        (print/throwable e))
+      (print/to-err (.getMessage e))
       (System/exit 1)))
   (System/exit 0))

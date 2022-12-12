@@ -1,4 +1,5 @@
-(ns lmgrep.cli.analysis-conf)
+(ns lmgrep.cli.analysis-conf
+  (:require [lmgrep.print :as print]))
 
 (def analysis-keys #{:case-sensitive?
                      :ascii-fold?
@@ -8,7 +9,7 @@
                      :word-delimiter-graph-filter})
 
 (def default-text-analysis
-  {:tokenizer {:name "standard"}
+  {:tokenizer     {:name "standard"}
    :token-filters [{:name "lowercase"}
                    {:name "asciifolding"}
                    {:name "englishMinimalStem"}]})
@@ -16,39 +17,39 @@
 (def ^String stemmer
   "Creates a stemmer object given the stemmer keyword.
   Default stemmer is English."
-  {:arabic "arabicstem"
-   :armenian "armenianSnowballStem"
-   :basque "basqueSnowballStem"
-   :catalan "catalanSnowballStem"
-   :danish "danishSnowballStem"
-   :dutch "dutchSnowballStem"
-   :english "englishMinimalStem"
-   :estonian "basqueSnowballStem"
-   :finnish "finnishlightstem"
-   :french "frenchLightStem"
-   :german2 "germanlightstem"
-   :german "germanstem"
-   :hungarian "hungarianLightStem"
-   :irish "irishSnowballStem"
-   :italian "italianlightstem"
-   :kp "kpSnowballStem"
+  {:arabic     "arabicstem"
+   :armenian   "armenianSnowballStem"
+   :basque     "basqueSnowballStem"
+   :catalan    "catalanSnowballStem"
+   :danish     "danishSnowballStem"
+   :dutch      "dutchSnowballStem"
+   :english    "englishMinimalStem"
+   :estonian   "basqueSnowballStem"
+   :finnish    "finnishlightstem"
+   :french     "frenchLightStem"
+   :german2    "germanlightstem"
+   :german     "germanstem"
+   :hungarian  "hungarianLightStem"
+   :irish      "irishSnowballStem"
+   :italian    "italianlightstem"
+   :kp         "kpSnowballStem"
    :lithuanian "lithuanianSnowballStem"
-   :lovins "lovinsSnowballStem"
-   :norwegian "norwegianminimalstem"
-   :porter "porterstem"
+   :lovins     "lovinsSnowballStem"
+   :norwegian  "norwegianminimalstem"
+   :porter     "porterstem"
    :portuguese "portugueselightstem"
-   :romanian "romanianSnowballStem"
-   :russian "russianlightstem"
-   :spanish "spanishlightstem"
-   :swedish "swedishlightstem"
-   :turkish "turkishSnowballStem"})
+   :romanian   "romanianSnowballStem"
+   :russian    "russianlightstem"
+   :spanish    "spanishlightstem"
+   :swedish    "swedishlightstem"
+   :turkish    "turkishSnowballStem"})
 
 (def tokenizer
-  {:keyword {:name "keyword"}
-   :letter {:name "letter"}
-   :standard {:name "standard"}
+  {:keyword            {:name "keyword"}
+   :letter             {:name "letter"}
+   :standard           {:name "standard"}
    :unicode-whitespace {:name "whitespace" :args {:rule "unicode"}}
-   :whitespace {:name "whitespace" :args {:rule "java"}}})
+   :whitespace         {:name "whitespace" :args {:rule "java"}}})
 
 (defn wdgf->token-filter-args
   "wdgf stands for Word Delimiter Graph Filter
@@ -84,8 +85,8 @@
                              (or (get stemmer stemmer-kw)
                                  (do
                                    (when stemmer-kw
-                                     (.println System/err
-                                               (format "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw)))
+                                     (print/to-err
+                                       (format "Stemmer '%s' not found! EnglishStemmer is used." stemmer-kw)))
                                    "englishMinimalStem")))})))
            (pos-int? (get flags :word-delimiter-graph-filter))
            (cons {:name "worddelimitergraph"
@@ -97,8 +98,9 @@
                         (or (get tokenizer tokenizer-kw)
                             (do
                               (when tokenizer-kw
-                                (.println System/err
-                                          (format "Tokenizer '%s' not found. StandardTokenizer is used." tokenizer-kw)))
+                                (print/to-err
+                                  (format "Tokenizer '%s' not found. StandardTokenizer is used."
+                                          tokenizer-kw)))
                               {:name "standard"})))
                       (get acm :tokenizer))
         token-filters (override-token-filters (get acm :token-filters) flags)]

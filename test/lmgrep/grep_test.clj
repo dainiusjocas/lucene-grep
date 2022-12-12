@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [jsonista.core :as json]
             [lmgrep.grep :as grep]
-            [lmgrep.formatter]))
+            [lmgrep.formatter]
+            [lmgrep.print :as print]))
 
 (deftest grepping-file
   (let [file "test/resources/test.txt"
@@ -187,33 +188,37 @@
                             (grep/grep queries nil nil options))))))))
 
 (deftest global-query-parser-setting
-  (testing "with classic query parser fails"
-    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
-          queries []
-          options {:split        true
-                   :pre-tags     ">"
-                   :post-tags    "<"
-                   :template     "{{highlighted-line}}"
-                   :queries-file "test/resources/problematic-queries.json"}]
-      (is (thrown? Exception
-                   (with-in-str text-from-stdin
-                                (str/trim
-                                  (with-out-str
-                                    (grep/grep queries nil nil options))))))))
-  (testing "with simple query parser it works"
-    (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
-          queries []
-          options {:split        true
-                   :pre-tags     ">"
-                   :post-tags    "<"
-                   :template     "{{highlighted-line}}"
-                   :query-parser "simple"
-                   :queries-file "test/resources/problematic-queries.json"}]
-      (is (= "The quick brown >fox< jumps over the lazy >dog<"
-             (with-in-str text-from-stdin
-                          (str/trim
-                            (with-out-str
-                              (grep/grep queries nil nil options)))))))))
+  (with-redefs [lmgrep.print/throwable (fn [& _])
+                lmgrep.print/to-err (fn [& _])]
+
+    (testing "with classic query parser fails"
+      (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+            queries []
+            options {:split        true
+                     :pre-tags     ">"
+                     :post-tags    "<"
+                     :template     "{{highlighted-line}}"
+                     :queries-file "test/resources/problematic-queries.json"}]
+        (is (thrown? Exception
+                     (with-in-str text-from-stdin
+                                  (str/trim
+                                    (with-out-str
+                                      (grep/grep queries nil nil options))))))))
+
+    (testing "with simple query parser it works"
+      (let [text-from-stdin "The quick brown fox jumps over the lazy dog"
+            queries []
+            options {:split        true
+                     :pre-tags     ">"
+                     :post-tags    "<"
+                     :template     "{{highlighted-line}}"
+                     :query-parser "simple"
+                     :queries-file "test/resources/problematic-queries.json"}]
+        (is (= "The quick brown >fox< jumps over the lazy >dog<"
+               (with-in-str text-from-stdin
+                            (str/trim
+                              (with-out-str
+                                (grep/grep queries nil nil options))))))))))
 
 (deftest grepping-multiple-queries-from-file-options
   (testing "options text analysis is injected into dictionary entry if not present"
@@ -578,96 +583,102 @@
              json/keyword-keys-object-mapper)))))
 
 (deftest allowing-leading-wildcards-for-classic-query-parser
-  (testing "by default query parser allows loading wildcards"
-    (let [file "test/resources/test.txt"
-          query "*fox"
-          options {:split    true :pre-tags ">" :post-tags "<"
-                   :template "{{highlighted-line}}"}]
-      (is (= "The quick brown >fox< jumps over the lazy dog"
-             (str/trim
-               (with-out-str
-                 (grep/grep [query] file nil options)))))))
+  (with-redefs [lmgrep.print/throwable (fn [& _])
+                lmgrep.print/to-err (fn [& _])]
 
-  (testing "explicitly declared :allow-leading-wildcard false causes exception"
-    (let [file "test/resources/test.txt"
-          query "*fox"
-          options {:split             true
-                   :pre-tags          ">" :post-tags "<"
-                   :template          "{{highlighted-line}}"
-                   :query-parser-conf {:allow-leading-wildcard false}}]
-      (is (thrown? Exception (grep/grep [query] file nil options)))))
+    (testing "by default query parser allows loading wildcards"
+      (let [file "test/resources/test.txt"
+            query "*fox"
+            options {:split    true :pre-tags ">" :post-tags "<"
+                     :template "{{highlighted-line}}"}]
+        (is (= "The quick brown >fox< jumps over the lazy dog"
+               (str/trim
+                 (with-out-str
+                   (grep/grep [query] file nil options)))))))
 
-  (testing "explicitly declared :allow-leading-wildcard false causes exception in queries file"
-    (let [file "test/resources/test.txt"
-          options {:split        true
-                   :pre-tags     ">" :post-tags "<"
-                   :template     "{{highlighted-line}}"
-                   :queries-file "test/resources/query-parser-conf.json"}]
-      (is (thrown? Exception (grep/grep [] file nil options))))))
+    (testing "explicitly declared :allow-leading-wildcard false causes exception"
+      (let [file "test/resources/test.txt"
+            query "*fox"
+            options {:split             true
+                     :pre-tags          ">" :post-tags "<"
+                     :template          "{{highlighted-line}}"
+                     :query-parser-conf {:allow-leading-wildcard false}}]
+        (is (thrown? Exception (grep/grep [query] file nil options)))))
+
+    (testing "explicitly declared :allow-leading-wildcard false causes exception in queries file"
+      (let [file "test/resources/test.txt"
+            options {:split        true
+                     :pre-tags     ">" :post-tags "<"
+                     :template     "{{highlighted-line}}"
+                     :queries-file "test/resources/query-parser-conf.json"}]
+        (is (thrown? Exception (grep/grep [] file nil options)))))))
 
 (deftest analyzers-file-handling
-  (let [text-from-stdin "foo bar baz"
-        query "\"bar bar\""
-        options {:split        true
-                 :format       :json
-                 :with-details true
-                 :analysis     {:analyzer {:name "some-custom-analyzer"}}}
-        analyzers-file "test/resources/analyzers.json"
-        another-analyzers-file "test/resources/analyzers-reverse-foobar.json"]
+  ;; These tests trigger exceptions, let's not pollute logs
+  (with-redefs [lmgrep.print/throwable (fn [& _])
+                lmgrep.print/to-err (fn [& _])]
+    (let [text-from-stdin "foo bar baz"
+          query "\"bar bar\""
+          options {:split        true
+                   :format       :json
+                   :with-details true
+                   :analysis     {:analyzer {:name "some-custom-analyzer"}}}
+          analyzers-file "test/resources/analyzers.json"
+          another-analyzers-file "test/resources/analyzers-reverse-foobar.json"]
 
-    (testing "exception is thrown that there is not such analyzer"
-      (is (thrown? Exception (with-in-str text-from-stdin
-                                          (str/trim
-                                            (with-out-str
-                                              (grep/grep [query] nil nil options)))))))
+      (testing "exception is thrown that there is not such analyzer"
+        (is (thrown? Exception (with-in-str text-from-stdin
+                                            (str/trim
+                                              (with-out-str
+                                                (grep/grep [query] nil nil options)))))))
 
-    (testing "standard analyzer doesn't match"
-      (let [options (dissoc options :analysis)]
-        (is (= "" (with-in-str text-from-stdin
-                               (str/trim
-                                 (with-out-str
-                                   (grep/grep [query] nil nil options))))))))
+      (testing "standard analyzer doesn't match"
+        (let [options (dissoc options :analysis)]
+          (is (= "" (with-in-str text-from-stdin
+                                 (str/trim
+                                   (with-out-str
+                                     (grep/grep [query] nil nil options))))))))
 
-    (testing "analyzer from the file is found"
-      (let [options (assoc options :analyzers-file [analyzers-file])]
-        (is (= {:highlights  [{:begin-offset  0
-                               :dict-entry-id "2120207166"
-                               :end-offset    7
-                               :meta          {}
-                               :query         "\"bar bar\""
-                               :type          "QUERY"}]
-                :line        "foo bar baz"
-                :line-number 1}
-               (json/read-value
-                 (with-in-str text-from-stdin
-                              (str/trim
-                                (with-out-str
-                                  (grep/grep [query] nil nil options))))
-                 json/keyword-keys-object-mapper)))))
+      (testing "analyzer from the file is found"
+        (let [options (assoc options :analyzers-file [analyzers-file])]
+          (is (= {:highlights  [{:begin-offset  0
+                                 :dict-entry-id "2120207166"
+                                 :end-offset    7
+                                 :meta          {}
+                                 :query         "\"bar bar\""
+                                 :type          "QUERY"}]
+                  :line        "foo bar baz"
+                  :line-number 1}
+                 (json/read-value
+                   (with-in-str text-from-stdin
+                                (str/trim
+                                  (with-out-str
+                                    (grep/grep [query] nil nil options))))
+                   json/keyword-keys-object-mapper)))))
 
-    (testing "two queries with analyzers defined in separate files both matches"
-      (let [queries []
-            options (-> options
-                        (assoc :queries-file "test/resources/queries-custom-analyzer-files.json")
-                        (dissoc :analysis)
-                        (assoc :analyzers-file [analyzers-file another-analyzers-file]))]
-        (is (= {:highlights  [{:begin-offset  0
-                               :dict-entry-id "phrase"
-                               :end-offset    7
-                               :meta          {}
-                               :query         "\"bar bar\""
-                               :type          "QUERY"}
-                              {:begin-offset  0
-                               :dict-entry-id "reverse-phrase"
-                               :end-offset    7
-                               :meta          {}
-                               :query         "\"baz bar\""
-                               :type          "QUERY"}]
-                :line        "foo bar baz"
-                :line-number 1}
-               (json/read-value
-                 (with-in-str text-from-stdin
-                              (str/trim
-                                (with-out-str
-                                  (grep/grep queries nil nil options))))
-                 json/keyword-keys-object-mapper)))))))
+      (testing "two queries with analyzers defined in separate files both matches"
+        (let [queries []
+              options (-> options
+                          (assoc :queries-file "test/resources/queries-custom-analyzer-files.json")
+                          (dissoc :analysis)
+                          (assoc :analyzers-file [analyzers-file another-analyzers-file]))]
+          (is (= {:highlights  [{:begin-offset  0
+                                 :dict-entry-id "phrase"
+                                 :end-offset    7
+                                 :meta          {}
+                                 :query         "\"bar bar\""
+                                 :type          "QUERY"}
+                                {:begin-offset  0
+                                 :dict-entry-id "reverse-phrase"
+                                 :end-offset    7
+                                 :meta          {}
+                                 :query         "\"baz bar\""
+                                 :type          "QUERY"}]
+                  :line        "foo bar baz"
+                  :line-number 1}
+                 (json/read-value
+                   (with-in-str text-from-stdin
+                                (str/trim
+                                  (with-out-str
+                                    (grep/grep queries nil nil options))))
+                   json/keyword-keys-object-mapper))))))))

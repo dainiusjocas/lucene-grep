@@ -16,7 +16,7 @@
     (json/read-value json-string)
     (catch Exception e
       (when (Boolean/parseBoolean (System/getenv "DEBUG_MODE"))
-        (.printStackTrace e))
+        (print/throwable e))
       (print/to-err (.getMessage e)))))
 
 (defn wrapped-matcher-fn [custom-analyzers options]
