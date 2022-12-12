@@ -1,5 +1,6 @@
 (ns lmgrep.lucene.analyzer
   (:require [clojure.string :as str]
+            [lmgrep.print :as print]
             [lucene.custom.analyzer :as ca])
   (:import (org.apache.lucene.analysis Analyzer)))
 
@@ -54,5 +55,5 @@
                   token-filter-name->class))
      (catch Exception e
        (when (System/getenv "DEBUG_MODE")
-         (.printStackTrace e))
+         (print/throwable e))
        (throw e)))))

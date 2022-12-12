@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [jsonista.core :as json]
+            [lmgrep.print]
             [lmgrep.streamed :as streamed]))
 
 (deftest streamed-processing
@@ -90,59 +91,61 @@
                             (with-out-str
                               (streamed/grep options))))))))
 
-  (doseq [options [{:preserve-order true
-                    :query-parser   "simple"
-                    :split          true}
+  (with-redefs [lmgrep.print/to-err (fn no-op [& _])
+                lmgrep.print/throwable (fn no-op [& _])]
+    (doseq [options [{:preserve-order true
+                      :query-parser   "simple"
+                      :split          true}
 
-                   {:preserve-order false
-                    :query-parser   "simple"
-                    :split          true}]]
+                     {:preserve-order false
+                      :query-parser   "simple"
+                      :split          true}]]
 
-    (testing "JSON that doesn't contain the text"
-      (let [text-from-stdin "{\"query\": \"AND nike~\"}"]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))
+      (testing "JSON that doesn't contain the text"
+        (let [text-from-stdin "{\"query\": \"AND nike~\"}"]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options)))))))
 
 
-    (testing "JSON that doesn't contain query"
-      (let [text-from-stdin "{\"text\": \"I am selling nikee\"}"]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))
+      (testing "JSON that doesn't contain query"
+        (let [text-from-stdin "{\"text\": \"I am selling nikee\"}"]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options)))))))
 
-    (testing "JSON that doesn't contain neither query nor text"
-      (let [text-from-stdin "{}"]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))
+      (testing "JSON that doesn't contain neither query nor text"
+        (let [text-from-stdin "{}"]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options)))))))
 
-    (testing "invalid JSON"
-      (let [text-from-stdin "{\"query\": \"AND nike~\", \"text\": \"I am selling nikee\""]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))
+      (testing "invalid JSON"
+        (let [text-from-stdin "{\"query\": \"AND nike~\", \"text\": \"I am selling nikee\""]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options)))))))
 
-    (testing "when query and text are empty strings"
-      (let [text-from-stdin "{\"query\": \"\", \"text\": \"\"}"]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))
+      (testing "when query and text are empty strings"
+        (let [text-from-stdin "{\"query\": \"\", \"text\": \"\"}"]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options)))))))
 
-    (testing "when query and text are nils"
-      (let [text-from-stdin "{\"query\": null, \"text\": null}"]
-        (is (empty?
-              (with-in-str
-                text-from-stdin
-                (with-out-str
-                  (streamed/grep options)))))))))
+      (testing "when query and text are nils"
+        (let [text-from-stdin "{\"query\": null, \"text\": null}"]
+          (is (empty?
+                (with-in-str
+                  text-from-stdin
+                  (with-out-str
+                    (streamed/grep options))))))))))

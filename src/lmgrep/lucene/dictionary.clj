@@ -2,7 +2,8 @@
   (:require [jsonista.core :as json]
             [lucene.custom.query :as q]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.field-name :as field-name])
+            [lmgrep.lucene.field-name :as field-name]
+            [lmgrep.print :as print])
   (:import (org.apache.lucene.queryparser.classic ParseException)
            (org.apache.lucene.monitor MonitorQuery)
            (org.apache.lucene.search Query)
@@ -42,13 +43,13 @@
                          DEFAULT_FIELD_NAME_KEY default-field-name)))
       (catch ParseException e
         (when (System/getenv "DEBUG_MODE")
-          (.println System/err (format "Failed to parse query: '%s' with exception '%s'" mq e))
-          (.printStackTrace e))
+          (print/to-err (format "Failed to parse query: '%s' with exception '%s'" mq e))
+          (print/throwable e))
         (throw e))
       (catch Exception e
         (when (System/getenv "DEBUG_MODE")
-          (.println System/err (format "Failed create query: '%s' with '%s'" mq e))
-          (.printStackTrace e))
+          (print/to-err (format "Failed create query: '%s' with '%s'" mq e))
+          (print/throwable e))
         (throw e)))))
 
 (defn in-memory-query-constructor [custom-analyzers]
@@ -62,13 +63,13 @@
                        (prepare-meta meta)))
       (catch ParseException e
         (when (System/getenv "DEBUG_MODE")
-          (.println System/err (format "Failed to parse query: '%s' with exception '%s'" mq e))
-          (.printStackTrace e))
+          (print/to-err (format "Failed to parse query: '%s' with exception '%s'" mq e))
+          (print/throwable e))
         (throw e))
       (catch Exception e
         (when (System/getenv "DEBUG_MODE")
-          (.println System/err (format "Failed create query: '%s' with '%s'" mq e))
-          (.printStackTrace e))
+          (print/to-err (format "Failed create query: '%s' with '%s'" mq e))
+          (print/throwable e))
         (throw e)))))
 
 (defn stable-id [m]
