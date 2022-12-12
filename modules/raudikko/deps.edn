@@ -1,5 +1,5 @@
 {:paths         ["target/raudikko.jar"]
- :deps          {org.apache.lucene/lucene-core {:mvn/version "9.4.1"}
+ :deps          {org.apache.lucene/lucene-core {:mvn/version "9.4.2"}
                  fi.evident.raudikko/raudikko  {:mvn/version "0.1.1"}}
  :deps/prep-lib {:ensure "target/raudikko.jar"
                  :alias  :build
@@ -7,5 +7,5 @@
  :aliases
  {:build
   {:deps       {org.clojure/clojure           {:mvn/version "1.11.1"}
-                io.github.clojure/tools.build {:tag "v0.8.3" :sha "0d20256"}}
+                io.github.clojure/tools.build {:git/tag "v0.8.5" :git/sha "9c738da"}}
    :ns-default build}}}

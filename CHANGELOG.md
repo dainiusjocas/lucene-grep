@@ -6,8 +6,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
-- Upgrade to Lucene 9.4.1
+- Upgrade to Lucene 9.4.2
 - Upgrade GraalVM to 22.3.0 (still Java 17)
+- Stack traces are not printed in tests
 
 ## v2022.10.21
 
