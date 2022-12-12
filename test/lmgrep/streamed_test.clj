@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [jsonista.core :as json]
+            [lmgrep.print]
             [lmgrep.streamed :as streamed]))
 
 (deftest streamed-processing
