@@ -1,10 +1,10 @@
 (ns lmgrep.streamed
   (:require [jsonista.core :as json]
-            [lmgrep.io :as io]
-            [lmgrep.lucene :as lucene]
             [lmgrep.analysis :as analysis]
+            [lmgrep.concurrent :as c]
+            [lmgrep.lucene :as lucene]
             [lmgrep.matching :as matching]
-            [lmgrep.concurrent :as c])
+            [lmgrep.print :as print])
   (:import (java.io BufferedReader BufferedWriter PrintWriter)
            (java.util.concurrent ExecutorService)
            (lmgrep.lucene LuceneMonitorMatcher)))
@@ -17,7 +17,7 @@
     (catch Exception e
       (when (Boolean/parseBoolean (System/getenv "DEBUG_MODE"))
         (.printStackTrace e))
-      (io/println-to-err (.getMessage e)))))
+      (print/to-err (.getMessage e)))))
 
 (defn wrapped-matcher-fn [custom-analyzers options]
   (fn [^long line-nr ^String line]
@@ -41,10 +41,10 @@
                     ^Runnable (fn []
                                 (if-let [out-str (matcher-fn line-nr line)]
                                   (.execute writer-thread-pool-executor
-                                            ^Runnable (fn [] (io/print-to-writer writer out-str)))
+                                            ^Runnable (fn [] (print/to-writer writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (io/print-to-writer writer)))))))
+                                              ^Runnable (fn [] (print/to-writer writer)))))))
           (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn ordered [reader ^ExecutorService matcher-thread-pool-executor
@@ -61,9 +61,9 @@
                       ^Runnable (fn []
                                   (let [^String out-str (.get f)]
                                     (if out-str
-                                      (io/print-to-writer writer out-str)
+                                      (print/to-writer writer out-str)
                                       (when with-empty-lines
-                                        (io/print-to-writer writer)))))))
+                                        (print/to-writer writer)))))))
           (recur (.readLine rdr) (inc line-nr)))))))
 
 (defn grep

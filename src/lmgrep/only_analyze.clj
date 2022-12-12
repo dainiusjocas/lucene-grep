@@ -3,6 +3,7 @@
             [lmgrep.analysis :as analysis]
             [lmgrep.concurrent :as c]
             [lmgrep.fs :as fs]
+            [lmgrep.print :as print]
             [lmgrep.lucene.analyzer :as analyzer]
             [lucene.custom.text-analysis :as text-analysis])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
@@ -17,7 +18,7 @@
       (if (nil? line)
         (.flush writer)
         (do
-          (.println writer (text-analysis/text->graph line analyzer))
+          (print/to-writer writer (text-analysis/text->graph line analyzer))
           (recur (.readLine rdr)))))))
 
 (defn graph [files-to-analyze writer analyzer options]
@@ -45,7 +46,7 @@
                               (let [out-str (json/write-value-as-string
                                               (analysis-fn line analyzer))]
                                 (.execute writer-thread-pool-executor
-                                          ^Runnable (fn [] (.println writer out-str))))))
+                                          ^Runnable (fn [] (print/to-writer writer out-str))))))
         (recur (.readLine rdr))))))
 
 (defn ordered-analysis
@@ -60,7 +61,7 @@
                                      (json/write-value-as-string
                                        (analysis-fn line analyzer))))]
           (.execute writer-thread-pool-executor
-                    ^Runnable (fn [] (.println writer (.get f)))))
+                    ^Runnable (fn [] (print/to-writer writer (.get f)))))
         (recur (.readLine rdr))))))
 
 (defn execute-analysis [files-to-analyze ^PrintWriter writer analyzer options]

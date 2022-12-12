@@ -4,7 +4,8 @@
             [jsonista.core :as json]
             [lucene.custom.query :as query]
             [lmgrep.lucene.analyzer :as analyzer]
-            [lmgrep.lucene.dictionary :as dictionary])
+            [lmgrep.lucene.dictionary :as dictionary]
+            [lmgrep.print :as print])
   (:import (org.apache.lucene.monitor MonitorConfiguration Monitor MonitorQuerySerializer Presearcher TermFilteredPresearcher MultipassTermFilteredPresearcher)
            (org.apache.lucene.analysis.miscellaneous PerFieldAnalyzerWrapper)
            (java.util ArrayList)
@@ -96,7 +97,7 @@
       (catch Exception e
         (when (System/getenv "DEBUG_MODE")
           (.printStackTrace e))
-        (.println System/err (format "Failed to register query %s with exception '%s'" mq (.getMessage e)))))))
+        (print/to-err (format "Failed to register query %s with exception '%s'" mq (.getMessage e)))))))
 
 (defn register-queries [^Monitor monitor monitor-queries]
   (try
@@ -104,7 +105,7 @@
     (catch Exception e
       (when (System/getenv "DEBUG_MODE")
         (.printStackTrace e))
-      (.println System/err (format "Failed to register queries with exception '%s'" (.getMessage e)))
+      (print/to-err (format "Failed to register queries with exception '%s'" (.getMessage e)))
       (defer-to-one-by-one-registration monitor monitor-queries))))
 
 (defn setup

@@ -2,7 +2,8 @@
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as sh]
             [clojure.string :as str]
-            [babashka.fs :as bfs])
+            [babashka.fs :as bfs]
+            [lmgrep.print :as print])
   (:import (java.nio.file FileSystems Path Files LinkOption)
            (java.io File IOException)))
 
@@ -113,7 +114,7 @@
         :visit-file-failed (if handle-error
                              (fn [path ^IOException exception]
                                (when (System/getenv "DEBUG_MODE")
-                                 (.println System/err (format "Visiting %s failed: %s" path (type exception))))
+                                 (print/to-err (format "Visiting %s failed: %s" path (type exception))))
                                :skip-subtree)
                              nil)})
      (let [results (persistent! @results)

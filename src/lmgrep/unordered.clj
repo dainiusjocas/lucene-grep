@@ -1,6 +1,6 @@
 (ns lmgrep.unordered
   (:require [lmgrep.concurrent :as c]
-            [lmgrep.io :as io]
+            [lmgrep.print :as print]
             [lmgrep.matching :as matching])
   (:import (java.io BufferedReader PrintWriter BufferedWriter FileReader)
            (java.util.concurrent ExecutorService)))
@@ -24,10 +24,10 @@
                               (let [^String out-str (matcher-fn line-nr line)]
                                 (if out-str
                                   (.execute writer-thread-pool-executor
-                                            ^Runnable (fn [] (io/print-to-writer writer out-str)))
+                                            ^Runnable (fn [] (print/to-writer writer out-str)))
                                   (when with-empty-lines
                                     (.execute writer-thread-pool-executor
-                                              ^Runnable (fn [] (io/print-to-writer writer))))))))
+                                              ^Runnable (fn [] (print/to-writer writer))))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn ordered-consume-reader
@@ -47,9 +47,9 @@
           (.execute writer-thread-pool-executor
                     ^Runnable (fn [] (let [out-str (.get f)]
                                        (if out-str
-                                         (io/print-to-writer writer out-str)
+                                         (print/to-writer writer out-str)
                                          (when with-empty-lines
-                                           (io/print-to-writer writer)))))))
+                                           (print/to-writer writer)))))))
         (recur (.readLine rdr) (inc line-nr))))))
 
 (defn grep [file-paths-to-analyze highlighter options]
