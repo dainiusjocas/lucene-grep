@@ -1,6 +1,6 @@
 {:paths         ["classes"]
- :deps          {org.apache.lucene/lucene-core    {:mvn/version "9.4.2"}
-                 org.apache.lucene/lucene-monitor {:mvn/version "9.4.2"}}
+ :deps          {org.apache.lucene/lucene-core    {:mvn/version "9.5.0"}
+                 org.apache.lucene/lucene-monitor {:mvn/version "9.5.0"}}
  :deps/prep-lib {:ensure "classes"
                  :alias  :build
                  :fn     compile-java}
