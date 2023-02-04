@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22.2.0 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22.3.1 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 
@@ -22,7 +22,7 @@ RUN microdnf install wget git \
 
 ENV PATH=$PATH:${MUSL_DIR}/x86_64-linux-musl-native/bin
 
-COPY --from=babashka/babashka:0.9.161 /usr/local/bin/bb /usr/local/bin/bb
+COPY --from=babashka/babashka:1.1.173 /usr/local/bin/bb /usr/local/bin/bb
 
 RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.sh \
     && chmod +x linux-install-$CLOJURE_VERSION.sh \
@@ -51,6 +51,7 @@ COPY test/ /usr/src/app/test
 COPY graalvm/ /usr/src/app/graalvm
 COPY resources/ /usr/src/app/resources
 COPY bb.edn /usr/src/app/
+COPY README.md /usr/src/app/
 
 RUN clojure -Spom
 RUN clojure -T:build prep-deps
