@@ -1,17 +1,8 @@
-.PHONY: pom.xml
-pom.xml:
-	clojure -Spom
-
-.PHONY: deps-prep
-deps-prep:
-	clojure -T:build prep-deps
-
 SNAPSHOT_SUFFIX = "-SNAPSHOT"
 
 .PHONY: uberjar
-uberjar: deps-prep pom.xml
-	echo "$$(git describe --tags --abbrev=0)$(SNAPSHOT_SUFFIX)" > resources/LMGREP_VERSION
-	clojure -T:build uberjar
+uberjar:
+	bb uberjar
 
 .PHONY: build
 build: uberjar

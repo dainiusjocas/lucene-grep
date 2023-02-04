@@ -1,7 +1,24 @@
 {:paths          ["."]
  :deps           {}
  :min-bb-version "0.4.0"
- :tasks          {run
+ :tasks          {:requires ([clojure.string :as str])
+                  -pom.xml
+                  {:doc  "Creates pom.xml"
+                   :task (clojure "-Spom")}
+                  deps-prep
+                  {:doc  "Build the required deps"
+                   :task (clojure "-T:build prep-deps")}
+                  -LMGREP_VERSION
+                  {:doc "Update LMGREP_VERSION file"
+                   :task (let [version (->> (shell {:out :string} "git describe --tags --abbrev=0")
+                                         (:out)
+                                         (str/trim))]
+                           (spit "resources/LMGREP_VERSION" (str version "-SNAPSHOT")))}
+                  uberjar
+                  {:doc  "Build an uberjar"
+                   :depends [deps-prep -pom.xml -LMGREP_VERSION]
+                   :task (clojure "-T:build uberjar")}
+                  run
                   {:requires ([script.env-profiles :as e])
                    :doc      "Run lmgrep on JVM with required profiles"
                    :task     (let [profiles (e/profiles)]
