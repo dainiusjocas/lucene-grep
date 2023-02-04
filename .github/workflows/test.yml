@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  BABASHKA_VERSION: '1.0.169'
+  BABASHKA_VERSION: '1.0.173'
 
 jobs:
   unit-test:
