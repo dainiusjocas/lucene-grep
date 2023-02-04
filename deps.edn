@@ -46,5 +46,6 @@
   {:extra-deps {lmgrep/bundled-analyzers {:local/root "modules/bundled-analyzers"}}
    :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
-  {:deps       {io.github.clojure/tools.build {:git/tag "v0.8.5" :git/sha "9c738da"}}
+  {:deps       {io.github.clojure/tools.build {:git/tag "v0.9.3" :git/sha "e537cd1"}
+                org.clojure/tools.deps.cli    {:mvn/version "0.9.10"}}
    :ns-default build}}}

@@ -1,5 +1,5 @@
 (ns build
-  (:require [clojure.tools.cli.api :as c]
+  (:require [clojure.tools.deps.cli.api :as c]
             [clojure.tools.build.api :as b]
             [script.env-profiles :as p]))
 
