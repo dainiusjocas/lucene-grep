@@ -4,6 +4,10 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+### Fixed/enhanced
+
+- Upgrade GraalVM to 22.3.1
+
 ## v2023.01.30
 
 ### Fixed/enhanced
