@@ -23,3 +23,4 @@ lmgrep.build_artifacts.txt
 graalvm/
 test/resources/binary/
 resources/LMGREP_VERSION
+modules/*/target/**
