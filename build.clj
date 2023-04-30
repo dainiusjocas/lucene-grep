@@ -6,9 +6,10 @@
 (defn prep-deps [& _]
   (let [profiles (p/profiles)]
     (println "Preparing transitive dependencies with profiles" profiles)
-    (c/prep (assoc (c/basis {:project "deps.edn"
-                             :aliases profiles})
-              :force true))))
+    (c/prep {:project "deps.edn"
+             :aliases profiles
+             :force   true})))
+
 
 (def class-dir "target/classes")
 

@@ -46,5 +46,5 @@
    :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
   {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.4"}
-                org.clojure/tools.deps.cli    {:mvn/version "0.9.10"}}
+                org.clojure/tools.deps.cli    {:mvn/version "0.9.35"}}
    :ns-default build}}}
