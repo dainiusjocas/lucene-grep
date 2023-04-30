@@ -13,17 +13,16 @@
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.6"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.20"}
-  babashka/fs                              {:mvn/version "0.2.15"}
-  io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "0.3"
-                                            :exclusions  [org.apache.lucene/lucene-analyzers-common]}
-  io.quarkus/quarkus-arc                   {:mvn/version "2.16.1.Final"}
+  babashka/fs                              {:mvn/version "0.3.17"}
+  io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "2"}
+  io.quarkus/quarkus-arc                   {:mvn/version "3.0.1.Final"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
                                                :git/sha "5b8909bdb072d66c9f643bae50cd2878a0f694c2"}
-                 org.slf4j/slf4j-nop          {:mvn/version "2.0.6"}
+                 org.slf4j/slf4j-nop          {:mvn/version "2.0.7"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
   {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
@@ -31,7 +30,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.01.20"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.04.14"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "modules/raudikko"}}
@@ -46,6 +45,6 @@
   {:extra-deps {lmgrep/bundled-analyzers {:local/root "modules/bundled-analyzers"}}
    :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
-  {:deps       {io.github.clojure/tools.build {:git/tag "v0.9.3" :git/sha "e537cd1"}
-                org.clojure/tools.deps.cli    {:mvn/version "0.9.10"}}
+  {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.4"}
+                org.clojure/tools.deps.cli    {:mvn/version "0.9.35"}}
    :ns-default build}}}
