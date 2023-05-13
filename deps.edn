@@ -2,20 +2,20 @@
  ["src" "resources"]
  :deps
  {org.clojure/clojure                      {:mvn/version "1.11.1"}
-  org.clojure/tools.cli                    {:mvn/version "1.0.214"}
-  org.apache.lucene/lucene-core            {:mvn/version "9.5.0"}
-  org.apache.lucene/lucene-analysis-common {:mvn/version "9.5.0"}
-  org.apache.lucene/lucene-monitor         {:mvn/version "9.5.0"}
-  org.apache.lucene/lucene-queries         {:mvn/version "9.5.0"}
-  org.apache.lucene/lucene-queryparser     {:mvn/version "9.5.0"}
+  org.clojure/tools.cli                    {:mvn/version "1.0.219"}
+  org.apache.lucene/lucene-core            {:mvn/version "9.6.0"}
+  org.apache.lucene/lucene-analysis-common {:mvn/version "9.6.0"}
+  org.apache.lucene/lucene-monitor         {:mvn/version "9.6.0"}
+  org.apache.lucene/lucene-queries         {:mvn/version "9.6.0"}
+  org.apache.lucene/lucene-queryparser     {:mvn/version "9.6.0"}
   metosin/jsonista                         {:mvn/version "0.3.7"}
   lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.24"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.6"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.20"}
-  babashka/fs                              {:mvn/version "0.3.17"}
-  io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "2"}
-  io.quarkus/quarkus-arc                   {:mvn/version "3.0.1.Final"}
+  babashka/fs                              {:mvn/version "0.4.18"}
+  io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "2.1.0"}
+  io.quarkus/quarkus-arc                   {:mvn/version "3.0.3.Final"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev

@@ -6,6 +6,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ### Fixed/enhanced
 
+- Upgrade Lucene to 9.6.0
 - Upgrade GraalVM to 22.3.1
 - Support building native images with GraalVM based on Java 19 on macOS
 
