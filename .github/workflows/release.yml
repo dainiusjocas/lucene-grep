@@ -11,14 +11,12 @@ env:
   LMGREP_FEATURE_CHARSETS: true
   LMGREP_FEATURE_STEMPEL: true
   LMGREP_FEATURE_RAUDIKKO: false
-  BABASHKA_VERSION: '1.3.176'
-  GRAALVM_VERSION: '22.3.1'
 
 jobs:
   create-gh-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
 
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -43,23 +41,19 @@ jobs:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: ${{ env.GRAALVM_VERSION }}
-          java-version: '17'
-          components: 'native-image'
+          java-version: '17.0.7'
+          distribution: 'graalvm'
+          native-image-job-reports: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install clojure tools-deps`
         uses: DeLaGuardo/setup-clojure@master
         with:
-          cli: '1.11.1.1273'
-
-      - name: Setup Babashka
-        uses: turtlequeue/setup-babashka@v1.5.0
-        with:
-          babashka-version: ${{ env.BABASHKA_VERSION }}
+          cli: '1.11.1.1347'
+          bb: '1.3.181'
 
       - name: Compile uberjar
         run: |
@@ -90,7 +84,7 @@ jobs:
 
   build-native-executables-and-upload-to-release:
     name: Native image build on ${{ matrix.os }}
-    needs: [create-gh-release, build-uberjar-upload-to-release-and-store-artifacts]
+    needs: [ create-gh-release, build-uberjar-upload-to-release-and-store-artifacts ]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -135,12 +129,12 @@ jobs:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: ${{ env.GRAALVM_VERSION }}
-          java-version: '17'
-          components: 'native-image'
+          java-version: '17.0.7'
+          distribution: 'graalvm'
+          native-image-job-reports: 'true'
           native-image-musl: ${{ matrix.native-image-musl }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -185,7 +179,7 @@ jobs:
     name: docker image release per architecture
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
 
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV

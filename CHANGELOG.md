@@ -4,6 +4,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Upgrade GraalVM to 23.0.0 GraalVM distribution Java 17
+- Raudikko 0.1.4
+
 ## v2023.05.13
 
 ### Fixed/enhanced

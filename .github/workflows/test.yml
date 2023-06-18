@@ -3,16 +3,13 @@ name: Tests
 on:
   push:
 
-env:
-  BABASHKA_VERSION: '1.3.176'
-
 jobs:
   unit-test:
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
 
       - name: Cache maven deps
         uses: actions/cache@v3.3.1
@@ -28,14 +25,10 @@ jobs:
           java-version: 17
 
       - name: Install clojure tools-deps
-        uses: DeLaGuardo/setup-clojure@master
+        uses: DeLaGuardo/setup-clojure@11.0
         with:
-          cli: '1.11.1.1273'
-
-      - name: Setup Babashka
-        uses: turtlequeue/setup-babashka@v1.5.0
-        with:
-          babashka-version: ${{ env.BABASHKA_VERSION }}
+          cli: '1.11.1.1347'
+          bb: '1.3.181'
 
       - name: Unit Tests
         env:

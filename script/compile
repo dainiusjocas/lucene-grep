@@ -24,6 +24,8 @@ args=( "-jar"
        "--initialize-at-build-time"
        "-H:+ReportExceptionStackTraces"
        "-H:IncludeResources=LMGREP_VERSION"
+       "-H:+BuildReport"
+       "-march=native"
        "-H:ReflectionConfigurationFiles=$(pwd)/graalvm/lucene-reflect-config.json" )
 
 LMGREP_STATIC=${LMGREP_STATIC:-}
@@ -60,9 +62,25 @@ if [ "$LMGREP_DEV_BUILD" = "true" ]; then
   args+=("-Ob")
 fi
 
+if [ "$LMGREP_FEATURE_BUNDLED_ANALYZERS" = "true" ]; then
+  args+=("-ELMGREP_FEATURE_BUNDLED_ANALYZERS=true")
+fi
+
+if [ "$LMGREP_FEATURE_STEMPEL" = "true" ]; then
+  args+=("-ELMGREP_FEATURE_STEMPEL=true")
+fi
+
+if [ "$LMGREP_FEATURE_SNOWBALL" = "true" ]; then
+  args+=("-ELMGREP_FEATURE_SNOWBALL=true")
+fi
+
+if [ "$LMGREP_FEATURE_RAUDIKKO" = "true" ]; then
+  args+=("-ELMGREP_FEATURE_RAUDIKKO=true")
+fi
+
 JAVA_VERSION=$(java -version 2>&1 | head -1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-if [[ $JAVA_VERSION =~ 19.* ]]; then
-  echo "UWAGA: Java 19 on macOS doesn't support `enableMemorySegments`"
+if [[ $JAVA_VERSION =~ 19.* || $JAVA_VERSION =~ 20.* ]]; then
+  echo "UWAGA: Java $JAVA_VERSION on macOS doesn't support `enableMemorySegments`"
   args+=("-Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false")
 fi
 

@@ -8,8 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.2
-      - uses: DeLaGuardo/clojure-lint-action@master
+      - uses: actions/checkout@v3.5.3
+      - name: Install clojure tools-deps
+        uses: DeLaGuardo/setup-clojure@11.0
         with:
-          clj-kondo-args: --lint src test
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cli: '1.11.1.1347'
+          bb: '1.3.181'
+          clj-kondo: '2023.05.26'
+
+      - name: Lint the code
+        run: clj-kondo --lint src test

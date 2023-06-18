@@ -41,7 +41,7 @@
                              (clojure "-M:clj-kondo")))}
                   outdated
                   {:doc  "Checks for outdated dependencies."
-                   :task (clojure "-Sdeps '{:deps {com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}' -M -m antq.core")}
+                   :task (clojure "-Sdeps '{:deps {org.slf4j/slf4j-nop {:mvn/version \"2.0.7\"} com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}' -M -m antq.core")}
                   generate-reflection-config
                   {:requires ([script.reflection :as r]
                               [script.env-profiles :as e])

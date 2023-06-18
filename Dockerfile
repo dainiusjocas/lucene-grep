@@ -1,8 +1,8 @@
-FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22.3.1 as BUILDER
+FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22.3.2 as BUILDER
 
 ENV GRAALVM_HOME=$JAVA_HOME
 
-ENV CLOJURE_VERSION=1.11.1.1155
+ENV CLOJURE_VERSION=1.11.1.1347
 
 ARG LMGREP_STATIC
 ENV LMGREP_STATIC=$LMGREP_STATIC
@@ -22,7 +22,7 @@ RUN microdnf install wget git \
 
 ENV PATH=$PATH:${MUSL_DIR}/x86_64-linux-musl-native/bin
 
-COPY --from=babashka/babashka:1.1.173 /usr/local/bin/bb /usr/local/bin/bb
+COPY --from=babashka/babashka:1.3.181 /usr/local/bin/bb /usr/local/bin/bb
 
 RUN curl -O https://download.clojure.org/install/linux-install-$CLOJURE_VERSION.sh \
     && chmod +x linux-install-$CLOJURE_VERSION.sh \
