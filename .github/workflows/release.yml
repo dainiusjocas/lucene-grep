@@ -18,7 +18,7 @@ jobs:
   create-gh-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
 
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -43,7 +43,7 @@ jobs:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ env.GRAALVM_VERSION }}
@@ -54,7 +54,7 @@ jobs:
       - name: Install clojure tools-deps`
         uses: DeLaGuardo/setup-clojure@master
         with:
-          cli: '1.11.1.1273'
+          cli: '1.11.1.1347'
 
       - name: Setup Babashka
         uses: turtlequeue/setup-babashka@v1.5.0
@@ -135,7 +135,7 @@ jobs:
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ env.GRAALVM_VERSION }}
@@ -185,7 +185,7 @@ jobs:
     name: docker image release per architecture
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v3.5.3
 
       - name: Set env variable with the release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV

@@ -1,6 +1,6 @@
 {:paths         ["target/raudikko.jar"]
  :deps          {org.apache.lucene/lucene-core {:mvn/version "9.6.0"}
-                 fi.evident.raudikko/raudikko  {:mvn/version "0.1.3"}}
+                 fi.evident.raudikko/raudikko  {:mvn/version "0.1.4"}}
  :deps/prep-lib {:ensure "target/raudikko.jar"
                  :alias  :build
                  :fn     jar}
