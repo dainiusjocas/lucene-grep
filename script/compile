@@ -24,6 +24,8 @@ args=( "-jar"
        "--initialize-at-build-time"
        "-H:+ReportExceptionStackTraces"
        "-H:IncludeResources=LMGREP_VERSION"
+#       "-H:+AllowDeprecatedBuilderClassesOnImageClasspath"
+       "-Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false"
        "-H:ReflectionConfigurationFiles=$(pwd)/graalvm/lucene-reflect-config.json" )
 
 LMGREP_STATIC=${LMGREP_STATIC:-}
