@@ -14,8 +14,6 @@
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.8"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.21"}
   babashka/fs                              {:mvn/version "0.4.19"}
-  ;io.quarkiverse.lucene/quarkus-lucene     {:mvn/version "2.1.0"}
-  ;io.quarkus/quarkus-arc                   {:mvn/version "3.1.1.Final"}
   com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
  :aliases
  {:dev

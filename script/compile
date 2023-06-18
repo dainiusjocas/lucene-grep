@@ -79,13 +79,8 @@ if [ "$LMGREP_FEATURE_RAUDIKKO" = "true" ]; then
 fi
 
 JAVA_VERSION=$(java -version 2>&1 | head -1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-if [[ $JAVA_VERSION =~ 19.* ]]; then
-  echo "UWAGA: Java 19 on macOS doesn't support `enableMemorySegments`"
-  args+=("-Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false")
-fi
-
-if [[ $JAVA_VERSION =~ 20.* ]]; then
-  echo "UWAGA: Java 20 on macOS doesn't support `enableMemorySegments`"
+if [[ $JAVA_VERSION =~ 19.* || $JAVA_VERSION =~ 20.* ]]; then
+  echo "UWAGA: Java $JAVA_VERSION on macOS doesn't support `enableMemorySegments`"
   args+=("-Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false")
 fi
 
