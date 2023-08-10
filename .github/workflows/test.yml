@@ -37,5 +37,5 @@ jobs:
           LMGREP_FEATURE_SNOWBALL: true
           LMGREP_FEATURE_RAUDIKKO: true
         run: |
-          clojure -T:build prep-deps
+          bb deps-prep
           bb test

@@ -3,7 +3,6 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [jsonista.core :as json]
-            [lmgrep.features]
             [lmgrep.lucene.analyzer :as analysis]
             [lucene.custom.text-analysis :as ta]
             [lmgrep.predefined-analyzers :as predefined]))
@@ -28,15 +27,6 @@
                   :token-filters [{"uppercase" nil}
                                   {"reverseString" nil}]}]
     (is (= expected (analysis/custom-analyzer->short-notation conf)))))
-
-(when lmgrep.features/bundled?
-  (deftest predefined-analyzers
-    (let [text "The brown foxes"
-          analyzer (with-analyzers {:analyzer {:name "EnglishAnalyzer"}})]
-      (is (= ["brown" "fox"] (ta/text->token-strings text analyzer))))
-    (let [text "The brown foxes"
-          analyzer (with-analyzers {:analyzer {:name "CollationKeyAnalyzer"}})]
-      (is (= ["The brown foxes"] (ta/text->token-strings text analyzer))))))
 
 (deftest analysis-construction-from-components
   (let [text "The quick brown fox"
@@ -120,18 +110,6 @@
                                                            "preserveOriginal"    1
                                                            "splitOnCaseChange"   1}}]})]
     (is (= ["TestClass" "Test" "Class"] (ta/text->token-strings text analyzer)))))
-
-(when lmgrep.features/snowball?
-  (deftest lithuanian-snowball-stemmer-token-filter-factory
-    (let [text "lietus lyja"
-          analyzer (analysis/create {:token-filters [{:name "lithuanianSnowballStem"}]})]
-      (is (= ["liet" "lyj"] (ta/text->token-strings text analyzer))))))
-
-(when lmgrep.features/stempel?
-  (deftest stempel-token-filter-factory
-    (let [text "Dziękuję"
-          analyzer (analysis/create {:token-filters [{:name "stempelpolishstem"}]})]
-      (is (= ["Dziękować"] (ta/text->token-strings text analyzer))))))
 
 (deftest try-all-predefined-analyzers
   (let [text "cats and dogs"

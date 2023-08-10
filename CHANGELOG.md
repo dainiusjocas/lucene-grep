@@ -4,6 +4,9 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Update `com.github.clj-easy/graal-build-time` to 1.0.5
+- Load Analyzers via SPI
+
 ## v2023.06.18
 
 - Upgrade GraalVM to 23.0.0 GraalVM distribution Java 17

@@ -14,7 +14,7 @@
   lt.jocas/lucene-query-parsing            {:mvn/version "1.0.8"}
   lt.jocas/lucene-text-analysis            {:mvn/version "1.0.21"}
   babashka/fs                              {:mvn/version "0.4.19"}
-  com.github.clj-easy/graal-build-time     {:mvn/version "0.1.4"}}
+  com.github.clj-easy/graal-build-time     {:mvn/version "1.0.5"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
