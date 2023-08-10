@@ -1,6 +1,6 @@
 {:paths         ["target/bundled-analyzers.jar"]
- :deps          {org.apache.lucene/lucene-core            {:mvn/version "9.6.0"}
-                 org.apache.lucene/lucene-analysis-common {:mvn/version "9.6.0"}}
+ :deps          {org.apache.lucene/lucene-core            {:mvn/version "9.7.0"}
+                 org.apache.lucene/lucene-analysis-common {:mvn/version "9.7.0"}}
  :deps/prep-lib {:ensure "target/bundled-analyzers.jar"
                  :alias  :build
                  :fn     jar}

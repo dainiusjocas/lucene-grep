@@ -200,7 +200,8 @@
               "hyphenationcompoundword" {"hyphenator" "test/resources/hyphenation_hyphenator.xml"}
               "hunspellstem"            {"dictionary" "test/resources/hunspell_dict.dic"
                                          "affix"      "test/resources/hunspell_dict.aff"}
-              "dropifflagged"           {"dropFlags" "2"}}]
+              "dropifflagged"           {"dropFlags" "2"}
+              "word2vecsynonym"         {"model" "test/resources/word2vec-model.zip"}}]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try
