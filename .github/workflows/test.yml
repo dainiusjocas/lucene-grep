@@ -32,7 +32,7 @@ jobs:
 
       - name: Unit Tests
         env:
-          LMGREP_FEATURE_BUNDLED_ANALYZERS: true
+          LMGREP_FEATURE_BUNDLED_ANALYZERS: false
           LMGREP_FEATURE_STEMPEL: true
           LMGREP_FEATURE_SNOWBALL: true
           LMGREP_FEATURE_RAUDIKKO: true
