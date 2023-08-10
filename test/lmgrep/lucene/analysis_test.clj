@@ -155,7 +155,9 @@
         tokenizer-names (keys components)
         args {"simplepatternsplit" {"pattern" " "}
               "simplepattern"      {"pattern" " "}
-              "pattern"            {"pattern" " "}}]
+              "pattern"            {"pattern" " "}
+              "opennlp"            {"sentenceModel" "test/resources/opennlp-en-ud-ewt-sentence-1.0-1.9.3.bin"
+                                    "tokenizerModel" "test/resources/opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin"}}]
     (is (seq tokenizer-names))
     (doseq [tokenizer-name tokenizer-names]
       (try
@@ -201,7 +203,10 @@
               "hunspellstem"            {"dictionary" "test/resources/hunspell_dict.dic"
                                          "affix"      "test/resources/hunspell_dict.aff"}
               "dropifflagged"           {"dropFlags" "2"}
-              "word2vecsynonym"         {"model" "test/resources/word2vec-model.zip"}}]
+              "word2vecsynonym"         {"model" "test/resources/word2vec-model.zip"}
+              "opennlppos"              {"posTaggerModel" "test/resources/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin"}
+              "opennlplemmatizer"       {"dictionary" "test/resources/en-lemmatizer.dict"}
+              "opennlpchunker"          {"chunkerModel" "test/resources/en-chunker.bin"}}]
     (is (seq token-filter-names))
     (doseq [token-filter-name token-filter-names]
       (try

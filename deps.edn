@@ -1,20 +1,21 @@
 {:paths
  ["src" "resources"]
  :deps
- {org.clojure/clojure                      {:mvn/version "1.11.1"}
-  org.clojure/tools.cli                    {:mvn/version "1.0.219"}
-  org.apache.lucene/lucene-core            {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-analysis-common {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-monitor         {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-queries         {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-queryparser     {:mvn/version "9.7.0"}
-  metosin/jsonista                         {:mvn/version "0.3.7"}
-  lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.28"}
-  lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
-  lt.jocas/lucene-query-parsing            {:mvn/version "1.0.8"}
-  lt.jocas/lucene-text-analysis            {:mvn/version "1.0.21"}
-  babashka/fs                              {:mvn/version "0.4.19"}
-  com.github.clj-easy/graal-build-time     {:mvn/version "1.0.5"}}
+ {org.clojure/clojure                       {:mvn/version "1.11.1"}
+  org.clojure/tools.cli                     {:mvn/version "1.0.219"}
+  org.apache.lucene/lucene-core             {:mvn/version "9.7.0"}
+  org.apache.lucene/lucene-analysis-common  {:mvn/version "9.7.0"}
+  org.apache.lucene/lucene-analysis-opennlp {:mvn/version "9.7.0"}
+  org.apache.lucene/lucene-monitor          {:mvn/version "9.7.0"}
+  org.apache.lucene/lucene-queries          {:mvn/version "9.7.0"}
+  org.apache.lucene/lucene-queryparser      {:mvn/version "9.7.0"}
+  metosin/jsonista                          {:mvn/version "0.3.7"}
+  lt.jocas/lucene-custom-analyzer           {:mvn/version "1.0.28"}
+  lmgrep/lucene-monitor-helpers             {:local/root "modules/lucene-monitor-helpers"}
+  lt.jocas/lucene-query-parsing             {:mvn/version "1.0.8"}
+  lt.jocas/lucene-text-analysis             {:mvn/version "1.0.21"}
+  babashka/fs                               {:mvn/version "0.4.19"}
+  com.github.clj-easy/graal-build-time      {:mvn/version "1.0.5"}}
  :aliases
  {:dev
   {:extra-paths ["dev" "test" "test/resources"]
