@@ -33,14 +33,14 @@
 
 (def default-analyzer (analyzer/create {}))
 
-(def DEFAULT_PRESEARCHER Presearcher/NO_FILTERING)
-
 (def SCHEMA_FILE_NAME "/schema.json")
 
-(def presearchers
-  {:no-filtering            Presearcher/NO_FILTERING
-   :term-filtered           (TermFilteredPresearcher.)
-   :multipass-term-filtered (MultipassTermFilteredPresearcher. 2)})
+(defn presearcher [key]
+  (case key
+    :no-filtering Presearcher/NO_FILTERING
+    :term-filtered (TermFilteredPresearcher.)
+    :multipass-term-filtered (MultipassTermFilteredPresearcher. 2)
+    Presearcher/NO_FILTERING))
 
 (defn prepare-per-field-analyzers [field-name->analysis-conf custom-analyzers]
   (reduce-kv (fn [schema field-name analysis-conf]
@@ -75,7 +75,7 @@
 
 (defn create [questionnaire-with-analyzers custom-analyzers options]
   (let [^MonitorConfiguration config (MonitorConfiguration.)
-        presearcher (get presearchers (get options :presearcher) DEFAULT_PRESEARCHER)]
+        presearcher (presearcher (get options :presearcher))]
     (.setQueryUpdateBufferSize config (int (get options :query-update-buffer-size 100000)))
     (if-let [queries-index-dir (get options :queries-index-dir)]
       (.setIndexPath config

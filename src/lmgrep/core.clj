@@ -9,6 +9,7 @@
             [lmgrep.predefined-analyzers :as predefined]
             [lmgrep.print :as print]
             [lmgrep.streamed :as streamed])
+  (:import (java.util.logging Logger Level))
   (:gen-class))
 
 (def version (str/trim (slurp (io/resource "LMGREP_VERSION"))))
@@ -32,8 +33,9 @@
    :token-filters (sort (keys analyzers/token-filter-name->class))})
 
 (defn -main [& args]
+  (.setLevel (Logger/getLogger "org.apache.lucene.util.RamUsageEstimator") Level/OFF)
   (try
-    (let [{:keys [options arguments errors summary]
+    (let [{:keys                                                        [options arguments errors summary]
            [lucene-query file-pattern & files :as positional-arguments] :arguments} (cli/handle-args args)]
       (when (seq errors)
         (println "Errors:" errors)

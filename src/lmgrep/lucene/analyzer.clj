@@ -24,14 +24,12 @@
              {} (ca/char-filter-factories)))
 
 (defn get-analyzer [analyzer-name custom-analyzers]
-  (or (get custom-analyzers (namify (str/replace analyzer-name "Analyzer" "")))
+  (or (get custom-analyzers (namify analyzer-name))
       (throw
         (Exception.
-          (format "%s '%s' is not available. Choose one of: %s"
-                  Analyzer
+          (format "Analyzer '%s' is not available. Choose one of: %s"
                   analyzer-name
                   (sort (keys custom-analyzers)))))))
-
 
 (defn custom-analyzer->short-notation [conf]
   (let [old->new (fn [old] {(get old :name) (get old :args)})
