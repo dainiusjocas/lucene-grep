@@ -4,6 +4,7 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
+- Bump Lucene to 9.7.0
 - Update `com.github.clj-easy/graal-build-time` to 1.0.5
 - Load Analyzers via SPI
 
