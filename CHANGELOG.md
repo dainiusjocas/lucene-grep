@@ -4,7 +4,11 @@ For a list of breaking changes, check [here](#breaking-changes).
 
 ## Unreleased
 
-- Bump Lucene to 9.7.0
+- Upgrade Lucene to 9.8.0 (#220)
+
+## v2023.08.31
+
+- Upgrade Lucene to 9.7.0
 - Support for the `Word2VecSynonymFilter`
 - Update `com.github.clj-easy/graal-build-time` to 1.0.5
 - Load Analyzers via SPI
