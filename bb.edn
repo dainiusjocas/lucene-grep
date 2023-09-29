@@ -9,22 +9,24 @@
                   {:doc  "Build the required deps"
                    :task (clojure "-T:build prep-deps")}
                   -LMGREP_VERSION
-                  {:doc "Update LMGREP_VERSION file"
+                  {:doc  "Update LMGREP_VERSION file"
                    :task (let [version (->> (shell {:out :string} "git describe --tags --abbrev=0")
                                          (:out)
                                          (str/trim))]
                            (spit "resources/LMGREP_VERSION" (str version "-SNAPSHOT")))}
                   uberjar
-                  {:doc  "Build an uberjar"
-                   :depends [deps-prep -pom.xml -LMGREP_VERSION]
-                   :task (clojure "-T:build uberjar")}
+                  {:doc              "Build an uberjar"
+                   :override-builtin true
+                   :depends          [deps-prep -pom.xml -LMGREP_VERSION]
+                   :task             (clojure "-T:build uberjar")}
                   run
-                  {:requires ([script.env-profiles :as e])
-                   :doc      "Run lmgrep on JVM with required profiles"
-                   :task     (let [profiles (e/profiles)]
-                               (println "Running lmgrep on JVM with profiles: " profiles)
-                               (apply clojure (cond-> [(str "-M:" (clojure.string/join ":" profiles) " -m lmgrep.core")]
-                                                (not (empty? *command-line-args*)) (concat *command-line-args*))))}
+                  {:requires         ([script.env-profiles :as e])
+                   :override-builtin true
+                   :doc              "Run lmgrep on JVM with required profiles"
+                   :task             (let [profiles (e/profiles)]
+                                       (println "Running lmgrep on JVM with profiles: " profiles)
+                                       (apply clojure (cond-> [(str "-M:" (clojure.string/join ":" profiles) " -m lmgrep.core")]
+                                                        (not (empty? *command-line-args*)) (concat *command-line-args*))))}
                   test
                   {:requires ([script.env-profiles :as e])
                    :doc      "Run tests with the required profiles"

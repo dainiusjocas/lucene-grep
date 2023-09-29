@@ -1,11 +1,11 @@
 {:paths         ["classes"]
- :deps          {org.apache.lucene/lucene-core    {:mvn/version "9.7.0"}
-                 org.apache.lucene/lucene-monitor {:mvn/version "9.7.0"}}
+ :deps          {org.apache.lucene/lucene-core    {:mvn/version "9.8.0"}
+                 org.apache.lucene/lucene-monitor {:mvn/version "9.8.0"}}
  :deps/prep-lib {:ensure "classes"
                  :alias  :build
                  :fn     compile-java}
  :aliases
  {:build
   {:deps       {org.clojure/clojure           {:mvn/version "1.11.1"}
-                io.github.clojure/tools.build {:mvn/version "0.9.4"}}
+                io.github.clojure/tools.build {:mvn/version "0.9.5"}}
    :ns-default build}}}
