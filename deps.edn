@@ -3,16 +3,16 @@
  :deps
  {org.clojure/clojure                      {:mvn/version "1.11.1"}
   org.clojure/tools.cli                    {:mvn/version "1.0.219"}
-  org.apache.lucene/lucene-core            {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-analysis-common {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-monitor         {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-queries         {:mvn/version "9.7.0"}
-  org.apache.lucene/lucene-queryparser     {:mvn/version "9.7.0"}
-  metosin/jsonista                         {:mvn/version "0.3.7"}
-  lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.28"}
+  org.apache.lucene/lucene-core            {:mvn/version "9.8.0"}
+  org.apache.lucene/lucene-analysis-common {:mvn/version "9.8.0"}
+  org.apache.lucene/lucene-monitor         {:mvn/version "9.8.0"}
+  org.apache.lucene/lucene-queries         {:mvn/version "9.8.0"}
+  org.apache.lucene/lucene-queryparser     {:mvn/version "9.8.0"}
+  metosin/jsonista                         {:mvn/version "0.3.8"}
+  lt.jocas/lucene-custom-analyzer          {:mvn/version "1.0.37"}
   lmgrep/lucene-monitor-helpers            {:local/root "modules/lucene-monitor-helpers"}
-  lt.jocas/lucene-query-parsing            {:mvn/version "1.0.8"}
-  lt.jocas/lucene-text-analysis            {:mvn/version "1.0.21"}
+  lt.jocas/lucene-query-parsing            {:mvn/version "1.0.12"}
+  lt.jocas/lucene-text-analysis            {:mvn/version "1.0.26"}
   babashka/fs                              {:mvn/version "0.4.19"}
   com.github.clj-easy/graal-build-time     {:mvn/version "1.0.5"}}
  :aliases
@@ -20,7 +20,7 @@
   {:extra-paths ["dev" "test" "test/resources"]
    :extra-deps  {org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha"
                                                :git/sha "5b8909bdb072d66c9f643bae50cd2878a0f694c2"}
-                 org.slf4j/slf4j-nop          {:mvn/version "2.0.7"}
+                 org.slf4j/slf4j-nop          {:mvn/version "2.0.9"}
                  criterium/criterium          {:mvn/version "0.4.6"}}}
   :test
   {:extra-paths ["test" "test/resources" "modules/text-analysis/test"]
@@ -28,7 +28,7 @@
    :main-opts   ["-m" "cognitect.test-runner"]}
   :clj-kondo
   {:main-opts  ["-m" "clj-kondo.main" "--lint" "src" "test"]
-   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.07.13"}}
+   :extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.09.07"}}
    :jvm-opts   ["-Dclojure.main.report=stderr"]}
   :raudikko
   {:extra-deps {lmgrep/raudikko-src {:local/root "modules/raudikko"}}
@@ -43,6 +43,6 @@
   {:extra-deps {lmgrep/bundled-analyzers {:local/root "modules/bundled-analyzers"}}
    :env        "LMGREP_FEATURE_BUNDLED_ANALYZERS"}
   :build
-  {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.4"}
+  {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.5"}
                 org.clojure/tools.deps.cli    {:mvn/version "0.9.43"}}
    :ns-default build}}}

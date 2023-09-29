@@ -26,7 +26,7 @@ args=( "-jar"
        "-H:+ReportExceptionStackTraces"
        "-H:IncludeResources=LMGREP_VERSION"
        "-H:+BuildReport"
-       "-march=native"
+       "-march=compatibility"
        "-H:ReflectionConfigurationFiles=$(pwd)/graalvm/lucene-reflect-config.json" )
 
 LMGREP_STATIC=${LMGREP_STATIC:-}
